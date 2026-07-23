@@ -3,8 +3,10 @@
 **Goal:** Build a portable **DSMR P1 meter-side** board that behaves like a Dutch/Belgian smart meter P1 port, so you can develop and test devices like **P1 Ghost** without a real meter.
 
 **MCU:** ESP32-C3-MINI-1 (Wi‑Fi)  
+**Power:** Seeed **Lipo Rider Plus** daughterboard (USB-C charge + 5 V + 3.3 V + LiPo)  
 **Connector:** RJ12 6P6C (female = meter side)  
-**Use case:** Fetch or generate P1 telegrams over Wi‑Fi / USB, and replay them on the P1 Data line when an OSM requests them.
+**Use case:** Fetch or generate P1 telegrams over Wi‑Fi / USB, and replay them on the P1 Data line when an OSM requests them.  
+**Mechanical:** `mechanicals/lipo_rider_plus/` (KiCad footprint + Seeed Eagle source)
 
 ---
 
@@ -34,37 +36,21 @@ Internet / USB ──► ESP32-C3 ──► open-collector UART ──► RJ12 p
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                        SMART METER SIMULATOR PCB                        │
 │                                                                         │
-│  ┌──────────┐   ┌─────────────────┐   ┌──────────────┐   ┌───────────┐ │
-│  │ USB-C    │──►│ Power path +    │──►│ 5V rail      │──►│ RJ12 P1   │ │
-│  │ (5 V in) │   │ battery charger │   │ (system +    │   │ female    │ │
-│  └──────────┘   │ + power mux     │   │  P1 supply)  │   │           │ │
-│                 └────────┬────────┘   └──────┬───────┘   │ 1 +5V     │ │
-│                          │                   │           │ 2 REQ     │ │
-│                    ┌─────▼─────┐       ┌─────▼─────┐     │ 3 DGND    │ │
-│                    │ LiPo cell │       │ 3.3 V buck│     │ 4 NC      │ │
-│                    │ + protect │       │ / LDO     │     │ 5 DATA    │ │
-│                    └───────────┘       └─────┬─────┘     │ 6 PGND    │ │
-│                                              │           └─────▲─────┘ │
-│                                        ┌─────▼─────┐           │       │
-│                                        │ ESP32-C3  │           │       │
-│                                        │ MINI-1    │           │       │
-│                                        └─────┬─────┘           │       │
-│              ┌──────────────┐    ┌───────────┼───────────┐     │       │
-│              │ Status LED   │◄───┤ GPIO      │ UART TX   │     │       │
-│              │ + button     │    └───────────┼───────────┘     │       │
-│              └──────────────┘                │                 │       │
-│                                   ┌──────────▼──────────┐      │       │
-│                                   │ A) Data Request     │◄─────┘ pin2  │
-│                                   │    sense (5V→3.3V)  │              │
-│                                   └─────────────────────┘              │
-│                                   ┌─────────────────────┐              │
-│                                   │ B) Open-collector   │────────────►│ pin5
-│                                   │    Data driver      │              │
-│                                   └─────────────────────┘              │
-│                                   ┌─────────────────────┐              │
-│                                   │ C) P1 +5V current   │────────────►│ pin1
-│                                   │    limit / foldback │              │
-│                                   └─────────────────────┘              │
+│  ┌─────────────────────────────┐     ┌──────────────┐   ┌───────────┐ │
+│  │ Seeed Lipo Rider Plus       │     │ P1 5V limit  │──►│ RJ12 P1   │ │
+│  │ (daughterboard)             │─5V─►│ (~250 mA)    │   │ female    │ │
+│  │  USB-C charge → LiPo        │     └──────────────┘   │ 1 +5V     │ │
+│  │  out: 5V + 3V3              │─3V3──────────────┐     │ 2 REQ     │ │
+│  └─────────────────────────────┘                  │     │ 3 DGND    │ │
+│                                                   ▼     │ 4 NC      │ │
+│  ┌──────────┐                              ┌──────────┐ │ 5 DATA    │ │
+│  │ USB-C    │── D+/D− ────────────────────►│ ESP32-C3 │ │ 6 PGND    │ │
+│  │ (flash)  │                              │ MINI-1   │ └─────▲─────┘ │
+│  └──────────┘                              └────┬─────┘       │       │
+│       Status LED / button ◄── GPIO              │             │       │
+│                                   ┌─────────────┼───────┐     │       │
+│                                   │ Request sense│ OC TX │─────┘       │
+│                                   └─────────────┴───────┘             │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -74,9 +60,9 @@ Internet / USB ──► ESP32-C3 ──► open-collector UART ──► RJ12 p
 |---|--------|----------------|---------|
 | 1 | USB-C input (power + native USB serial) | Yes | **Required** |
 | 2 | ESP32-C3-MINI-1 (+ EN reset, strapping, caps) | Yes | **Required** |
-| 3 | Battery + charger (USB → LiPo) | Yes | **Nice for portable lab**; optional if desk-only |
-| 4 | Power mux (USB vs battery → 5V system) | Implied | **Required if battery** |
-| 5 | 5V → 3.3V for MCU | Yes | **Required** |
+| 3 | Lipo Rider Plus (USB-C charge + 5V + 3V3 + LiPo) | Yes | **Buy module** — see `mechanicals/lipo_rider_plus/` |
+| 4 | On-board 5V↔battery mux / discrete charger | — | **Not needed** (inside Lipo Rider) |
+| 5 | Extra 5V→3.3V regulator | — | **Skip** if using Lipo Rider 3V3 pin |
 | 6 | RJ12 +5V out with current limit | Yes (you said ~1.25 A) | **Required — but use DSMR numbers (below)** |
 | 7 | Data Request / Enable sense | Yes | **Required** |
 | 8 | Open-collector Data TX | Yes | **Required** |
@@ -200,37 +186,29 @@ Target: **~250 mA continuous**, trip near **260–300 mA**, recover after fault.
 
 Add bulk capacitance near RJ12 pin 1 (e.g. 100 µF low-ESR) so OSM Wi‑Fi bursts / inrush do not brown out.
 
-### 5.4 USB-C + ESP32-C3
+### 5.4 USB-C data + ESP32-C3 (main board)
 
-Reuse patterns from your P1 Ghost design:
+This is **flash/serial only** — not the battery charger.
 
-- USB-C CC resistors (5.1 kΩ on CC1/CC2) for 5 V sink
+- USB-C CC resistors (5.1 kΩ on CC1/CC2)
 - ESD (e.g. USBLC6-2SC6) on D+/D−
 - ESP32-C3 native USB: **GPIO18 = D−, GPIO19 = D+**
-- EN with RC reset; keep strapping pins clean (GPIO8/9 etc.)
+- EN with RC reset; keep strapping pins clean
 
-### 5.5 Battery (optional but useful)
+### 5.5 Power = Seeed Lipo Rider Plus (buy)
 
-Typical path:
+Do not design charger / boost / mux on the main PCB.
 
-```
-USB 5V ──► LiPo charger IC (e.g. TP4056 class or better: MCP73831 / BQ2407x)
-              │
-            LiPo + protection (DW01+FS8205 or protected cell)
-              │
-         Power mux / ideal diode ──► 5V boost OR system 5V rail
-                                      │
-                                 3.3V regulator ──► ESP32
-```
+- Wiki: https://wiki.seeedstudio.com/Lipo-Rider-Plus/
+- Mount footprint: `mechanicals/lipo_rider_plus/Seeed_Lipo_Rider_Plus.kicad_mod`
+- Wire header **5V** → `SYS_5V`, **3V3** → ESP32, **GND** → GND
+- Plug 1S LiPo into module JST; charge via module USB-C
+- Module has **no** D+/D− path to the ESP32
 
-If you only work at a desk: **skip battery v1**, power from USB only. Add battery in v2.
+### 5.6 Extra 3.3 V regulator
 
-### 5.6 5V → 3.3V
-
-- Buck (efficient, same family as Ghost SY8088) **or**
-- LDO (simpler, hotter if ESP TX Wi‑Fi peak)
-
-ESP32-C3 Wi‑Fi peaks matter: prefer a buck + good ceramics near the module.
+**Skip** when using Lipo Rider 3V3. Only add circuit 03 for desk-only
+USB-powered builds without the daughterboard.
 
 ---
 
@@ -255,15 +233,13 @@ Avoid putting ADC / Request sense on **strapping** pins used at boot.
 2. **Direction of each RJ12 pin** (you supply 5V; you sense Request; you OC-drive Data)  
 3. **ESD** on RJ12 and USB  
 4. **MCU support circuit** (EN, decoupling, USB ESD, antenna keep-out for Mini-1)  
-5. **Power path clarity** (USB-only vs USB+battery mux)  
-6. **Bulk caps** on P1 5V for OSM inrush / Wi‑Fi peaks  
-7. **Status / debug** (LED, button, test points, UART or USB logs)  
-8. **Firmware plan** (local telegram file vs Wi‑Fi download vs live generation + CRC16)  
-9. **Isolation** only if you want meter-grade realism (optional for v1)  
-10. **Mechanical:** RJ12 footprint orientation, battery holder / JST, USB-C mechanical strength
+5. **Bulk caps** on P1 5V for OSM inrush / Wi‑Fi peaks  
+6. **Status / debug** (LED, button, test points)  
+7. **Firmware plan** (telegram store / Wi‑Fi fetch + CRC16)  
+8. **Isolation** optional (v1 skip)  
+9. **Mechanical:** Lipo Rider footprint (done in `mechanicals/`), RJ12 orientation
 
-Your core idea is correct: USB + MCU + 5V + 3.3V + battery + Request sense + OC Data.  
-The gaps are mostly **protection, current numbers, and bring-up aids**.
+Power is settled: **Lipo Rider Plus** for 5V + 3.3V + charge; board USB-C for ESP32 data.
 
 ---
 
@@ -271,17 +247,17 @@ The gaps are mostly **protection, current numbers, and bring-up aids**.
 
 Work **one subcircuit per day**. End each day with: schematic snippet + part numbers + “how I will test it”.
 
-### Week 1 — Power & MCU (desk version, no battery yet)
+### Week 1 — Power module + MCU
 
 | Day | Subcircuit | Done when… |
 |-----|------------|------------|
-| **1** | System block diagram + net names | One-page diagram (section 2) locked; nets named: `USB_5V`, `SYS_5V`, `P1_5V`, `VCC_3V3`, `P1_REQ`, `P1_DATA`, `GND` |
-| **2** | USB-C input | CC resistors, ESD, `USB_5V` net; can measure 5 V from a cable |
-| **3** | 5V → 3.3V regulator | Module footprint + caps; 3.3 V stable under ~100 mA load |
-| **4** | ESP32-C3-MINI-1 + EN + USB D+/D− | Board enumerates as USB serial / can flash a blink |
-| **5** | Status LED + button | LED toggles from firmware; button readable |
-| **6** | RJ12 connector footprint + GND pins | Pinout checked against DSMR table; silkscreen labeled 1…6 |
-| **7** | Catch-up / ERC of power+MCU sheet | No floating power nets; ESD present |
+| **1** | Net names + Lipo Rider keep-out | Place `Seeed_Lipo_Rider_Plus` footprint; nets: `SYS_5V`, `P1_5V`, `VCC_3V3`, `P1_REQ`, `P1_DATA`, `GND` |
+| **2** | Board USB-C (data) | CC + ESD; D+/D− to GPIO18/19 |
+| **3** | Wire Lipo Rider 5V/3V3/GND | Module powered → rails OK (skip discrete 3V3) |
+| **4** | ESP32-C3-MINI-1 + EN | Flash blink over board USB-C |
+| **5** | Status LED + button | LED toggles; button readable |
+| **6** | RJ12 footprint | Pins 1…6 silk correct |
+| **7** | ERC power+MCU | No floating rails; ESD present |
 
 ### Week 2 — P1 electrical interface (the heart)
 
@@ -295,17 +271,17 @@ Work **one subcircuit per day**. End each day with: schematic snippet + part num
 | **13** | Replay a fixed DSMR telegram | P1 Ghost (or USB-serial adapter with pull-up) receives a valid frame |
 | **14** | ESD on RJ12 (TVS array) + test points | TPs on `P1_5V`, `P1_REQ`, `P1_DATA`, `VCC_3V3` |
 
-### Week 3 — Battery (optional) + polish
+### Week 3 — Polish (power already bought)
 
 | Day | Subcircuit | Done when… |
 |-----|------------|------------|
-| **15** | Charger IC + charge LED | USB charges cell; terminates correctly |
-| **16** | Battery protection / connector | Protected pack or DW01 circuit; correct polarity silk |
-| **17** | Power mux USB vs battery | Hot-plug USB without brownout; battery powers when USB removed |
-| **18** | Boost to 5V (if battery < 5V path needs it) | `SYS_5V` holds under P1 250 mA load |
-| **19** | Mechanical: enclosure holes, antenna keep-out | Mini-1 RF keep-out clear of copper |
-| **20** | Full ERC/DRC + BOM | Orderable BOM; all critical nets named |
-| **21** | Bring-up checklist (print & keep) | See section 10 |
+| **15** | Lipo Rider standoffs / header stack | Module mounts solid; charge via its USB-C |
+| **16** | LiPo pack + polarity check | Protected 1S cell; runs hours in a corner |
+| **17** | (spare) | — |
+| **18** | (spare) | — |
+| **19** | Enclosure + antenna keep-out | Mini-1 RF clear; USB-C / RJ12 accessible |
+| **20** | Full ERC/DRC + BOM | Includes Lipo Rider as purchased part |
+| **21** | Bring-up checklist | See section 10 |
 
 ### Week 4 — Firmware product behaviour
 
@@ -325,25 +301,20 @@ If you only have **~30 min/day**, finishing Week 2 already gives a usable USB-po
 
 ## 9. Recommended v1 vs v2
 
-### v1 (ship first — simplest useful board)
+### v1 (ship this)
 
-- USB-C power + programming  
+- **Lipo Rider Plus** + LiPo (5V + 3V3 + charge)  
+- Board USB-C for ESP32 flash (D+/D−)  
 - ESP32-C3-MINI-1  
-- 3.3 V regulator  
-- RJ12 with current-limited 5 V  
-- Request sense  
-- Open-collector Data  
-- LED + button  
-- ESD  
-
-**Skip:** battery, optocouplers, fancy foldback IC (use good load-switch with Ilim).
+- RJ12 + current-limited P1 5 V  
+- Request sense + open-collector Data  
+- LED + button + ESD  
 
 ### v2
 
-- LiPo + charger + mux  
-- Closer DSMR foldback behaviour  
-- Optional opto isolation on Request + Data  
-- Better mechanical enclosure / pogo debug  
+- Tighter DSMR foldback on P1 5 V  
+- Optional P1 isolation  
+- Enclosure using GrabCAD STEP (see mechanicals README)  
 
 ---
 
@@ -364,16 +335,15 @@ If you only have **~30 min/day**, finishing Week 2 already gives a usable USB-po
 
 | Function | Example parts (verify footprints/stock) |
 |----------|------------------------------------------|
+| Power daughterboard | **Seeed Lipo Rider Plus** + 1S LiPo |
 | MCU | ESP32-C3-MINI-1-N4 or N4U |
-| USB ESD | USBLC6-2SC6 |
-| 3.3 V buck | SY8088 / AP3429 / similar 3.3 V |
+| Board USB ESD | USBLC6-2SC6 |
 | P1 current limit | 5 V eFuse/load switch, Ilim ≈ 0.25–0.3 A |
 | OC driver | BSS138 or 2N7002 |
 | RJ12 | 6P6C PCB jack (same family as Ghost) |
 | TVS RJ12 | Low-cap ESD array on pins 1,2,5 |
-| LED | Single LED + resistor (keep simple for v1) |
-| Charger (v2) | MCP73831 or TP4056 module-equivalent discrete |
-| Battery connector | JST-PH 2-pin |
+| LED | Single LED + resistor |
+| Lipo Rider footprint | `mechanicals/lipo_rider_plus/Seeed_Lipo_Rider_Plus.kicad_mod` |
 
 Reuse footprints/symbols from your existing EasyEDA→KiCad Ghost library where possible.
 

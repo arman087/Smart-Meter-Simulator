@@ -1,10 +1,14 @@
-01 — USB-C INPUT (power + USB serial)
-=====================================
+01 — USB-C INPUT (ESP32 DATA / FLASH)
+====================================
 
 WHAT THIS BLOCK IS
 ------------------
-Brings 5 V into the board and connects USB D+/D- to the ESP32-C3
-native USB pins so you can flash and log without a separate UART bridge.
+Board USB-C for **D+/D− only** (flash + serial to ESP32-C3).
+System 5V / 3.3V / battery charging come from **Lipo Rider Plus**
+(circuit 02) — not from this connector.
+
+You may still tie VBUS to a sense net or leave unused; do not fight
+the Lipo Rider 5V rail.
 
 NECESSARY PIECES
 ----------------

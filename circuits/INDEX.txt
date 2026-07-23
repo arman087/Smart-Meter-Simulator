@@ -1,12 +1,9 @@
 CIRCUITS INDEX
 ==============
 
-Numbered folders match the README table. Each contains NOTES.txt only
-for now (schematics / KiCad sheets come later when you draw them).
-
-01_usb_c_input              USB-C + ESD path to ESP32 USB
-02_battery_and_power_mux    LiPo charge + load share + 5V boost
-03_regulator_3v3            SYS_5V → VCC_3V3
+01_usb_c_input              Board USB-C data → ESP32 (+ ESD)
+02_battery_and_power_mux    Seeed Lipo Rider Plus (5V + 3V3 + charge)
+03_regulator_3v3            Skip if using Lipo Rider 3V3 pin
 04_p1_5v_current_limit      Meter +5V to RJ12 pin1 (limited)
 05_esp32_c3_mini            MCU module + EN + keep-out
 06_rj12_connector           Female 6P6C pinout
@@ -14,15 +11,16 @@ for now (schematics / KiCad sheets come later when you draw them).
 08_open_collector_data      UART TX → pin5 OC
 09_esd_protection           TVS on USB + RJ12
 10_ui_led_button            LED + button
-11_optional_isolation       Optos / iso DC-DC (skip for v1)
+11_optional_isolation       Optional
 
-Suggested buy-list shortcut for a lab prototype
------------------------------------------------
+Buy list
+--------
+- Seeed Lipo Rider Plus + 1S LiPo
 - ESP32-C3-MINI-1
-- USB-C jack + USBLC6-2SC6
-- Adafruit PowerBoost 1000C (+ LiPo) OR USB_5V wired straight to SYS_5V
-- 3.3 V buck module or SY8088
-- TI TPS2595 (or AP2553) for P1_5V limit
-- RJ12 6P6C jack
-- BSS138 + 4.7k + divider 2x10k
+- Board USB-C jack + USBLC6 (for D+/D− flash)
+- P1 current limit (TPS2595 / AP2553 class)
+- RJ12 6P6C
+- BSS138 + 4.7k + Request divider
 - LED + switch
+
+Mechanical: mechanicals/lipo_rider_plus/

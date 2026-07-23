@@ -1,52 +1,38 @@
-02 — POWER MODULE (BUY THIS — DO NOT DESIGN)
-============================================
+02 — SEEED LIPO RIDER PLUS (POWER DAUGHTERBOARD)
+===============================================
 
-FINAL SOLUTION
---------------
-Use a ready-made module. Do not design a charger/boost circuit.
+Buy: Seeed Lipo Rider Plus (SKU 106990290)
+Wiki: https://wiki.seeedstudio.com/Lipo-Rider-Plus/
 
-Buy one of these two:
+ROLE
+----
+Finished module. Do not design charger/boost on the main PCB.
 
+  USB-C on module  → charge LiPo (power only)
+  Header 5V        → SYS_5V
+  Header 3V3       → ESP32 VCC
+  JST              → 1S LiPo ≥ 1000 mAh (protected)
+  USB-A on module  → ignore
 
-A) BEST SIMPLE PICK — Seeed Lipo Rider Plus
-   https://wiki.seeedstudio.com/Lipo-Rider-Plus/
-   Also sold as: Seeed Studio "Lipo Rider Plus (Charger/Booster)"
+ESP32 flash/serial uses the **main board** USB-C (circuit 01) with D+/D−.
+This module does not expose USB data to the ESP32.
 
-   What you get on one board (already built):
-   - USB-C input to charge the LiPo
-   - Regulated 5 V output (boost, up to ~2.4 A)
-   - Regulated 3.3 V output (~250 mA)
-   - Battery connector / pads
-   - Charge / battery LEDs
+HEADER PIN ORDER (J3)
+---------------------
+1 USB | 2 GND | 3 BAT | 4 GND | 5 5V | 6 GND | 7 EN | 8 3V3
 
-   Wire into the simulator:
-   - Module 5V  → SYS_5V → P1 current limit → RJ12 pin 1
-   - Module 3.3V → ESP32 VCC
-   - Module GND → board GND
-   - Plug 1S LiPo into the module
+EN to GND turns 5V output off. Leave open for normal use.
 
+MOUNT ON MAIN PCB
+-----------------
+Footprint + holes + 3D placeholder:
+  ../../mechanicals/lipo_rider_plus/
 
-B) ALTERNATIVE — Adafruit bq25185 USB-C + 5V Boost
-   https://www.adafruit.com/product/6106
-
-   What you get:
-   - USB-C charge in
-   - Regulated 5 V out from onboard boost
-   - LiPo JST
-
-   Missing: 3.3 V → add any small 3.3 V regulator from the 5 V rail
-   (circuit 03), or a ready 5V→3.3V module.
-
-
-WHAT TO BUY WITH IT
--------------------
-- 1S LiPo ≥ 1000 mAh, protected pack, check JST polarity
-- That is enough for power. ESP32 flashing still uses the board USB-C
-  (circuit 01) for data.
-
+  Seeed_Lipo_Rider_Plus.kicad_mod  ← add to KiCad
+  README.txt                       ← dimensions, GrabCAD STEP link
 
 TEST
 ----
-Battery only: 5 V and 3.3 V present.
-USB-C on the power module: battery charges; 5 V stays regulated.
-Unplug USB-C: rails stay up.
+Battery only → 5V and 3V3 present.
+Module USB-C plugged → battery charges; rails stay up.
+Unplug → still running from LiPo.
