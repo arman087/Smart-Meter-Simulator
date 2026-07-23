@@ -1,74 +1,52 @@
-02 — BATTERY + CHARGER + POWER MUX (USB vs battery → SYS_5V)
-============================================================
+02 — POWER MODULE (BUY THIS — DO NOT DESIGN)
+============================================
 
-WHAT THIS BLOCK IS
-------------------
-When USB is plugged: charge LiPo AND power the board from USB.
-When USB is removed: power the board from the battery, boosted to ~5 V
-so RJ12 pin1 can still feed an OSM (P1 Ghost).
+FINAL SOLUTION
+--------------
+Use a ready-made module. Do not design a charger/boost circuit.
 
-For a desk-only v1 you can SKIP this whole folder and feed SYS_5V from USB_5V.
+Buy one of these two:
 
-NECESSARY PIECES
-----------------
-1. Single-cell LiPo (1S) with correct JST polarity (Adafruit = red +, usually).
-2. Charger with load-sharing / power-path (so charge terminates correctly
-   while the load is connected).
-3. Protection: over-charge / over-discharge / short (DW01+MOSFET module
-   or a protected cell).
-4. Boost 3.7 V → 5 V if you need P1_5V from battery alone.
-5. Ideal diode / power mux so USB and boost do not fight.
 
-RECOMMENDED APPROACH FOR THIS PROJECT (modules OK)
---------------------------------------------------
-Best "buy once, stop thinking" option:
+A) BEST SIMPLE PICK — Seeed Lipo Rider Plus
+   https://wiki.seeedstudio.com/Lipo-Rider-Plus/
+   Also sold as: Seeed Studio "Lipo Rider Plus (Charger/Booster)"
 
-  A) Adafruit PowerBoost 1000C (or 500C)
-     - MCP73871 load-share charger + TPS61090 boost to ~5.2 V
-     - USB in, JST battery, 5V out
-     - Learn guide:
-       https://learn.adafruit.com/adafruit-powerboost-1000c-load-share-usb-charge-boost
-     - On your PCB: leave a PowerBoost footprint / header and treat it as
-       a daughter module, OR reverse-engineer the same chips on-board later.
+   What you get on one board (already built):
+   - USB-C input to charge the LiPo
+   - Regulated 5 V output (boost, up to ~2.4 A)
+   - Regulated 3.3 V output (~250 mA)
+   - Battery connector / pads
+   - Charge / battery LEDs
 
-Alternative discrete-ish but still easy:
+   Wire into the simulator:
+   - Module 5V  → SYS_5V → P1 current limit → RJ12 pin 1
+   - Module 3.3V → ESP32 VCC
+   - Module GND → board GND
+   - Plug 1S LiPo into the module
 
-  B) BQ24074 / BQ24210 (TI) power-path charger breakout
-     + MT3608 or TPS61088 / Pololu 5V boost
-     + TPS2113A / TPS2121 power mux (~€ few) to pick USB_5V vs BOOST_5V
 
-Cheap but fiddly (only if you already know the pitfalls):
+B) ALTERNATIVE — Adafruit bq25185 USB-C + 5V Boost
+   https://www.adafruit.com/product/6106
 
-  C) TP4056 + DW01 module
-     - Needs EXTRA power-path (P-MOS + diode). Plain TP4056 OUT→load
-       breaks charge termination.
-     - Good explainers:
-       https://github.com/DoImant/TP4056-Power-Path-PCB
-       https://electronics.stackexchange.com/questions/431817/...
-       Hackaday LiIon helper PCB writeup:
-       https://hackaday.com/2024/03/14/lithium-ion-batteries-power-your-devboards-easily/
+   What you get:
+   - USB-C charge in
+   - Regulated 5 V out from onboard boost
+   - LiPo JST
 
-RECOMMENDED PARTS
------------------
-- Module: Adafruit PowerBoost 1000C (preferred for lab)
-- Battery: 1S LiPo 1000–2000 mAh, protected pack, JST-PH
-- Mux IC if rolling your own: TPS2113A, TPS2121, or LTC4412 ideal diode
-- Charger IC if rolling your own: MCP73871 or BQ24074 (not bare TP4056)
+   Missing: 3.3 V → add any small 3.3 V regulator from the 5 V rail
+   (circuit 03), or a ready 5V→3.3V module.
 
-HUMAN / SIMILAR REFERENCES
---------------------------
-- Adafruit PowerBoost 1000C overview + schematic PDF (best module template).
-- DoImant TP4056 power-path KiCad/PCB (shows MOSFET+diode bypass).
-- aachtenberg esp-sensor-hub BATTERY_SETUP_GUIDE (TP4056 + ESP caveats):
-  https://github.com/aachtenberg/esp-sensor-hub
 
-KICAD
------
-- Easiest: 2.54 mm header footprint matching PowerBoost pinout; mount module.
-- Later: import MCP73871 + TPS61090 symbols from manufacturer / UltraLibrarian.
+WHAT TO BUY WITH IT
+-------------------
+- 1S LiPo ≥ 1000 mAh, protected pack, check JST polarity
+- That is enough for power. ESP32 flashing still uses the board USB-C
+  (circuit 01) for data.
+
 
 TEST
 ----
-USB only → SYS_5V present, battery charges.
-USB unplug → SYS_5V stays (~5 V) from boost under ~300 mA load.
-Charge LED behaves (charge / done) with load attached.
+Battery only: 5 V and 3.3 V present.
+USB-C on the power module: battery charges; 5 V stays regulated.
+Unplug USB-C: rails stay up.

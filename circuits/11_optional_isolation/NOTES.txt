@@ -1,14 +1,60 @@
-11 — OPTIONAL GALVANIC ISOLATION (optocouplers)
-==============================================
+11 — OPTIONAL ISOLATION (USB data AND/OR P1)
+===========================================
 
-WHAT THIS BLOCK IS
-------------------
+THE CORE RULE ABOUT USB DATA
+----------------------------
+USB D+ / D− need a **shared ground reference** with the PC.
+You cannot "just disconnect GND" and still flash / use USB serial.
+
+If USB GND is open from board GND → USB data does **not** work.
+
+So "not sharing ground" + "still using USB data" means you must add a
+**USB isolator** (a chip/module that bridges USB across two grounds).
+
+
+SOLUTIONS WHEN YOU DO NOT WANT SHARED GROUND
+--------------------------------------------
+
+1) USB isolator IC / module (real solution for data + separate grounds)
+   PC USB ──► isolator ──► ESP32 USB
+              │              │
+           GND_PC         GND_BOARD   (not connected together)
+
+   Parts (buy modules, fine for lab):
+   - Analog Devices ADuM3160 / ADuM4160 (Full-Speed USB isolator)
+   - TI ISOUSB211 (newer USB 2.0 isolator)
+   - Ready dongle: "USB isolator" box between PC cable and board
+     (easiest: no PCB change)
+
+   Cost: typically tens of euros. Correct way if you insist on isolation
+   while keeping USB CDC / flashing.
+
+2) Do not use USB data on the board after first flash
+   - Flash once with common ground (or with isolator dongle)
+   - Later updates via **Wi‑Fi OTA**
+   - USB-C on board used only as **charge** (or only PowerBoost charge)
+   - Grounds can still be common; you simply stop relying on USB data
+
+3) Isolated UART programming instead of native USB
+   - ESP-Prog / USB‑UART on PC side
+   - Digital isolators (Si86xx / ADuM1201) on TX/RX (+ EN/boot if needed)
+   - Isolated DC‑DC for programmer side power if required
+   - More pins, more hassle than a USB isolator for ESP32-C3
+
+4) Isolate the P1 side (often what people actually need)
+   - Keep USB + ESP32 on one ground (shared with PC when plugged)
+   - Isolate RJ12 (Request + Data + maybe 5V) toward OSM
+   - Protects PC/USB from whatever is on the P1 cable
+   - This matches real-meter thinking more than isolating the charger
+
+WHAT THIS BLOCK IS (P1 isolation)
+---------------------------------
 Real meters isolate P1 from mains with optocouplers on Data and Data Request
 (and isolated 5 V supply). Your simulator is USB/battery powered — there is
-NO mains — so isolation is OPTIONAL realism / extra USB-host protection.
+NO mains — so isolation is OPTIONAL realism / extra host protection.
 
-Skip for v1 unless you specifically want "feels like a meter" or floating
-grounds between USB host and OSM.
+Skip for v1 unless you specifically want floating grounds between the
+USB/MCU domain and the RJ12/OSM domain.
 
 IF YOU DO IT — NECESSARY PIECES
 -------------------------------
@@ -19,6 +65,11 @@ IF YOU DO IT — NECESSARY PIECES
 
 RECOMMENDED PARTS (modules OK)
 ------------------------------
+USB isolation (if you need separate USB GND vs board GND + still use data):
+- ADuM3160 / ADuM4160 breakout, or TI ISOUSB211
+- Or external USB isolator dongle (zero PCB work)
+
+P1 isolation:
 - Isolated DC-DC: MEE1S0505SC, B0505S-1W, or similar 5V/5V 1W
 - Optos: PC817 (slow — marginal at 115200), better high-speed:
   6N137, TLP2361, Si86xx digital isolators (pricier, excellent)
@@ -31,20 +82,30 @@ often too slow.
 HUMAN / SIMILAR REFERENCES
 --------------------------
 - DSMR §5.2.2 Galvanic Isolation + figure with optos on Request/Data.
+- ADuM3160 datasheet / Analog "USB isolation" app notes
 - App notes: "UART digital isolator open drain"
-- Industrial USB↔RS485 isolated dongles (same idea, different PHY)
+- Industrial USB isolator dongles (same idea as ADuM3160 in a box)
 
 KICAD
 -----
 Clearance slot / keep-out between USB domain and P1 domain if truly isolated.
 Label GND vs GND_ISO loudly on silk.
+If using on-board USB isolator: two ground pours, barrier under the isolator.
 
 TEST
 ----
 Continuity: USB GND must NOT connect to RJ12 GND if isolation is claimed.
 Still get valid Ghost telegrams with isolation engaged.
+With USB isolator: PC enumerates ESP32; ohmmeter shows USB shell GND
+open from board GND (except through the isolator chip's barrier).
 
 RECOMMENDATION FOR THIS PROJECT
 -------------------------------
-v1: skip.
-v2: only if you need it after Ghost↔Simulator works without isolation.
+v1: **share ground**. PowerBoost + board USB-C. Simplest, works.
+
+If you later hate ground loops PC↔Ghost:
+  - Prefer **isolate P1** (option 4), or
+  - Use a **USB isolator dongle** when plugged into a PC (option 1), or
+  - Flash once, then **OTA** (option 2).
+
+Do not try to float USB GND without an isolator — data will break.
