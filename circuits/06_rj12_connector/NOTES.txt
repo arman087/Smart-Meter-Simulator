@@ -8,7 +8,7 @@ Physical DSMR P1 port. On the METER / simulator you use a FEMALE 6P6C
 
 PINOUT (DSMR) — meter side
 --------------------------
- 1  +5V         SOURCE from current-limit block (circuit 04)
+ 1  +5V         SOURCE from Lipo Rider 5V (SYS_5V / P1_5V)
  2  Data Request  INPUT sense (circuit 07)
  3  Data GND    → system GND
  4  n.c.        leave open

@@ -1,38 +1,46 @@
-02 — SEEED LIPO RIDER PLUS (POWER DAUGHTERBOARD)
-===============================================
+02 — SEEED LIPO RIDER PLUS (DAUGHTERBOARD)
+=========================================
 
-Buy: Seeed Lipo Rider Plus (SKU 106990290)
+CHOSEN SOLUTION
+---------------
+Seeed Lipo Rider Plus — charger/booster made for MCU projects.
+Use as a **daughterboard / sidecar** next to (or stacked on) the main PCB.
+You draw the footprint yourself (or use mechanicals/ as a starting point).
+
 Wiki: https://wiki.seeedstudio.com/Lipo-Rider-Plus/
+SKU:  106990290
 
-ROLE
-----
-Finished module. Do not design charger/boost on the main PCB.
+WHAT IT GIVES
+-------------
+- USB-C → charge 1S LiPo
+- JST → battery
+- Header **5V**  → SYS_5V → RJ12 pin 1
+- Header **3V3** → ESP32 VCC
+- GND
+- USB-A → ignore
 
-  USB-C on module  → charge LiPo (power only)
-  Header 5V        → SYS_5V
-  Header 3V3       → ESP32 VCC
-  JST              → 1S LiPo ≥ 1000 mAh (protected)
-  USB-A on module  → ignore
+USB charge unplugged + battery connected → **5 V and 3.3 V still on**.
 
-ESP32 flash/serial uses the **main board** USB-C (circuit 01) with D+/D−.
-This module does not expose USB data to the ESP32.
-
-HEADER PIN ORDER (J3)
----------------------
+HEADER (J3) ORDER
+-----------------
 1 USB | 2 GND | 3 BAT | 4 GND | 5 5V | 6 GND | 7 EN | 8 3V3
 
-EN to GND turns 5V output off. Leave open for normal use.
+EN → GND cuts 5V output. Leave open for normal use.
 
-MOUNT ON MAIN PCB
------------------
-Footprint + holes + 3D placeholder:
+MAIN PCB
+--------
+- Pads / header matching Lipo Rider (your footprint)
+- Board USB-C for ESP32 D+/D− only (circuit 01)
+- No on-board charger, no second 3.3 V regulator, no P1 current-limit IC
+
+MECHANICALS
+-----------
+Optional reference (outline, holes, photos, Eagle):
   ../../mechanicals/lipo_rider_plus/
-
-  Seeed_Lipo_Rider_Plus.kicad_mod  ← add to KiCad
-  README.txt                       ← dimensions, GrabCAD STEP link
 
 TEST
 ----
-Battery only → 5V and 3V3 present.
-Module USB-C plugged → battery charges; rails stay up.
-Unplug → still running from LiPo.
+Battery only: 5V + 3V3 present.
+USB-C on Lipo Rider: charges; rails stay up.
+Unplug USB-C: still running from LiPo.
+Ghost on RJ12 gets 5V.

@@ -1,19 +1,14 @@
-LIPO RIDER PLUS — DAUGHTERBOARD MECHANICALS
-===========================================
+LIPO RIDER PLUS — DAUGHTERBOARD (CHOSEN POWER)
+==============================================
 
 Product
 -------
 Seeed Studio Lipo Rider Plus (SKU 106990290)
 Wiki: https://wiki.seeedstudio.com/Lipo-Rider-Plus/
-Buy:  search "Lipo Rider Plus" on Seeed / DigiKey / Mouser / local shops
+Buy:  Seeed / distributors — search "Lipo Rider Plus"
 
-What it gives your simulator
-----------------------------
-- USB-C = charge the LiPo (power only — NO D+/D- to ESP32)
-- Pin header 5V  → SYS_5V
-- Pin header 3V3 → ESP32 VCC
-- JST LiPo battery
-- USB-A 5V out = unused for this project (ignore)
+This is the project power solution: MCU charger/booster as a daughterboard.
+Draw your own footprint if you prefer; files below are a reference.
 
 Mounting on YOUR PCB
 --------------------

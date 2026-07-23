@@ -10,41 +10,46 @@ Use it to develop readers such as [P1 Ghost](https://github.com/arman087/P1_ghos
 | **Senses** Data Request on pin 2 | Drives Request high |
 | **Open-collector** Data on pin 5 | Reads Data |
 
-**MCU:** ESP32-C3-MINI-1 · **P1 serial:** 115200 8N1 inverted open-drain · **P1 power:** ~250 mA @ 5 V
+**MCU:** ESP32-C3-MINI-1 · **P1 serial:** 115200 8N1 inverted open-drain
 
 ---
 
-## Power (buy this — do not design)
+## Power
 
-**[Seeed Lipo Rider Plus](https://wiki.seeedstudio.com/Lipo-Rider-Plus/)** daughterboard:
+**[Seeed Lipo Rider Plus](https://wiki.seeedstudio.com/Lipo-Rider-Plus/)** — MCU-oriented charger/booster, used as a **daughterboard / sidecar** (buy module; footprint you can draw yourself).
 
 | Port | Use |
 |------|-----|
-| USB-C | Charge LiPo only (no D+/D− to ESP32) |
-| Header **5V** | `SYS_5V` → P1 current limit → RJ12 pin 1 |
-| Header **3V3** | ESP32 `VCC_3V3` |
-| JST LiPo | 1S battery for corner / portable testing |
+| USB-C | Charge LiPo |
+| JST | 1S LiPo battery |
+| **5V** | → RJ12 pin 1 (`SYS_5V`) |
+| **3V3** | → ESP32 `VCC_3V3` |
+| GND | Common |
 | USB-A | Unused |
 
-Board USB-C (circuit 01) still carries **D+/D−** for flashing the ESP32.
+USB unplugged + battery → still **5 V and 3.3 V**.  
+Board USB-C (circuit 01) = ESP32 **D+/D−** flash only (not the charger).
 
-Mechanical footprint + mounting holes:  
-**[mechanicals/lipo_rider_plus/](mechanicals/lipo_rider_plus/)** (`Seeed_Lipo_Rider_Plus.kicad_mod`)
+Reference photos / Eagle (optional): [mechanicals/lipo_rider_plus/](mechanicals/lipo_rider_plus/)
 
 ---
 
 ## Architecture
 
 ```
-LiPo + Lipo Rider Plus ──► 5V ──► P1 current limit ──► RJ12 pin1
-         │                  └──► 3.3V ──► ESP32-C3-MINI-1
-         │                                      │         │
-    USB-C charge                         Request sense   OC Data
-         (power only)                           ▲            │
-                                           RJ12 pin2    RJ12 pin5
+Lipo Rider Plus (daughterboard)
+   USB-C charge + LiPo
+   5V  ──────────────────────────► RJ12 pin1
+   3V3 ──► ESP32-C3-MINI-1
+              │              │
+       Request sense      OC Data TX
+              ▲              │
+         RJ12 pin2      RJ12 pin5
 
-Board USB-C ── D+/D− ──► ESP32 (flash / serial)   ← separate from Lipo Rider
+Board USB-C ── D+/D− ──► ESP32 (flash / serial)
 ```
+
+No P1 current-limit IC. No separate on-board 3.3 V regulator (use Lipo Rider 3V3).
 
 Full blueprint: **[DESIGN_GUIDE.md](DESIGN_GUIDE.md)**
 
@@ -52,12 +57,11 @@ Full blueprint: **[DESIGN_GUIDE.md](DESIGN_GUIDE.md)**
 
 ## Subcircuits
 
-| Folder | Block |
+| Folder | Status |
 |--------|--------|
-| [circuits/01_usb_c_input](circuits/01_usb_c_input) | Board USB-C **data** to ESP32 (+ ESD) |
-| [circuits/02_battery_and_power_mux](circuits/02_battery_and_power_mux) | **Lipo Rider Plus** (5V + 3.3V + charge) |
-| [circuits/03_regulator_3v3](circuits/03_regulator_3v3) | Skip if using Lipo Rider 3V3 pin |
-| [circuits/04_p1_5v_current_limit](circuits/04_p1_5v_current_limit) | Limit P1 +5V (~250 mA) |
+| [circuits/01_usb_c_input](circuits/01_usb_c_input) | Board USB-C data → ESP32 |
+| [circuits/02_battery_and_power_mux](circuits/02_battery_and_power_mux) | **Lipo Rider Plus** daughterboard |
+| [circuits/04_p1_5v_current_limit](circuits/04_p1_5v_current_limit) | **Dropped** |
 | [circuits/05_esp32_c3_mini](circuits/05_esp32_c3_mini) | ESP32-C3-MINI-1 |
 | [circuits/06_rj12_connector](circuits/06_rj12_connector) | RJ12 meter jack |
 | [circuits/07_data_request_sense](circuits/07_data_request_sense) | Pin 2 → GPIO |
@@ -66,20 +70,19 @@ Full blueprint: **[DESIGN_GUIDE.md](DESIGN_GUIDE.md)**
 | [circuits/10_ui_led_button](circuits/10_ui_led_button) | LED + button |
 | [circuits/11_optional_isolation](circuits/11_optional_isolation) | Optional |
 
-Suggested order: **02 (mount Lipo Rider) → 01 → 05 → 06 → 08 → 07 → 04 → 09 → 10**
+Suggested order: **02 → 01 → 05 → 06 → 08 → 07 → 09 → 10**
 
 ---
 
 ## Spec reminders
 
-- P1 continuous current **250 mA** ([DSMR P1 5.0.2](https://www.netbeheernederland.nl/sites/default/files/2024-02/dsmr_5.0.2_p1_companion_standard.pdf))
-- Data Request HIGH ≈ 5 V → send; OSM releases to high‑Z to stop
-- Data = open-collector, inverted UART
+- Data Request HIGH ≈ 5 V → send; OSM releases high‑Z to stop  
+- Data = open-collector, inverted UART  
+- P1 continuous ~250 mA on real meters; this lab board does not limit in hardware  
 
 ## References
 
 - [P1 Companion Standard 5.0.2](https://www.netbeheernederland.nl/sites/default/files/2024-02/dsmr_5.0.2_p1_companion_standard.pdf)
 - [SanderBorra/DSMRSim](https://github.com/SanderBorra/DSMRSim)
-- [lvzon/dsmr-p1-parser](https://github.com/lvzon/dsmr-p1-parser)
-- [arman087/P1_ghost](https://github.com/arman087/P1_ghost)
 - [Seeed Lipo Rider Plus](https://wiki.seeedstudio.com/Lipo-Rider-Plus/)
+- [arman087/P1_ghost](https://github.com/arman087/P1_ghost)

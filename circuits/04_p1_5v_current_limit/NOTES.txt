@@ -1,58 +1,17 @@
-04 — P1 +5 V CURRENT LIMIT (meter power to OSM)
-===============================================
+04 — P1 +5 V CURRENT LIMIT — DROPPED
+====================================
 
-WHAT THIS BLOCK IS
-------------------
-You are the METER: RJ12 pin 1 must SOURCE +5 V to the OSM (P1 Ghost).
-DSMR wants ~250 mA continuous, trip ~260–300 mA, foldback on short.
+STATUS
+------
+**Removed from this project.** Lab simulator only — do not design an
+eFuse / current-limit IC for RJ12 pin 1.
 
-Lab reality: slightly higher limit (e.g. 0.5 A) is OK if short-circuit
-protected. Do NOT ship a hard unlimited 1–2 A rail into the RJ12.
+WIRING INSTEAD
+--------------
+  Lipo Rider Plus header 5V  →  SYS_5V / P1_5V  →  RJ12 pin 1
 
-NECESSARY PIECES
-----------------
-1. Input from SYS_5V.
-2. Current-limit / eFuse / electronic load switch set near 250–500 mA.
-3. Output bulk cap near RJ12 pin 1 (e.g. 47–220 µF low-ESR) for OSM Wi‑Fi
-   inrush + bursts.
-4. Ceramics 100 nF at connector.
-5. Optional FLT open-drain to MCU to show "P1 power fault".
+Optional (not required): a bulk cap (e.g. 47–100 µF) near RJ12 pin 1
+for Ghost inrush. That is decoupling, not a current limiter.
 
-RECOMMENDED PARTS (expensive IC / EVM OK)
------------------------------------------
-Best "do it properly" lab choices:
-
-  A) TI TPS2595 eFuse (+ EVM to learn, then copy)
-     - Datasheet: https://www.ti.com/product/TPS2595
-     - EVM: https://www.ti.com/tool/TPS2595EVM
-     - Note: programmable ILIM typically from ~0.5 A up — a bit high vs
-       DSMR 250 mA, but excellent protection / soft-start for a simulator.
-
-  B) Adjustable USB power-distribution switch with lower ILIM
-     - AP2553 / AP2552 / MIC2009 / MIC2019 class
-     - Set R_ILIM for ~250–300 mA
-
-  C) ST STEF05 / STEF05S (5 V electronic fuse family) if available
-
-  D) Proto shortcut: buy any 5 V adjustable current-limit / eFuse breakout
-     and header it behind the RJ12.
-
-Also add: polyfuse as backup is optional if eFuse is solid.
-
-HUMAN / SIMILAR REFERENCES
---------------------------
-- DSMR P1 Companion Standard §5.3 power supply (250 mA, foldback, ripple).
-- TI TPS2595EVM user guide (layout + RILM examples).
-- Application notes: "USB power switch current limit" for AP2553-style chips.
-
-KICAD
------
-Place eFuse close to RJ12. Thick traces / planes for P1_5V and GND.
-Keep sense resistor / RILM as datasheet kelvin-ish if accuracy matters.
-
-TEST
-----
-Open: P1_5V ≈ 5.0–5.2 V.
-Load 200 mA: still ≥ 4.9 V.
-Short pin1–pin6 briefly: current collapses / fault; recovers when short gone.
-Ghost boots from P1_5V alone (no Ghost USB) if Ghost is designed for that.
+DSMR meters use ~250 mA continuous; we intentionally skip matching that
+hardware limit to keep the board simple.

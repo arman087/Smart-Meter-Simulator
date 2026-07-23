@@ -6,7 +6,7 @@
 **Power:** Seeed **Lipo Rider Plus** daughterboard (USB-C charge + 5 V + 3.3 V + LiPo)  
 **Connector:** RJ12 6P6C (female = meter side)  
 **Use case:** Fetch or generate P1 telegrams over Wi‑Fi / USB, and replay them on the P1 Data line when an OSM requests them.  
-**Mechanical:** `mechanicals/lipo_rider_plus/` (KiCad footprint + Seeed Eagle source)
+**Mechanical:** `mechanicals/lipo_rider_plus/` (reference footprint; you may draw your own)
 
 ---
 
@@ -36,10 +36,10 @@ Internet / USB ──► ESP32-C3 ──► open-collector UART ──► RJ12 p
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                        SMART METER SIMULATOR PCB                        │
 │                                                                         │
-│  ┌─────────────────────────────┐     ┌──────────────┐   ┌───────────┐ │
-│  │ Seeed Lipo Rider Plus       │     │ P1 5V limit  │──►│ RJ12 P1   │ │
-│  │ (daughterboard)             │─5V─►│ (~250 mA)    │   │ female    │ │
-│  │  USB-C charge → LiPo        │     └──────────────┘   │ 1 +5V     │ │
+│  ┌─────────────────────────────┐                        ┌───────────┐ │
+│  │ Seeed Lipo Rider Plus       │──── 5V ───────────────►│ RJ12 P1   │ │
+│  │ (daughterboard)             │                        │ female    │ │
+│  │  USB-C charge → LiPo        │                        │ 1 +5V     │ │
 │  │  out: 5V + 3V3              │─3V3──────────────┐     │ 2 REQ     │ │
 │  └─────────────────────────────┘                  │     │ 3 DGND    │ │
 │                                                   ▼     │ 4 NC      │ │
@@ -54,6 +54,8 @@ Internet / USB ──► ESP32-C3 ──► open-collector UART ──► RJ12 p
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
+P1 current-limit IC: **dropped**. Discrete charger design: **not needed** (Lipo Rider).
+
 ### Block checklist
 
 | # | Block | You mentioned? | Verdict |
@@ -62,8 +64,8 @@ Internet / USB ──► ESP32-C3 ──► open-collector UART ──► RJ12 p
 | 2 | ESP32-C3-MINI-1 (+ EN reset, strapping, caps) | Yes | **Required** |
 | 3 | Lipo Rider Plus (USB-C charge + 5V + 3V3 + LiPo) | Yes | **Buy module** — see `mechanicals/lipo_rider_plus/` |
 | 4 | On-board 5V↔battery mux / discrete charger | — | **Not needed** (inside Lipo Rider) |
-| 5 | Extra 5V→3.3V regulator | — | **Skip** if using Lipo Rider 3V3 pin |
-| 6 | RJ12 +5V out with current limit | Yes (you said ~1.25 A) | **Required — but use DSMR numbers (below)** |
+| 5 | Extra 5V→3.3V regulator | — | **Removed** — use Lipo Rider 3V3 |
+| 6 | RJ12 +5V out (direct from Lipo Rider) | Yes | **Required** — **no** current-limit IC |
 | 7 | Data Request / Enable sense | Yes | **Required** |
 | 8 | Open-collector Data TX | Yes | **Required** |
 | 9 | ESD on USB and RJ12 | Missing | **Strongly recommended** |
@@ -76,20 +78,12 @@ Internet / USB ──► ESP32-C3 ──► open-collector UART ──► RJ12 p
 
 ## 3. Important corrections (so architecture stays correct)
 
-### 3.1 Current limit is **250 mA**, not 1.25 A
+### 3.1 P1 +5V current (lab choice)
 
-Per **DSMR P1 Companion Standard v5.0.2**:
-
-| Spec | Value |
-|------|--------|
-| Continuous +5V to OSM | **≤ 250 mA** |
-| Overload trip window | **~260–300 mA** |
-| After short: foldback current | **≤ 50 mA** |
-| Voltage at 250 mA | **≥ 4.9 V** (≤ 5.5 V idle) |
-| Ripple at 250 mA | **≤ 100 mVpp** |
-
-So the P1 power block should be a **5 V source + current limit / foldback around 250–300 mA**, not a 1.25 A supply.  
-1.25 A would overpower OSM faults and is **not** what real meters do.
+DSMR meters guarantee ~250 mA continuous. **This simulator skips a
+hardware current-limit IC** — Lipo Rider 5V goes straight to RJ12 pin 1.
+Keep Ghost radios mutually exclusive (Wi‑Fi **or** LoRa) so average draw
+stays reasonable. Optional bulk cap near pin 1 for inrush only.
 
 ### 3.2 Data Request polarity
 
@@ -172,19 +166,14 @@ Firmware: when pin reads HIGH → start streaming telegrams; when released → s
 
 **Do not** connect MCU GPIO directly to 5 V.
 
-### 5.3 P1 +5V with current limit — essential
+### 5.3 P1 +5V — direct (no limiter)
 
-Pick one approach (simplest first):
+```
+Lipo Rider 5V ──► SYS_5V / P1_5V ──► RJ12 pin 1
+(+ optional 47–100 µF near the jack)
+```
 
-| Approach | Pros | Cons |
-|----------|------|------|
-| **A. eFuse / current-limit IC** (e.g. TPS2592x, AP2280x class, or similar 5 V load switch with Ilim) | Clean foldback, auto-retry | Need correct Ilim set resistors |
-| **B. Polyfuse ~0.3–0.5 A + series resistor** | Cheap | Soft, not exact DSMR foldback |
-| **C. Dedicated LDO/buck + sense resistor + comparator shutoff** | Educational | More parts |
-
-Target: **~250 mA continuous**, trip near **260–300 mA**, recover after fault.
-
-Add bulk capacitance near RJ12 pin 1 (e.g. 100 µF low-ESR) so OSM Wi‑Fi bursts / inrush do not brown out.
+Circuit 04 is **dropped**. Do not add eFuse / polyfuse for v1.
 
 ### 5.4 USB-C data + ESP32-C3 (main board)
 
@@ -205,10 +194,10 @@ Do not design charger / boost / mux on the main PCB.
 - Plug 1S LiPo into module JST; charge via module USB-C
 - Module has **no** D+/D− path to the ESP32
 
-### 5.6 Extra 3.3 V regulator
+### 5.6 3.3 V for ESP32
 
-**Skip** when using Lipo Rider 3V3. Only add circuit 03 for desk-only
-USB-powered builds without the daughterboard.
+Use Lipo Rider header **3V3** → `VCC_3V3`. No separate regulator on this board.
+Put decoupling ceramics next to the ESP32 module.
 
 ---
 
@@ -229,17 +218,17 @@ Avoid putting ADC / Request sense on **strapping** pins used at boot.
 
 ## 7. What was missing from your mental model
 
-1. **Correct P1 current limit (250 mA + foldback)** — not 1.25 A  
+1. **No P1 current-limit IC** (dropped on purpose)  
 2. **Direction of each RJ12 pin** (you supply 5V; you sense Request; you OC-drive Data)  
 3. **ESD** on RJ12 and USB  
 4. **MCU support circuit** (EN, decoupling, USB ESD, antenna keep-out for Mini-1)  
-5. **Bulk caps** on P1 5V for OSM inrush / Wi‑Fi peaks  
+5. **Bulk caps** on P1 5V for Ghost inrush (optional but cheap)  
 6. **Status / debug** (LED, button, test points)  
 7. **Firmware plan** (telegram store / Wi‑Fi fetch + CRC16)  
 8. **Isolation** optional (v1 skip)  
 9. **Mechanical:** Lipo Rider footprint (done in `mechanicals/`), RJ12 orientation
 
-Power is settled: **Lipo Rider Plus** for 5V + 3.3V + charge; board USB-C for ESP32 data.
+Power is settled: **Lipo Rider Plus** for 5V + 3.3V + charge; board USB-C for ESP32 data; RJ12 pin1 = direct 5V.
 
 ---
 
@@ -253,7 +242,7 @@ Work **one subcircuit per day**. End each day with: schematic snippet + part num
 |-----|------------|------------|
 | **1** | Net names + Lipo Rider keep-out | Place `Seeed_Lipo_Rider_Plus` footprint; nets: `SYS_5V`, `P1_5V`, `VCC_3V3`, `P1_REQ`, `P1_DATA`, `GND` |
 | **2** | Board USB-C (data) | CC + ESD; D+/D− to GPIO18/19 |
-| **3** | Wire Lipo Rider 5V/3V3/GND | Module powered → rails OK (skip discrete 3V3) |
+| **3** | Wire Lipo Rider 5V/3V3/GND | Module powered → rails OK |
 | **4** | ESP32-C3-MINI-1 + EN | Flash blink over board USB-C |
 | **5** | Status LED + button | LED toggles; button readable |
 | **6** | RJ12 footprint | Pins 1…6 silk correct |
@@ -263,8 +252,8 @@ Work **one subcircuit per day**. End each day with: schematic snippet + part num
 
 | Day | Subcircuit | Done when… |
 |-----|------------|------------|
-| **8** | P1_5V current-limit / load switch | Set for ~250 mA; short pin1–6 → current collapses / recovers |
-| **9** | Bulk + ceramic decoupling on P1_5V | Scope voltage under pulsed load stays ≥ 4.9 V idea |
+| **8** | Route SYS_5V → RJ12 pin1 (+ optional bulk cap) | Ghost gets 5 V from P1; no limiter IC |
+| **9** | (optional) Ceramic near P1_5V | Quiet rail under load |
 | **10** | Data Request sense divider / shifter | Apply 5 V on pin2 → MCU GPIO high; open → low |
 | **11** | Open-collector Data driver | Scope pin5: idle high with pull-up; MCU TX toggles → clean edges |
 | **12** | Wire Request→firmware gate TX | Only send UART when Request high |
@@ -293,7 +282,7 @@ Work **one subcircuit per day**. End each day with: schematic snippet + part num
 | **25** | CRC16 check/fix for DSMR telegram footer |
 | **26** | Auto-send every 1 s while Request high (DSMR-like) |
 | **27** | Pair test with P1 Ghost end-to-end |
-| **28** | Document known limits (no mains isolation, max 250 mA, etc.) |
+| **28** | Document known limits (no P1 current limit IC, no mains isolation, etc.) |
 
 If you only have **~30 min/day**, finishing Week 2 already gives a usable USB-powered simulator.
 
@@ -306,13 +295,12 @@ If you only have **~30 min/day**, finishing Week 2 already gives a usable USB-po
 - **Lipo Rider Plus** + LiPo (5V + 3V3 + charge)  
 - Board USB-C for ESP32 flash (D+/D−)  
 - ESP32-C3-MINI-1  
-- RJ12 + current-limited P1 5 V  
+- RJ12 with **direct** 5 V from Lipo Rider (no current-limit IC)  
 - Request sense + open-collector Data  
 - LED + button + ESD  
 
 ### v2
 
-- Tighter DSMR foldback on P1 5 V  
 - Optional P1 isolation  
 - Enclosure using GrabCAD STEP (see mechanicals README)  
 
@@ -320,14 +308,13 @@ If you only have **~30 min/day**, finishing Week 2 already gives a usable USB-po
 
 ## 10. Bring-up checklist (print this)
 
-1. USB plugged → `USB_5V` ≈ 5.0 V, `VCC_3V3` ≈ 3.3 V  
-2. Flash blink firmware via USB  
-3. No OSM connected: `P1_5V` ≈ 5 V, current ≈ 0  
-4. Short `P1_5V` to GND briefly → protection trips / recovers (do not hold forever on crude polyfuse designs)  
-5. Force `P1_REQ` to 5 V → MCU sees enable  
-6. 4.7 kΩ pull-up pin5→5V, scope Data while sending “UUUU” → square-ish inverted UART  
-7. Connect P1 Ghost → Ghost gets 5 V, asserts Request, receives telegram  
-8. Wi‑Fi fetch path works (after firmware day)
+1. Lipo Rider up → `SYS_5V` / `VCC_3V3` OK  
+2. Flash blink firmware via board USB  
+3. `P1_5V` ≈ 5 V on RJ12 pin 1  
+4. Force `P1_REQ` to 5 V → MCU sees enable  
+5. 4.7 kΩ pull-up pin5→5V, scope Data while sending “UUUU” → square-ish inverted UART  
+6. Connect P1 Ghost → Ghost gets 5 V, asserts Request, receives telegram  
+7. Wi‑Fi fetch path works (after firmware day)
 
 ---
 
@@ -338,7 +325,6 @@ If you only have **~30 min/day**, finishing Week 2 already gives a usable USB-po
 | Power daughterboard | **Seeed Lipo Rider Plus** + 1S LiPo |
 | MCU | ESP32-C3-MINI-1-N4 or N4U |
 | Board USB ESD | USBLC6-2SC6 |
-| P1 current limit | 5 V eFuse/load switch, Ilim ≈ 0.25–0.3 A |
 | OC driver | BSS138 or 2N7002 |
 | RJ12 | 6P6C PCB jack (same family as Ghost) |
 | TVS RJ12 | Low-cap ESD array on pins 1,2,5 |
