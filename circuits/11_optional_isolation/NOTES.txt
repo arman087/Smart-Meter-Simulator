@@ -1,0 +1,50 @@
+11 — OPTIONAL GALVANIC ISOLATION (optocouplers)
+==============================================
+
+WHAT THIS BLOCK IS
+------------------
+Real meters isolate P1 from mains with optocouplers on Data and Data Request
+(and isolated 5 V supply). Your simulator is USB/battery powered — there is
+NO mains — so isolation is OPTIONAL realism / extra USB-host protection.
+
+Skip for v1 unless you specifically want "feels like a meter" or floating
+grounds between USB host and OSM.
+
+IF YOU DO IT — NECESSARY PIECES
+-------------------------------
+1. Isolated 5 V DC-DC (e.g. Murata / RECOM 5V–5V 1W module) for P1_5V side.
+2. Optocoupler on Data Request (OSM → MCU domain).
+3. Optocoupler OR isolated open-collector on Data (MCU → OSM).
+4. Separate GND_ISO for RJ12 pins 3/6 vs USB GND — only join where intended.
+
+RECOMMENDED PARTS (modules OK)
+------------------------------
+- Isolated DC-DC: MEE1S0505SC, B0505S-1W, or similar 5V/5V 1W
+- Optos: PC817 (slow — marginal at 115200), better high-speed:
+  6N137, TLP2361, Si86xx digital isolators (pricier, excellent)
+- Digital isolator alternative: ADuM1201 / Si8421 for UART-like use
+  then FET on isolated side for true OC
+
+For 115200 baud, prefer high-speed opto or digital isolator — PC817 is
+often too slow.
+
+HUMAN / SIMILAR REFERENCES
+--------------------------
+- DSMR §5.2.2 Galvanic Isolation + figure with optos on Request/Data.
+- App notes: "UART digital isolator open drain"
+- Industrial USB↔RS485 isolated dongles (same idea, different PHY)
+
+KICAD
+-----
+Clearance slot / keep-out between USB domain and P1 domain if truly isolated.
+Label GND vs GND_ISO loudly on silk.
+
+TEST
+----
+Continuity: USB GND must NOT connect to RJ12 GND if isolation is claimed.
+Still get valid Ghost telegrams with isolation engaged.
+
+RECOMMENDATION FOR THIS PROJECT
+-------------------------------
+v1: skip.
+v2: only if you need it after Ghost↔Simulator works without isolation.

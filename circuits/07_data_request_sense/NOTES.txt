@@ -1,0 +1,60 @@
+07 — DATA REQUEST SENSE (pin 2 → MCU)
+=====================================
+
+WHAT THIS BLOCK IS
+------------------
+When the OSM wants telegrams, it drives RJ12 pin 2 HIGH (~4.0–5.5 V).
+Your MCU must DETECT that and start UART TX. When OSM releases pin 2
+(high‑Z), stop sending.
+
+You NEVER drive pin 2 from the MCU.
+
+NECESSARY PIECES
+----------------
+1. Level translation 5 V → safe 3.3 V GPIO.
+2. Optional Schmitt / debounce (software debounce is usually enough).
+3. ESD (shared with circuit 09).
+4. Firmware: interrupt or poll → gate telegram stream.
+
+RECOMMENDED CIRCUITS (pick one)
+-------------------------------
+A) Resistor divider (simplest, good enough)
+     Pin2 ── 10k ──●── 10k ── GND
+                   │
+                GPIO (≈ 2.5 V when Request = 5 V)
+   Add 100 nF to GND at mid-point if noisy.
+
+B) N-MOS / BSS138 translator (cleaner digital edge)
+   Same style as level-shifter breakouts; gate/bias so HIGH on pin2
+   becomes HIGH (or LOW — pick polarity and document it) on GPIO.
+
+C) Fancy: TXB0101 / 74LVC1T45 single-bit translator IC / tiny module
+   Overkill but fine for a lab board.
+
+Clamp: Schottky to 3.3 V or use GPIO with absolute-max headroom careful.
+
+RECOMMENDED PARTS
+-----------------
+- 2× 10 kΩ 0402 + 100 nF (option A) — recommended for v1
+- or BSS138 + 10k pull-ups (option B)
+- Optional: ready "4ch BSS138 level shifter" module for breadboard bring-up
+
+HUMAN / SIMILAR REFERENCES
+--------------------------
+- DSMR §5.7.1 Data Request: HIGH to start; release to high‑Z to stop;
+  OSM must NOT force pin to GND.
+- Reader-side inverse (Ghost drives Request): P1 Ghost report 08_P1_level_shift
+  — useful to understand the OTHER end, not to copy blindly.
+- Simple-DSMR-P1-meter: reader ties Request to 5 V (always on) — your
+  simulator must still *sense* that.
+
+KICAD
+-----
+Net names: P1_REQ (5 V side), P1_REQ_3V3 (MCU side).
+Silk: "REQ IN".
+
+TEST
+----
+Float pin2 → MCU reads inactive.
+Apply 5 V to pin2 (through 1k if nervous) → MCU reads active → firmware
+starts sending. Remove → stops.

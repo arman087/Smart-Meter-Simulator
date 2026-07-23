@@ -1,0 +1,48 @@
+05 — ESP32-C3-MINI-1 (MCU CORE)
+===============================
+
+WHAT THIS BLOCK IS
+------------------
+The brain: Wi‑Fi to fetch / generate telegrams, USB for flash/logs,
+UART TX into the open-collector Data driver, GPIO in for Data Request.
+
+NECESSARY PIECES
+----------------
+1. ESP32-C3-MINI-1 module (N4 / N4U — built-in antenna).
+2. VDD / VDDA decoupling per datasheet (100 nF + bulk near pins).
+3. EN pin: RC reset (e.g. 10 kΩ pull-up + 1 µF to GND) — copy Espressif.
+4. Native USB: GPIO18 = D-, GPIO19 = D+ (from USB-C sheet).
+5. Antenna keep-out: no ground pour under antenna area (module drawing).
+6. Optional: CHIP_PU / boot strap awareness (GPIO8, GPIO9, etc.).
+
+PIN PLAN (starter)
+------------------
+- USB D-/D+     : IO18 / IO19
+- UART TX       : free UART TX → open-collector gate (see circuit 08)
+- Request sense : free GPIO IN (NOT a strap pin) ← circuit 07
+- LED / button  : free GPIOs (see circuit 10)
+
+RECOMMENDED PARTS
+-----------------
+- ESP32-C3-MINI-1-N4 (or N4U)
+- 0402/0603 ceramics from Espressif reference
+- Do NOT invent a discrete ESP32-C3 chip-down for v1 — use the module
+
+HUMAN / SIMILAR REFERENCES
+--------------------------
+- Espressif ESP32-C3-MINI-1 datasheet + hardware design guidelines
+- Official KiCad symbols/footprints:
+  https://github.com/espressif/kicad-libraries
+- Your P1 Ghost MCU sheet (same module family) — reuse keep-out and EN RC
+- last check report 01_ESP32_module.txt (pin lessons / strap traps)
+
+KICAD
+-----
+Import Espressif PCM library or use Ghost footprint
+  WIFIM-SMD_ESP32-C3-MINI-1.
+Silk: mark antenna end; courtyard clear of metal.
+
+TEST
+----
+USB enumerates → flash blink sketch → LED toggles.
+Wi‑Fi STA joins AP. Serial log works over USB CDC.

@@ -1,0 +1,45 @@
+03 — 5 V → 3.3 V REGULATOR (MCU rail)
+=====================================
+
+WHAT THIS BLOCK IS
+------------------
+Takes SYS_5V (from USB or battery boost) and makes a clean VCC_3V3 for
+ESP32-C3-MINI-1. Wi‑Fi TX peaks need decent transient response + ceramics
+next to the module.
+
+NECESSARY PIECES
+----------------
+1. Buck converter OR LDO rated for ESP32 peaks (budget ≥ 500 mA continuous,
+   preferably 1 A).
+2. Input and output capacitors per datasheet.
+3. Optional enable pin tied to SYS_5V or MCU power policy.
+4. Optional ferrite / LC if USB noise is ugly (usually not needed for lab).
+
+RECOMMENDED PARTS (pick one)
+----------------------------
+Buck (preferred — cooler, same idea as P1 Ghost):
+  - SY8088AAC 3.3 V (you already used this on Ghost)
+  - AP63205 / MPS MP2315 style 3.3 V modules
+  - Pololu 3.3 V step-down (drop-in module for proto)
+
+LDO (simpler, hotter at 5→3.3 with Wi‑Fi):
+  - AMS1117-3.3 module (OK for desk; drop + heat)
+  - Better LDOs: AP2112-3.3, TLV1117-33, MIC5504
+
+For a one-off board: a small 3.3 V buck *module* footprint (headers) is fine.
+
+HUMAN / SIMILAR REFERENCES
+--------------------------
+- Espressif power-supply notes in ESP32-C3 hardware design guidelines.
+- P1 Ghost buck sheet (last check report 03_Buck_ESP32_VCC) — reuse pattern.
+- Pololu regulator product pages (clear pinouts for module mounting).
+
+KICAD
+-----
+Reuse SY8088 footprint from Ghost if staying on-board.
+Or place a 3–4 pin module footprint (VIN, GND, VOUT, EN).
+
+TEST
+----
+SYS_5V in → VCC_3V3 = 3.3 V ±3%.
+With Wi‑Fi TX, scope VCC_3V3: dips should stay above ~3.0 V.

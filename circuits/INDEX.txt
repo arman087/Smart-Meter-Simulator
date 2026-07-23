@@ -1,0 +1,28 @@
+CIRCUITS INDEX
+==============
+
+Numbered folders match the README table. Each contains NOTES.txt only
+for now (schematics / KiCad sheets come later when you draw them).
+
+01_usb_c_input              USB-C + ESD path to ESP32 USB
+02_battery_and_power_mux    LiPo charge + load share + 5V boost
+03_regulator_3v3            SYS_5V → VCC_3V3
+04_p1_5v_current_limit      Meter +5V to RJ12 pin1 (limited)
+05_esp32_c3_mini            MCU module + EN + keep-out
+06_rj12_connector           Female 6P6C pinout
+07_data_request_sense       Pin2 → GPIO
+08_open_collector_data      UART TX → pin5 OC
+09_esd_protection           TVS on USB + RJ12
+10_ui_led_button            LED + button
+11_optional_isolation       Optos / iso DC-DC (skip for v1)
+
+Suggested buy-list shortcut for a lab prototype
+-----------------------------------------------
+- ESP32-C3-MINI-1
+- USB-C jack + USBLC6-2SC6
+- Adafruit PowerBoost 1000C (+ LiPo) OR USB_5V wired straight to SYS_5V
+- 3.3 V buck module or SY8088
+- TI TPS2595 (or AP2553) for P1_5V limit
+- RJ12 6P6C jack
+- BSS138 + 4.7k + divider 2x10k
+- LED + switch

@@ -1,0 +1,69 @@
+08 — OPEN-COLLECTOR DATA DRIVER (MCU TX → pin 5)
+================================================
+
+WHAT THIS BLOCK IS
+------------------
+This is the heart of "being a meter". Pin 5 must be an OPEN COLLECTOR /
+OPEN DRAIN output: you only PULL LOW; the OSM's pull-up (1–10 kΩ) makes HIGH.
+
+UART is logically inverted vs normal TTL (DSMR uses optocoupler heritage).
+A single N-MOSFET from MCU TX often gives both level shift and inversion.
+
+NECESSARY PIECES
+----------------
+1. Open-drain switch: N-MOSFET or open-drain buffer IC.
+2. Optional local pull-up 4.7 kΩ pin5 → +5 V (helps bench test without OSM;
+   OSM will also have its own pull-up).
+3. Gate resistor ~100–220 Ω (optional EMI).
+4. ESD on pin 5 (circuit 09).
+5. Firmware: send only while Request active; 115200 8N1; watch invert flag.
+
+RECOMMENDED CIRCUITS
+--------------------
+A) Discrete MOSFET (best first choice — proven on DSMRSim)
+
+      ESP32 TX ──► Gate
+      Source ──► GND
+      Drain  ──► RJ12 pin5 ──┬── 4.7k ── +5V (optional local)
+                             └── to OSM
+
+  Parts: BSS138, 2N7002, or AO3400 (logic-level).
+
+  Idle TX HIGH → FET off → line pulled HIGH.
+  TX LOW → FET on → line LOW.
+  = hardware invert for normal (non-inverted) UART TX.
+
+B) Open-drain buffer IC (tidy, a bit "expensive", fine for lab)
+  - SN74LVC1G07 (open-drain buffer) — check if you still need invert in SW
+  - SN7406 / SN7416 (older OC inverters) — classic suggestion in dsmr-p1-parser
+  - 74HC07
+
+C) Optocoupler output stage (see circuit 11) if you want meter-like isolation.
+
+RECOMMENDED PARTS
+-----------------
+- BSS138 SOT-23 + 4.7 kΩ + 100 Ω gate  (v1 winner)
+- or TI SN74LVC1G07DBV if you prefer an IC
+- Do NOT drive pin5 with a push-pull 3.3 V UART pin directly
+
+HUMAN / SIMILAR REFERENCES
+--------------------------
+GOLD: SanderBorra/DSMRSim hardware (exact meter-side MOSFET diagram)
+  https://github.com/SanderBorra/DSMRSim
+
+- lvzon/dsmr-p1-parser — OC + invert notes; suggests SN7406 / NPN
+- Wikipedia: Open collector
+- Ghost report 08 is the READER receive shifter — opposite direction;
+  useful contrast, not a copy-paste.
+
+KICAD
+-----
+Nets: MCU_P1_TX → FET gate; P1_DATA → drain / RJ12 pin5.
+Place FET next to RJ12. Keep drain trace short.
+
+TEST
+----
+4.7k pull-up to 5 V on pin5, scope vs GND:
+  idle ≈ 5 V; streaming "U" chars → clean baud-rate pulses.
+Connect Ghost → valid telegrams when Request high.
+If gibberish: toggle UART invert in firmware (double-invert is common bug).

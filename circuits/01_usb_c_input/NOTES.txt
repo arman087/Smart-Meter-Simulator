@@ -1,0 +1,49 @@
+01 — USB-C INPUT (power + USB serial)
+=====================================
+
+WHAT THIS BLOCK IS
+------------------
+Brings 5 V into the board and connects USB D+/D- to the ESP32-C3
+native USB pins so you can flash and log without a separate UART bridge.
+
+NECESSARY PIECES
+----------------
+1. USB-C receptacle (16-pin mid-mount is fine; 6-pin power-only is NOT enough
+   if you want USB data).
+2. CC1 / CC2 pulldowns 5.1 kΩ to GND (tells charger / host we are a UFP sink).
+3. VBUS → fuse or polyfuse (optional but good) → USB_5V net.
+4. ESD diode array on D+ / D- (and preferably VBUS).
+5. Series resistors ~22–27 Ω on D+/D- (Espressif reference style) optional.
+6. Decoupling: 10 µF + 100 nF on USB_5V near the connector.
+
+RECOMMENDED PARTS (lab / module-friendly)
+-----------------------------------------
+- Connector: TYPE-C-31-M-12 or Molex/Amphenol 16-pin SMD (reuse Ghost footprint).
+- ESD: USBLC6-2SC6 (same as P1 Ghost) or TPD2E001 / PESD5V0x1Bx.
+- Optional ready module for bring-up: any "USB-C breakout with CC resistors"
+  (SparkFun / Adafruit USB-C breakout) wired to a breadboard first.
+
+DO NOT FORGET
+-------------
+ESP32-C3 USB mapping is fixed:
+  D- = GPIO18
+  D+ = GPIO19
+(Wrong pins = no USB device.)
+
+HUMAN / SIMILAR REFERENCES
+--------------------------
+- Espressif ESP32-C3 hardware design guidelines (USB section):
+  https://docs.espressif.com/projects/esp-hardware-design-guidelines/
+- Your own P1 Ghost sheet: USB-C + USBLC6 (last check report 02_USB_C_input).
+- Adafruit / SparkFun USB-C breakout guides (CC = 5.1k to GND for sink).
+
+KICAD
+-----
+- Symbol/footprint: reuse EasyEDA import from P1 Ghost USB-C.
+- Official Espressif KiCad libs (for later MCU sheet):
+  https://github.com/espressif/kicad-libraries
+
+TEST
+----
+Plug cable → USB_5V ≈ 5.0 V. Host should enumerate only after MCU is powered
+and USB pins are wired correctly.

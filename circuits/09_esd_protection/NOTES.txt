@@ -1,0 +1,42 @@
+09 — ESD PROTECTION (USB + RJ12)
+================================
+
+WHAT THIS BLOCK IS
+------------------
+Lab cables get plugged a lot. ESD kills USB PHYs and MOSFET gates.
+Cheap insurance: TVS / ESD arrays on exposed connectors.
+
+NECESSARY PIECES
+----------------
+1. USB: dedicated ESD on D+ / D- (and optionally VBUS).
+2. RJ12: clamp pins 1, 2, 5 (power + signals). Pins 3/6 are GND.
+3. Short path from TVS to connector GND pad (low inductance).
+
+RECOMMENDED PARTS
+-----------------
+USB:
+  - USBLC6-2SC6 (used on P1 Ghost) — perfect reuse
+  - or TPD2E2U06 / PESD5V0x1UL
+
+RJ12 / general:
+  - PESD5V0L2BT / PESD5V0S1UL on P1_REQ and P1_DATA
+  - SMAJ5.0A or similar on P1_5V if you want beefier power clamp
+  - Multi-channel ESD arrays (e.g. TPD4E05U06) if you like one chip
+
+Modules: not really needed — discrete TVS are tiny and cheap.
+If you want zero thinking: "USB ESD protector breakout" for USB only.
+
+HUMAN / SIMILAR REFERENCES
+--------------------------
+- IEC 61000-4-2 mentions in DSMR P1 safety section (context).
+- TI / ST ESD app notes for USB 2.0 high-speed routing.
+- P1 Ghost schematic: USBLC6 next to USB-C.
+
+KICAD
+-----
+Place ESD within a few mm of the connector. Via to GND plane under TVS.
+
+TEST
+----
+No easy home test for ESD rating. Continuity: TVS not shorted;
+signal edges still clean at 115200 on Data.

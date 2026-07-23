@@ -1,0 +1,48 @@
+06 — RJ12 CONNECTOR (P1 METER JACK)
+===================================
+
+WHAT THIS BLOCK IS
+------------------
+Physical DSMR P1 port. On the METER / simulator you use a FEMALE 6P6C
+(RJ12) jack. OSM (Ghost) plugs in with a male RJ12 cable.
+
+PINOUT (DSMR) — meter side
+--------------------------
+ 1  +5V         SOURCE from current-limit block (circuit 04)
+ 2  Data Request  INPUT sense (circuit 07)
+ 3  Data GND    → system GND
+ 4  n.c.        leave open
+ 5  Data        open-collector OUT (circuit 08)
+ 6  Power GND   → system GND
+
+NECESSARY PIECES
+----------------
+1. RJ12 / 6P6C PCB jack (same family as Ghost is ideal for cable compatibility).
+2. Silk labels 1…6 matching the standard (check datasheet pin 1 orientation —
+   easy to mirror!).
+3. Short fat traces for pins 1 and 6; star GND to digital section if noisy.
+4. Optional: shroud / panel cutout note for enclosure.
+
+RECOMMENDED PARTS
+-----------------
+- KH-PCB-6P6C or equivalent 6P6C vertical / right-angle (Ghost used KH-PCB-6P6C)
+- Ready breakout for bench: TinyTronics "RJ12 to Dupont" adapters
+  https://www.tinytronics.nl (search RJ12)
+
+HUMAN / SIMILAR REFERENCES
+--------------------------
+- P1 Companion Standard Table 5-1 pin assignment
+- lvzon/dsmr-p1-parser README pin table
+- maximevince/Simple-DSMR-P1-meter wiring table (reader view — invert roles)
+- SanderBorra/DSMRSim hardware section (simulator view — same as you)
+- P1 Ghost last check report 07_USB_sense_RJ12.txt
+
+KICAD
+-----
+Reuse Ghost RJ12 footprint from EasyEDA import if pin numbers match
+the datasheet. Double-check pin 1 with continuity on a scrap jack.
+
+TEST
+----
+Continuity: PCB net P1_5V ↔ jack pin 1, etc.
+Cable into Ghost: Ghost sees 5 V on its pin 1 when simulator powered.
