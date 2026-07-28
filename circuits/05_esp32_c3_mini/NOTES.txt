@@ -17,7 +17,7 @@ NECESSARY PIECES
 
 POWER
 -----
-VCC_3V3 from circuit 03 only — **not** Lipo Rider 3V3.
+VCC_3V3 from circuit 03 (from SYS_5V / TPS61023) — never from bq25185 V+/VSYS alone.
 
 PIN PLAN (starter)
 ------------------

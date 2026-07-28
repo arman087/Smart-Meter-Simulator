@@ -3,16 +3,16 @@
 **Goal:** Portable **DSMR P1 meter-side** board so you can develop and field-test **P1 Ghost** (Wi‑Fi range, etc.) without asking to use real doorstep meters.
 
 **MCU:** ESP32-C3-MINI-1 (Wi‑Fi **on** for config / OTA / talk-to-device)  
-**Power:** Seeed **Lipo Rider Plus** daughterboard → **5 V only** + **on-board 5→3.3 V** (≥500 mA)  
+**Power (on main PCB):** Adafruit **#6106** circuit — **bq25185** (charge + `VSYS`/`V+`) + **TPS61023** (`V+` → **+5 V**) + **on-board 5→3.3 V** (≥500 mA)  
 **P1 +5 V:** TI **TPS2662** foldback  
-**Store:** **microSD** telegram files (not SDRAM, not live Wi‑Fi fetch as primary)  
+**Store:** **microSD** telegram files  
 **Connector:** RJ12 6P6C female (meter side)  
-**Signals:** Optocouplers on Request + Data (DSMR-like); optional isolated DC-DC for true floating P1  
-**Volume:** ~5 boards — cost of SD / OLED / optos is fine  
-**Skip:** LoRa  
+**Signals:** Optocouplers on Request + Data; optional isolated DC-DC for true floating P1  
+**Volume:** ~5 boards  
+**Skip:** LoRa · feeding RJ12 from `V+` without the boost  
 
 Part picking: **[PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)**  
-Mechanicals: `mechanicals/lipo_rider_plus/`
+Reference: `my_design/libraries/adafruit_bq25185_5v_boost/`
 
 ---
 
@@ -23,7 +23,7 @@ Mechanicals: `mechanicals/lipo_rider_plus/`
 | **This project (Simulator)** | Acts as the **meter** | Female jack, **supplies** +5V, **senses** Data Request, **drives** Data (OC / opto) |
 | P1 Ghost / OSM | Acts as the **reader** | Male plug, **takes** +5V, **drives** Data Request high, **reads** Data |
 
-**Field use:** battery + simulator in a building corner → Ghost on RJ12 → you elsewhere with a laptop checking **Ghost** Wi‑Fi. Simulator replays telegrams from **microSD**.
+**Field use:** battery + simulator in a building corner → Ghost on RJ12 → you elsewhere checking **Ghost** Wi‑Fi. Simulator replays telegrams from **microSD**.
 
 ```
 microSD telegrams ──► ESP32-C3 ──► opto / OC UART ──► RJ12 pin5 (Data)
@@ -39,15 +39,16 @@ microSD telegrams ──► ESP32-C3 ──► opto / OC UART ──► RJ12 pin
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                     SMART METER SIMULATOR PCB                            │
+│                     SMART METER SIMULATOR PCB (one board)                │
 │                                                                          │
-│  Lipo Rider Plus ──5V──► SYS_5V                                          │
-│  (USB-C + LiPo)            │                                             │
-│                            ├─► 5V→3.3V (≥500 mA) ──► VCC_3V3 ──► ESP32   │
-│                            │                         │         + microSD │
-│                            │                         │         ± OLED    │
-│                            └─► TPS2662 ──► P1_5V ──► RJ12 pin1           │
-│                                 (± iso DC-DC if full isolation)          │
+│  USB-C ──► bq25185 ──► VSYS/V+ (3.0–4.5 V) ──► TPS61023 ──► SYS_5V     │
+│                 │                              │                         │
+│              LiPo JST           ┌──────────────┴──────────────┐          │
+│                                 ▼                             ▼          │
+│                          5V→3.3V (≥500 mA)              TPS2662          │
+│                                 ▼                             ▼          │
+│                            VCC_3V3 ── ESP32              P1_5V → RJ12    │
+│                                   + microSD ± OLED                       │
 │                                                                          │
 │  Board USB-C (D+/D−) ─────────────────────────────► ESP32 flash         │
 │  RJ12 pin2 ──► Request opto ──► GPIO                                     │
@@ -61,69 +62,68 @@ microSD telegrams ──► ESP32-C3 ──► opto / OC UART ──► RJ12 pin
 |---|--------|---------|
 | 1 | Board USB-C (D+/D− flash) | **Required** |
 | 2 | ESP32-C3-MINI-1 + EN / caps | **Required** |
-| 3 | Lipo Rider Plus headers (5V/GND/EN) | **Required** — buy module |
-| 4 | On-board **5V→3.3V** (≥500 mA) | **Required** — Rider 3V3 is only 250 mA |
-| 5 | **TPS2662** SYS_5V→P1_5V | **Required** — DSMR foldback |
-| 6 | RJ12 6P6C | **Required** |
-| 7 | Request path (opto) | **Required** |
-| 8 | Data path (opto / OC) | **Required** |
-| 9 | microSD | **Required** — telegram store |
+| 3 | **bq25185** charge + power path | **Required** — integrate from #6106 |
+| 4 | **TPS61023** `V+` → `SYS_5V` | **Required** — do **not** omit |
+| 5 | On-board **5V→3.3V** (≥500 mA) | **Required** |
+| 6 | **TPS2662** SYS_5V→P1_5V | **Required** — DSMR foldback |
+| 7 | RJ12 6P6C | **Required** |
+| 8 | Request + Data optos | **Required** |
+| 9 | microSD | **Required** |
 | 10 | ESD USB + RJ12 | **Required** |
 | 11 | LED + button | **Recommended** |
-| 12 | OLED | **Optional** — handy in the field |
-| 13 | Isolated 5V DC-DC | **Optional** — needed only for true floating P1 GND |
+| 12 | OLED | **Optional** |
+| 13 | Isolated 5V DC-DC | **Optional** — true floating P1 |
 | 14 | LoRa | **Skip** |
-| 15 | Rider 3V3 → ESP32 | **Skip** |
+| 15 | Skip TPS61023 / use `V+` as P1 5 V | **Skip — wrong** |
 
 ---
 
 ## 3. Important rules
 
-### 3.1 Power budgets
+### 3.1 What `VSYS` / `V+` is (bq25185 pin 1)
+
+Adafruit net **`V+`** = charger **VSYS**. It is **not** a 5 V rail.
+
+| Condition | Typical voltage |
+|-----------|-----------------|
+| USB / DC in | ~**4.5 V** regulated |
+| Battery only | ~**3.0–4.2 V** (follows cell) |
+
+**TPS61023** boosts `V+` → fixed **+5 V** (`SYS_5V`). Keep it so:
+
+- RJ12 / Ghost always see real ~5 V on battery  
+- Your 5→3.3 regulator always has headroom (LDO from a 3.2 V cell cannot make 3.3 V)
+
+### 3.2 Power budgets
 
 | Rail | Source | Budget |
 |------|--------|--------|
-| `SYS_5V` | Lipo Rider 5V | Up to **2.4 A** available; you need ≪ that |
-| `P1_5V` | TPS2662 | ~**250 mA** continuous, foldback on fault (DSMR) |
-| `VCC_3V3` | On-board regulator | Size **≥500 mA** (Wi‑Fi + SD + OLED) |
+| `V+` / VSYS | bq25185 | Intermediate only |
+| `SYS_5V` | TPS61023 | ~**1 A** max (Adafruit); you need ≪ that |
+| `P1_5V` | TPS2662 | ~**250 mA** continuous, foldback on fault |
+| `VCC_3V3` | On-board regulator from `SYS_5V` | **≥500 mA** |
 
-**Do not** power the ESP32 from Lipo Rider **3V3** (spec **250 mA**).
+### 3.3 P1 +5V foldback
 
-### 3.2 P1 +5V foldback
+DSMR: ~250 mA continuous, overload ~260–300 mA, then **foldback**.  
+**TPS2662** — [slvaf94](https://www.ti.com/lit/pdf/slvaf94).
 
-DSMR: ~250 mA continuous, overload ~260–300 mA, then **foldback** (ISC ≤ 50 mA).  
-Implement with **TPS2662** ([slvaf94](https://www.ti.com/lit/pdf/slvaf94)).
+### 3.4 Data Request / Data
 
-### 3.3 Data Request polarity
-
-- OSM sets pin 2 **HIGH (~5 V)** → start sending  
-- OSM **releases** high‑Z to stop (must **not** drive hard to GND)  
-- MCU only **senses** (via opto); never drives pin 2  
-
-### 3.4 Data line = open-collector + inverted UART
-
-- Meter drives pin 5 open-collector / open-drain (opto output stage)  
-- Idle pulled high by OSM (1–10 kΩ)  
-- 115200 8N1; watch firmware invert vs hardware invert  
-
-Use **high-speed** optos (TLP2361 / 6N137 / digital isolator). **PC817 is often too slow** at 115200.
+- Pin 2 HIGH (~5 V) → start TX; release high‑Z to stop  
+- Pin 5 open-collector / opto; 115200 8N1; use **fast** optos (not PC817)
 
 ### 3.5 Isolation
 
-Real meters isolate P1 from mains. This board has no mains.
+Optos in scope. True floating P1 needs isolated 5 V DC-DC + `GND_ISO`.
 
-- **In scope:** optos on Request + Data (DSMR-like)  
-- **True galvanic split:** add isolated 5V DC-DC + `GND_ISO` on RJ12  
-- USB D+/D− still need a ground reference to the PC when flashing (shared MCU GND, or a USB isolator)
-
-### 3.6 Storage & Wi‑Fi roles
+### 3.6 Storage & Wi‑Fi
 
 | Path | Role |
 |------|------|
-| **microSD** | Primary telegram library in the field |
-| **Wi‑Fi** | Talk to device / OTA / config — **not** the main telegram pipe |
-| **USB-C** | First flash + serial debug |
-| Internal flash | Optional small cache; SD is the library |
+| **microSD** | Primary telegram library |
+| **Wi‑Fi** | Config / OTA — not primary telegram pipe |
+| **USB-C** | First flash + serial |
 
 ---
 
@@ -131,116 +131,82 @@ Real meters isolate P1 from mains. This board has no mains.
 
 | Pin | Name | Simulator must… |
 |-----|------|------------------|
-| 1 | +5V | **Source** 5 V, current-limited (~250 mA) |
+| 1 | +5V | **Source** 5 V via TPS2662 |
 | 2 | Data Request | **Sense** HIGH → enable TX |
 | 3 | Data GND | System GND or `GND_ISO` |
 | 4 | NC | Leave open |
 | 5 | Data | **OC / opto** UART from MCU TX |
 | 6 | Power GND | Same as pin 3 |
 
-Official: [P1 Companion Standard 5.0.2](https://www.netbeheernederland.nl/sites/default/files/2024-02/dsmr_5.0.2_p1_companion_standard.pdf)
-
 ---
 
 ## 5. Reference circuit patterns
 
-### 5.1 Power
+### 5.1 Power (copy Adafruit #6106, then your rails)
 
 ```
-Lipo Rider 5V ──► SYS_5V
-                    ├─► 5→3.3 regulator ──► VCC_3V3 ──► ESP32, SD, OLED
-                    └─► TPS2662 ──► P1_5V ──► (± iso DC-DC) ──► RJ12 pin1
+USB-C ──► bq25185 ──► V+ / VSYS
+              │            │
+           VBAT/LiPo       └──► TPS61023 ──► SYS_5V
+                                              ├─► 5→3.3 ──► VCC_3V3
+                                              └─► TPS2662 ──► P1_5V ──► RJ12 pin1
 ```
 
-Leave Rider **3V3** pin unconnected (or mark DNP test only).
+Omit solar pads / green terminal if unused. **Keep both ICs.**
 
-### 5.2 Request (opto)
+### 5.2–5.5
 
-```
-RJ12 pin2 ──► opto LED (+ series R to P1_5V or from OSM drive)
-opto transistor / digital out ──► ESP32 GPIO (3.3 V domain)
-```
-
-Document active level in firmware.
-
-### 5.3 Data (opto OC)
-
-```
-ESP32 UART TX ──► opto LED (3.3 V domain)
-opto output (OC) ──► RJ12 pin5
-Optional 4.7 kΩ pin5 → P1_5V for bench
-```
-
-Match invert in HW/SW once; do not double-invert.
-
-### 5.4 USB-C data
-
-- CC: 5.1 kΩ on CC1/CC2  
-- ESD: USBLC6-2SC6 on D+/D−  
-- ESP32-C3: **GPIO18 = D−, GPIO19 = D+**  
-
-### 5.5 microSD
-
-SPI mode is simplest on C3: CS, MOSI, MISO, SCK + card detect optional.  
-Store plain DSMR `.txt` telegrams; firmware rotates / selects via button or Wi‑Fi UI.
+Request opto, Data opto OC, USB-C data (GPIO18/19), microSD SPI — see circuit NOTES and earlier patterns in `circuits/`.
 
 ---
 
 ## 6. Suggested ESP32-C3 pin assignment
 
-| GPIO | Function | Notes |
-|------|----------|--------|
-| 18 / 19 | USB D− / D+ | Fixed |
-| Free UART TX | → Data opto LED | Prefer free UART |
-| Free GPIO in | Request after opto | Not a strap pin |
-| SPI pins | microSD | Avoid straps |
-| I²C (optional) | OLED | SDA/SCL |
-| Free GPIO | LED / button | Avoid boot straps |
-| EN | Reset | RC network |
+| GPIO | Function |
+|------|----------|
+| 18 / 19 | USB D− / D+ |
+| Free UART TX | → Data opto |
+| Free GPIO in | Request after opto |
+| SPI | microSD |
+| I²C optional | OLED |
+| Free GPIO | LED / button |
+| EN | Reset RC |
 
 ---
 
-## 7. Day-by-day / KiCad order
-
-Work **one subcircuit** at a time. End with: schematic snippet + PN + how to test.
+## 7. KiCad order
 
 | Step | Subcircuit | Done when… |
 |------|------------|------------|
-| 1 | Nets + Lipo Rider header | `SYS_5V`, `VCC_3V3`, `P1_5V`, `P1_REQ`, `P1_DATA`, `GND` |
-| 2 | 5→3.3 | ESP32 can run from SYS_5V path |
-| 3 | Board USB-C | CC + ESD; D+/D− to 18/19 |
-| 4 | ESP32-C3-MINI-1 | Flash blink over USB |
-| 5 | microSD | Mount FAT; read a file |
-| 6 | TPS2662 | P1_5V ≈ 5 V; short → foldback |
-| 7 | RJ12 footprint | Pins 1…6 silk correct |
-| 8 | Request opto | 5 V on pin2 → GPIO active |
-| 9 | Data opto / OC | Scope pin5 clean at 115200 |
-| 10 | ESD + LED/button (± OLED) | Bring-up checklist green |
-| 11 | Firmware | Replay SD telegram while Request high; Wi‑Fi UI optional |
+| 1 | Nets + bq25185 + TPS61023 (`02`) | `V+`, `SYS_5V`, charge, battery |
+| 2 | 5→3.3 (`03`) | `VCC_3V3` stable under Wi‑Fi |
+| 3 | Board USB-C (`01`) | Flash blink |
+| 4 | ESP32 (`05`) | CDC + Wi‑Fi smoke |
+| 5 | microSD (`12`) | Read telegram file |
+| 6 | TPS2662 (`04`) | P1_5V; short → foldback |
+| 7 | RJ12 + optos (`06`/`11`/`07`/`08`) | Ghost gets valid telegram |
+| 8 | ESD + UI (`09`/`10`) | Bring-up checklist green |
 
 ---
 
 ## 8. Bring-up checklist
 
-1. Rider → `SYS_5V` OK; `VCC_3V3` OK (**not** from Rider 3V3)  
-2. Flash blink via board USB  
-3. Wi‑Fi STA joins (smoke test)  
-4. SD lists telegram files  
-5. `P1_5V` ≈ 5 V; brief short pin1–GND → foldback, recovers  
-6. Force Request → MCU sees enable  
-7. Pull-up on pin5 → scope UART; Ghost receives valid telegram  
-8. Battery-only run in a corner with Ghost attached  
+1. Charge USB → battery charges; `V+` present  
+2. `SYS_5V` ≈ 5 V (boost on); battery-only still ≈ 5 V  
+3. `VCC_3V3` ≈ 3.3 V; Wi‑Fi without brown-out  
+4. Flash via board USB; SD lists files  
+5. `P1_5V` ≈ 5 V; short → foldback, recovers  
+6. Request → TX; Ghost receives telegram  
 
 ---
 
 ## 9. Relation to P1 Ghost
 
-| Signal | Ghost (reader) | This simulator (meter) |
-|--------|----------------|-------------------------|
+| Signal | Ghost | Simulator |
+|--------|-------|-----------|
 | Pin 1 +5V | Input | **Output** (TPS2662) |
-| Pin 2 Request | MCU drives HIGH | **Sense** via opto |
-| Pin 5 Data | Level-shift → UART RX | **OC / opto** from UART TX |
-| Goal | Parse / forward / Wi‑Fi | Replay from SD; portable fake meter |
+| Pin 2 Request | Drives HIGH | **Sense** via opto |
+| Pin 5 Data | UART RX path | **OC / opto** from TX |
 
 ---
 
@@ -248,6 +214,6 @@ Work **one subcircuit** at a time. End with: schematic snippet + PN + how to tes
 
 1. [DSMR P1 Companion Standard 5.0.2](https://www.netbeheernederland.nl/sites/default/files/2024-02/dsmr_5.0.2_p1_companion_standard.pdf)  
 2. [TI slvaf94 — TPS2662](https://www.ti.com/lit/pdf/slvaf94)  
-3. [Seeed Lipo Rider Plus](https://wiki.seeedstudio.com/Lipo-Rider-Plus/)  
+3. [Adafruit #6106](https://www.adafruit.com/product/6106) · [PCB GitHub](https://github.com/adafruit/Adafruit-bq25185-with-5V-Boost-PCB)  
 4. [PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)  
 5. [arman087/P1_ghost](https://github.com/arman087/P1_ghost)  

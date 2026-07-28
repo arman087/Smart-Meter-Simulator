@@ -3,15 +3,16 @@
 
 WHY THIS EXISTS
 ---------------
-Lipo Rider Plus 3V3 is only **250 mA**. ESP32-C3 with Wi-Fi (config / OTA)
-can peak near or above that → brown-outs.
+ESP32-C3 with Wi-Fi needs a solid **≥500 mA** 3.3 V rail.
 
-So: take **SYS_5V** from the Rider and make a proper **VCC_3V3** on the
-main PCB, sized **≥500 mA** (1 A comfortable with SD + OLED).
+Take **SYS_5V** from the **TPS61023** boost (circuit 02) — not from
+bq25185 `V+`/`VSYS` (that rail is only 3.0–4.5 V and collapses near
+empty battery, so a 3.3 V LDO from V+ will brown out).
 
 FLOW
 ----
-    SYS_5V ──► 5→3.3 regulator ──► VCC_3V3 ──► ESP32, microSD, OLED, logic
+    SYS_5V (+5 V from TPS61023)
+         ──► 5→3.3 regulator ──► VCC_3V3 ──► ESP32, microSD, OLED, logic
 
 NECESSARY PIECES
 ----------------

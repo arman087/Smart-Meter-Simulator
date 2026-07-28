@@ -1,58 +1,60 @@
-02 — SEEED LIPO RIDER PLUS (DAUGHTERBOARD)
-=========================================
+02 — POWER: bq25185 + TPS61023 (INTEGRATE ON MAIN PCB)
+======================================================
 
 CHOSEN SOLUTION
 ---------------
-Seeed Lipo Rider Plus — charger + 5V boost.
-Use as a **daughterboard** on headers / pads on the main PCB.
+Copy Adafruit product #6106 onto the main PCB (open-source Eagle/KiCad):
 
-    Wiki: https://wiki.seeedstudio.com/Lipo-Rider-Plus/
-    SKU:  106990290
+  https://www.adafruit.com/product/6106
+  Ref files: ../../my_design/libraries/adafruit_bq25185_5v_boost/
 
-WHAT WE USE FROM IT
--------------------
-- USB-C → charge 1S LiPo (fast charge up to 5V/2A)
-- JST → battery
-- Header **5V**  → SYS_5V on main PCB (up to 5V/2.4A available)
-- GND
-- EN (optional) → GPIO or leave open so 5V stays on
-- USB-A → ignore
+Two ICs — **keep both**:
 
-WHAT WE DO NOT USE
-------------------
-- Header **3V3** — only **250 mA**. Too weak for ESP32-C3 with Wi-Fi.
-  Main PCB makes its own 5V→3.3V (circuit 03), ≥500 mA.
+  1) bq25185  — USB/DC charge, power path, battery BUVLO, VSYS out
+  2) TPS61023 — boost VSYS → fixed +5 V (SYS_5V)
+
+Do **not** omit the boost. Do **not** use Lipo Rider Plus as the primary power design.
+
+NETS (IMPORTANT)
+----------------
+  VBUS / VIN   USB-C (and optional DC pads — omit solar if unused)
+  VBAT         1S LiPo (2-wire OK; IC has charge terminate + BUVLO)
+  VSYS / V+    bq25185 pin 1 — system rail
+                 • ~4.5 V with USB
+                 • ~3.0–4.2 V on battery only
+                 • THIS IS NOT 5 V
+  SYS_5V       TPS61023 output — regulated +5 V → rest of board
+  EN           boost enable (Adafruit: pull-up to V+; can GPIO later)
 
 POWER FLOW
 ----------
-    Lipo Rider 5V ──► SYS_5V
-                         ├─► circuit 03 → VCC_3V3 → ESP32 / SD / OLED
-                         └─► circuit 04 TPS2662 → P1_5V → RJ12 pin1
+    USB-C ──► bq25185 ──► V+ / VSYS ──► TPS61023 ──► SYS_5V
+                   │                         │
+                LiPo                    ┌────┴────┐
+                                        ▼         ▼
+                                   circuit 03  circuit 04
+                                   VCC_3V3     TPS2662 → P1_5V
 
-HEADER (J3) ORDER (Seeed)
--------------------------
-1 USB | 2 GND | 3 BAT | 4 GND | 5 5V | 6 GND | 7 EN | 8 3V3
+WHY KEEP TPS61023
+-----------------
+- RJ12 / Ghost need ~5 V on battery (V+ alone is often 3.3–4.2 V).
+- 5→3.3 LDO needs headroom; from a near-empty cell V+ cannot make 3.3 V.
 
-Main PCB: bring out at least GND, 5V, EN. Leave 3V3 unconnected (or TP only).
+WHAT TO COPY / DROP FROM #6106
+------------------------------
+Copy: USB-C charge, JST/battery, bq25185, TPS61023, input diodes, ISET/VSET,
+      boost inductor + FB resistors, status LEDs if you want.
+Drop: solar/DC terminal if unused; green 5V terminal block (use nets instead).
+Layout: keep Adafruit inductor/charger area close to their reference.
 
-MAIN PCB
---------
-- Pads / header matching Lipo Rider (your footprint)
-- Board USB-C for ESP32 D+/D− only (circuit 01)
-- No on-board LiPo charger (inside Rider)
-- P1 foldback is circuit 04, not on the Rider
-
-MECHANICALS
------------
-  ../../mechanicals/lipo_rider_plus/
-
-ALT MODULE
-----------
-Adafruit #6106 bq25185 + 5V boost — same role (5V out); still need circuit 03.
+MAIN PCB ALSO HAS
+-----------------
+- Separate (or carefully shared) USB-C for ESP32 D+/D− (circuit 01)
+- 5→3.3 (circuit 03), TPS2662 (circuit 04), etc.
 
 TEST
 ----
-Battery only: SYS_5V present; VCC_3V3 from circuit 03 (not Rider 3V3).
-USB-C on Rider: charges; rails stay up.
-Unplug Rider USB-C: still running from LiPo.
-Ghost on RJ12 gets 5V via TPS2662.
+USB charge: CHG LED; VBAT rises to ~4.2 V.
+Battery only: SYS_5V still ≈ 5 V; V+ tracks cell.
+Fault / empty: boost or load drops cleanly (BUVLO) — no silent deep discharge mess.
+Ghost on RJ12 gets ~5 V via TPS2662.

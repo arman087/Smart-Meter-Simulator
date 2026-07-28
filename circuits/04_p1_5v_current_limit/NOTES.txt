@@ -36,7 +36,7 @@ Optional: TPS2662 EVM to learn, then copy onto the simulator PCB.
 
 HOW IT FITS YOUR BOARD
 ----------------------
-  Lipo Rider 5V (SYS_5V)   ← circuit 02; Rider 3V3 unused
+  TPS61023 → SYS_5V (+5 V)   ← circuit 02 (after bq25185 V+)
        │
        ├─► 5→3.3 (circuit 03) → MCU
        │
@@ -46,6 +46,8 @@ HOW IT FITS YOUR BOARD
        ▼
   P1_5V ──► (± isolated DC-DC, circuit 11) ──► RJ12 pin 1
   (+ bulk ceramic near the jack for OSM inrush)
+
+Do NOT feed TPS2662 from V+/VSYS — that is not a stable 5 V rail.
 
 TI’s note also shows a brief “boost ILIM at startup” trick with an MCU
 GPIO so Ghost can charge its caps without sitting forever in foldback.
