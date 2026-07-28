@@ -8,7 +8,7 @@ Physical DSMR P1 port. On the METER / simulator you use a FEMALE 6P6C
 
 PINOUT (DSMR) — meter side
 --------------------------
- 1  +5V         SOURCE from Lipo Rider 5V (SYS_5V / P1_5V)
+ 1  +5V         SOURCE via TPS2662 foldback (SYS_5V → P1_5V)
  2  Data Request  INPUT sense (circuit 07)
  3  Data GND    → system GND
  4  n.c.        leave open
@@ -29,13 +29,10 @@ RECOMMENDED PARTS
 - Ready breakout for bench: TinyTronics "RJ12 to Dupont" adapters
   https://www.tinytronics.nl (search RJ12)
 
-HUMAN / SIMILAR REFERENCES
---------------------------
-- P1 Companion Standard Table 5-1 pin assignment
-- lvzon/dsmr-p1-parser README pin table
-- maximevince/Simple-DSMR-P1-meter wiring table (reader view — invert roles)
-- SanderBorra/DSMRSim hardware section (simulator view — same as you)
-- P1 Ghost last check report 07_USB_sense_RJ12.txt
+REFERENCES
+----------
+- P1 Companion Standard 5.0.2 — Table 5-1 pin assignment + §5.3 power / foldback
+- P1 Ghost last check report 07_USB_sense_RJ12.txt (reader view — invert roles)
 
 KICAD
 -----

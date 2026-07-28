@@ -1,0 +1,46 @@
+03 — 5 V → 3.3 V REGULATOR (MCU RAIL)
+=====================================
+
+WHY THIS EXISTS
+---------------
+Lipo Rider Plus 3V3 is only **250 mA**. ESP32-C3 with Wi-Fi (config / OTA)
+can peak near or above that → brown-outs.
+
+So: take **SYS_5V** from the Rider and make a proper **VCC_3V3** on the
+main PCB, sized **≥500 mA** (1 A comfortable with SD + OLED).
+
+FLOW
+----
+    SYS_5V ──► 5→3.3 regulator ──► VCC_3V3 ──► ESP32, microSD, OLED, logic
+
+NECESSARY PIECES
+----------------
+1. Regulator IC or your proven 5→3.3 module/circuit.
+2. Input ceramic near VIN (e.g. 10 µF).
+3. Output ceramic + bulk near VOUT (e.g. 10 µF + 100 nF).
+4. Extra 100 nF at ESP32 VDD pins (circuit 05).
+
+CANDIDATE PARTS (pick one family and lock PN)
+---------------------------------------------
+LDO (simple, some heat at high Iq):
+  - AP2112K-3.3 (600 mA) — common, SOT-23-5
+  - TLV1117LV-33 / AMS1117-3.3 (check dropout + heat from 5V)
+
+Buck (cooler, more efficient for Wi-Fi peaks):
+  - Small 5→3.3 buck module you already trust
+  - Or IC e.g. TPS62840 / similar 1 A class (verify stock/footprint)
+
+If you already have a working 5→3.3 daughterboard from earlier work:
+  reuse that schematic/footprint here.
+
+KICAD
+-----
+Nets: SYS_5V → VIN; VCC_3V3 → ESP32 / SD / UI.
+Keep switcher inductors away from antenna keep-out if using a buck.
+Thermal relief / copper for LDO if used.
+
+TEST
+----
+SYS_5V ≈ 5 V → VCC_3V3 ≈ 3.3 V.
+Enable Wi-Fi + SD read: rail stays ≥ 3.2 V (scope/multimeter).
+No reset loops under TX peaks.

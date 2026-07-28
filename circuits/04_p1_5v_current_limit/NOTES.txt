@@ -1,17 +1,73 @@
-04 — P1 +5 V CURRENT LIMIT — DROPPED
-====================================
+04 — P1 +5 V WITH FOLDBACK (DSMR-ALIGNED)
+=========================================
 
-STATUS
-------
-**Removed from this project.** Lab simulator only — do not design an
-eFuse / current-limit IC for RJ12 pin 1.
+WHAT THIS IS
+------------
+RJ12 pin 1 must SOURCE +5 V like a Dutch P1 meter:
 
-WIRING INSTEAD
---------------
-  Lipo Rider Plus header 5V  →  SYS_5V / P1_5V  →  RJ12 pin 1
+  Continuous     IL_CONT ≈ 250 mA
+  Overload trip  ≈ 260–300 mA window (DSMR)
+  Foldback       on sustained fault / short → ISC ≤ 50 mA
+  Then recover when the fault is gone
 
-Optional (not required): a bulk cap (e.g. 47–100 µF) near RJ12 pin 1
-for Ghost inrush. That is decoupling, not a current limiter.
+Official rules: Netbeheer Nederland P1 Companion Standard v5.0.2 §5.3
+(power supply + foldback). Signal side (Request / Data) uses optocouplers
+and open-collector Data — that is separate (circuits 07 / 08).
 
-DSMR meters use ~250 mA continuous; we intentionally skip matching that
-hardware limit to keep the board simple.
+Do **not** cite random GitHub “simulators”. Use the standard + TI’s
+P1 protection design.
+
+
+THE PART THAT MATCHES THIS
+--------------------------
+**TI TPS2662** eFuse (adjustable ~25 mA … 880 mA)
+
+TI wrote this **for smart-meter P1 +5 V**:
+
+  App note (PDF): https://www.ti.com/lit/pdf/slvaf94
+  Title: Fold Back Current Limiting on User Ports of Smart Meters
+         (TPS2662; ILIM near DSMR continuous; foldback ~tens of mA on fault).
+
+  Product: https://www.ti.com/product/TPS2662
+
+Buy DigiKey / Mouser: search **TPS2662**.
+Optional: TPS2662 EVM to learn, then copy onto the simulator PCB.
+
+
+HOW IT FITS YOUR BOARD
+----------------------
+  Lipo Rider 5V (SYS_5V)   ← circuit 02; Rider 3V3 unused
+       │
+       ├─► 5→3.3 (circuit 03) → MCU
+       │
+       ▼
+  TPS2662 eFuse  (ILIM ≈ 250–300 mA, foldback path per slvaf94)
+       │
+       ▼
+  P1_5V ──► (± isolated DC-DC, circuit 11) ──► RJ12 pin 1
+  (+ bulk ceramic near the jack for OSM inrush)
+
+TI’s note also shows a brief “boost ILIM at startup” trick with an MCU
+GPIO so Ghost can charge its caps without sitting forever in foldback.
+Optional but smart if Ghost has large bulk caps.
+
+
+OTHER OPTIONS (WEAKER MATCH)
+----------------------------
+- Generic 5 V eFuse (TPS2595, STEF05): current **limit**, often not true
+  DSMR foldback to ≤50 mA. OK for crude lab, not “as in the standard”.
+- Classic LM317 foldback resistor network: educational, not preferred.
+
+
+KICAD
+-----
+Place TPS2662 on SYS_5V → P1_5V. Follow slvaf94 schematic (RILIM, soft-start,
+FLT, optional MCU ILIM boost). Thick P1_5V / GND to RJ12.
+
+
+TEST
+----
+Open: P1_5V ≈ 5 V.
+~200 mA load: stays ≥ ~4.9 V.
+Hard short pin1–pin6: current collapses into foldback (~tens of mA),
+not stuck at 250 mA heating forever; recovers when short removed.

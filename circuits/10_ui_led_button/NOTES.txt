@@ -1,37 +1,32 @@
-10 — UI: STATUS LED + USER BUTTON
-=================================
+10 — UI: LED + BUTTON (± OLED)
+==============================
 
 WHAT THIS BLOCK IS
 ------------------
-Human feedback while developing: Wi‑Fi connected, Request active,
-sending telegram, battery low, error.
+Field feedback without a laptop: Request active, sending, SD error,
+which telegram / profile, battery/charger status (if sensed).
 
 NECESSARY PIECES
 ----------------
-1. At least one LED + series resistor from GPIO (or WS2812 if you like RGB).
-2. One tactile button to GND + software pull-up (or external 10k).
-3. Avoid boot-strapping pins for the button (see ESP32-C3 strap table).
+1. At least one LED + series resistor from GPIO.
+2. One tactile button to GND + pull-up (profile select / next file).
+3. Avoid boot-strapping pins for the button.
+
+OPTIONAL (RECOMMENDED FOR FIELD USE)
+------------------------------------
+4. 0.96" OLED SSD1306 I2C — show profile name, REQ, SD OK.
+   Power from VCC_3V3; SDA/SCL to free GPIOs.
 
 RECOMMENDED PARTS
 -----------------
-Simple (recommended v1):
-  - 0603 LED + 1k–3.3k to GPIO
-  - 4×3 mm or 6×6 mm tactile switch (Ghost used KMR2 style)
-
-Fancy:
-  - WS2812B (Ghost has one) — needs 5 V pixel power, 3.3 V data usually OK
-  - Keep level shifter if flaky
-
-HUMAN / SIMILAR REFERENCES
---------------------------
-- Espressif strap pin tables (do not put button on wrong GPIO).
-- P1 Ghost reports 05_Switch_Pogo_RGB.txt (what went wrong / right).
+- 0603 LED + 1k–3.3k
+- 6×6 mm tactile switch
+- Optional: SSD1306 0.96" module or bare panel + footprint
 
 KICAD
 -----
-Silk: LED meaning if fixed (e.g. "REQ", "WIFI").
-Test points optional next to LED anode.
+Silk labels for LED meaning. OLED away from antenna if possible.
 
 TEST
 ----
-Firmware blink. Button press logged on USB serial.
+LED toggles; button logged; OLED shows selected telegram name.

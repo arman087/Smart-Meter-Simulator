@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "Adafruit bq25185 with 5V Boost Breakout")(type "KiCad")(uri "$(KIPRJMOD)/Adafruit bq25185 with 5V Boost Breakout.pretty")(options "")(descr ""))
+)

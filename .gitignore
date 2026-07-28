@@ -1,0 +1,6 @@
+﻿# KiCad temp / autosave
+**/#auto_saved_files#/
+**/_autosave-*
+**/~*.lck
+**/*-backups/
+*.kicad_pcb.lck

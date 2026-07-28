@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 0)
+  (lib (name "Adafruit bq25185 with 5V Boost Breakout-eagle-import")(type "KiCad")(uri "${KIPRJMOD}/Adafruit bq25185 with 5V Boost Breakout-eagle-import.kicad_sym")(options "")(descr ""))
+)

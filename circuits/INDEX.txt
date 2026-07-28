@@ -2,23 +2,46 @@ CIRCUITS INDEX
 ==============
 
 01_usb_c_input              Board USB-C data → ESP32 (+ ESD)
-02_battery_and_power_mux    Seeed Lipo Rider Plus daughterboard
-04_p1_5v_current_limit      DROPPED
-05_esp32_c3_mini            ESP32-C3-MINI-1
+02_battery_and_power_mux    Lipo Rider Plus headers — use 5V only
+03_5v_to_3v3                On-board 5V→3.3V (≥500 mA) for MCU/SD/OLED
+04_p1_5v_current_limit      TPS2662 foldback P1 +5V (DSMR / TI slvaf94)
+05_esp32_c3_mini            ESP32-C3-MINI-1 (Wi-Fi on for config/OTA)
 06_rj12_connector           RJ12 6P6C meter jack
-07_data_request_sense       Pin2 → GPIO
-08_open_collector_data      UART TX → pin5 OC
+07_data_request_sense       Pin2 → opto → GPIO
+08_open_collector_data      UART TX → opto OC → pin5
 09_esd_protection           USB + RJ12 ESD
-10_ui_led_button            LED + button
-11_optional_isolation       Optional
+10_ui_led_button            LED + button (± OLED)
+11_optional_isolation       Optos (+ optional iso 5V DC-DC) — IN SCOPE
+12_microsd                  microSD telegram store
 
-Buy list
---------
-- Seeed Lipo Rider Plus + 1S LiPo
+Buy / choose list
+-----------------
+See PARTS_CHECKLIST.md in repo root.
+
+Quick buy
+---------
+- Seeed Lipo Rider Plus + 1S LiPo (use 5V rail only)
+- On-board 5→3.3 regulator ≥500 mA
+- TI TPS2662 for P1 5V foldback
 - ESP32-C3-MINI-1
 - Board USB-C + USBLC6 (flash)
+- microSD holder + card
 - RJ12 6P6C
-- BSS138 + Request divider
-- LED + switch
+- High-speed optos ×2 (Request + Data) — not PC817 for 115200
+- Optional: isolated 5V/5V DC-DC for true P1 isolation
+- LED + switch ± OLED
 
-Power = Lipo Rider daughterboard (5V + 3V3). No discrete charger design.
+KiCad order
+-----------
+02 → 03 → 04 → 01 → 05 → 12 → 06 → 11/07/08 → 09 → 10
+
+Skip
+----
+- LoRa
+- Lipo Rider 3V3 as ESP32 supply (only 250 mA)
+- External SDRAM
+
+Official docs
+-------------
+- DSMR P1 Companion Standard 5.0.2 (Netbeheer Nederland)
+- TI app brief slvaf94 — foldback on smart-meter user ports (TPS2662)
