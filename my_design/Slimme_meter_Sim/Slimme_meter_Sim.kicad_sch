@@ -1,0 +1,62 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "d59de98b-abe3-4329-b084-e6d28a71ec22")
+	(paper "A3")
+	(title_block
+		(title "Main PCB")
+		(date "2026-07-30")
+	)
+	(lib_symbols)
+	(sheet
+		(at 40.64 29.21)
+		(size 58.42 24.13)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 255 122 161 1.0000)
+		)
+		(uuid "5e636416-256f-40d4-bd94-a88f282663f2")
+		(property "Sheetname" "SCH_1_USB_5volt"
+			(at 40.64 26.5934 0)
+			(show_name yes)
+			(effects
+				(font
+					(size 5.08 5.08)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "SCH_1_USB_5volt_sch.kicad_sch"
+			(at 40.64 53.9246 0)
+			(show_name yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

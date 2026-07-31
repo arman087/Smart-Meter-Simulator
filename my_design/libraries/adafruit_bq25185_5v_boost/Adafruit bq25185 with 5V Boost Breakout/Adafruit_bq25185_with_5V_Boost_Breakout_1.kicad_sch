@@ -38809,7 +38809,7 @@
 			)
 		)
 		(property "Value" "10K"
-			(at 55.88 117.475 0)
+			(at 54.864 117.348 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -40151,7 +40151,7 @@
 			)
 		)
 		(property "Value" "10uF"
-			(at 63.5 106.68 90)
+			(at 65.278 108.458 90)
 			(effects
 				(font
 					(size 1.27 1.27)
