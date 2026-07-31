@@ -1,39 +1,30 @@
 # my_design
 
-Your working area for the Smart Meter Simulator PCB.
+Working KiCad for the Smart Meter Simulator:
 
 ```
 my_design/
-  libraries/          ← reference designs you study (do not edit as your product)
-    adafruit_bq25185_5v_boost/
-  (later) your KiCad project sheets
+  Slimme_meter_Sim/          ← product project (start here)
+    SCH_1_USB_5volt_sch…     USB-C → bq25185 → TPS61023 → SYS_5V
 ```
 
-## libraries/
-
-| Folder | Source | Use for |
-|--------|--------|---------|
-| `adafruit_bq25185_5v_boost/` | [Adafruit #6106 GitHub](https://github.com/adafruit/Adafruit-bq25185-with-5V-Boost-PCB) | **Integrate both ICs** onto main PCB |
-
-### Power path (locked)
+## Power nets
 
 ```
 USB-C → bq25185 → V+ / VSYS (3.0–4.5 V) → TPS61023 → +5V (SYS_5V)
 ```
 
-- **bq25185** pin 1 = `VSYS` (Adafruit net `V+`) — **not** 5 V  
-- **TPS61023** is **required** — do not delete the boost sheet when copying  
+- **bq25185** system rail = `VSYS` (schematic `V+`) — **not** 5 V  
+- **TPS61023** is **required** — do not feed P1 or the 3.3 V regulator from `V+` alone  
 
-### How to use
+## Docs
 
-1. Open KiCad project under `adafruit_bq25185_5v_boost/Adafruit bq25185 with 5V Boost Breakout/`  
-   (or Eagle `.sch` / `.brd` at the folder root).  
-2. Copy bq25185 **and** TPS61023 (plus inductor, FB, input path) into your product schematic.  
-3. Omit solar pads / terminal block if unused.  
-4. Then add circuits `03` (5→3.3), `04` (TPS2662), ESP32, SD, RJ12, optos.
+- [DESIGN_REPORT.md](../DESIGN_REPORT.md) — why / how so far  
+- [DESIGN_GUIDE.md](../DESIGN_GUIDE.md) — architecture checklist  
+- [PARTS_CHECKLIST.md](../PARTS_CHECKLIST.md)  
 
-### Upstream
+## Silicon refs
 
-- Product: https://www.adafruit.com/product/6106  
-- Guide: https://learn.adafruit.com/adafruit-bq25185-usb-dc-solar-charger-with-5v-boost-board  
-- `license.txt` — Adafruit OSHW; respect when redistributing  
+- https://www.ti.com/product/BQ25185  
+- https://www.ti.com/product/TPS61023  
+- https://www.ti.com/lit/pdf/slvaf94 (P1 foldback / TPS2662)

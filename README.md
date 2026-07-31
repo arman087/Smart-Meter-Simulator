@@ -13,11 +13,14 @@ Park it on battery in a building corner, plug in [P1 Ghost](https://github.com/a
 **MCU:** ESP32-C3-MINI-1 (Wi‑Fi on for config / OTA) · **P1 serial:** 115200 8N1 inverted open-drain  
 **Telegram store:** microSD · **Build volume:** ~5 boards (JLCPCB)
 
+**Why / how so far:** **[DESIGN_REPORT.md](DESIGN_REPORT.md)**  
+**Working KiCad:** `my_design/Slimme_meter_Sim/` (power through **SYS_5V** drawn)
+
 ---
 
 ## Locked power architecture
 
-Integrate Adafruit **#6106** on the **main PCB** (one board + battery — no daughterboard stack):
+Charge, boost, MCU, and P1 on **one main PCB** (plus 1S LiPo — no power daughterboard):
 
 ```
 USB-C ──► bq25185 ──► VSYS / V+ (≈3.0–4.5 V) ──► TPS61023 ──► SYS_5V (+5 V)
@@ -32,15 +35,12 @@ USB-C ──► bq25185 ──► VSYS / V+ (≈3.0–4.5 V) ──► TPS61023 
 
 | Net | What it is | Notes |
 |-----|------------|--------|
-| `VSYS` / `V+` | bq25185 pin 1 (system rail) | **Not 5 V** — ~4.5 V on USB, ~3.0–4.2 V on battery |
-| `SYS_5V` | TPS61023 boost out | **Keep this IC** — required for real P1 5 V |
+| `VSYS` / `V+` | bq25185 system rail | **Not 5 V** — ~4.5 V on USB, ~3.0–4.2 V on battery |
+| `SYS_5V` | TPS61023 boost out | **Required** — real P1 5 V + headroom for 3.3 V |
 | `VCC_3V3` | On-board 5→3.3 | From `SYS_5V`, ≥500 mA (Wi‑Fi) |
 | `P1_5V` | TPS2662 out | DSMR foldback ~250 mA |
 
 **Do not** feed RJ12 or a 3.3 V LDO from `V+` alone — Ghost needs ~5 V on battery, and a 3.3 V LDO browns out when the cell is low.
-
-Reference: `my_design/libraries/adafruit_bq25185_5v_boost/`  
-Product: [Adafruit #6106](https://www.adafruit.com/product/6106)
 
 Board USB-C for ESP32 **D+/D−** may be separate from charge USB-C (or carefully shared).
 
@@ -57,7 +57,7 @@ RJ12 pin2 ── opto ──► Request GPIO
 ESP32 TX ── opto / OC ──► RJ12 pin5
 ```
 
-Full blueprint: **[DESIGN_GUIDE.md](DESIGN_GUIDE.md)** · Parts: **[PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)** · Refs: **[my_design/](my_design/)**
+Full blueprint: **[DESIGN_GUIDE.md](DESIGN_GUIDE.md)** · Parts: **[PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)** · Design: **[my_design/Slimme_meter_Sim/](my_design/Slimme_meter_Sim/)**
 
 ---
 
@@ -66,7 +66,7 @@ Full blueprint: **[DESIGN_GUIDE.md](DESIGN_GUIDE.md)** · Parts: **[PARTS_CHECKL
 | Folder | Status |
 |--------|--------|
 | [circuits/01_usb_c_input](circuits/01_usb_c_input) | Board USB-C data → ESP32 |
-| [circuits/02_battery_and_power_mux](circuits/02_battery_and_power_mux) | **bq25185 + TPS61023** (integrate #6106) |
+| [circuits/02_battery_and_power_mux](circuits/02_battery_and_power_mux) | **bq25185 + TPS61023** |
 | [circuits/03_5v_to_3v3](circuits/03_5v_to_3v3) | On-board 5→3.3 for MCU |
 | [circuits/04_p1_5v_current_limit](circuits/04_p1_5v_current_limit) | TPS2662 foldback P1 +5 V |
 | [circuits/05_esp32_c3_mini](circuits/05_esp32_c3_mini) | ESP32-C3-MINI-1 |
@@ -93,5 +93,5 @@ Suggested KiCad order: **02 → 03 → 04 → 01 → 05 → 12 → 06 → 11/07/
 
 - [P1 Companion Standard 5.0.2](https://www.netbeheernederland.nl/sites/default/files/2024-02/dsmr_5.0.2_p1_companion_standard.pdf)
 - [TI slvaf94 — TPS2662](https://www.ti.com/lit/pdf/slvaf94)
-- [Adafruit #6106 — bq25185 + 5V boost](https://www.adafruit.com/product/6106)
+- [TI bq25185](https://www.ti.com/product/BQ25185) · [TI TPS61023](https://www.ti.com/product/TPS61023)
 - [arman087/P1_ghost](https://github.com/arman087/P1_ghost)

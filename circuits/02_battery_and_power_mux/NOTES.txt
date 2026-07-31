@@ -1,30 +1,31 @@
-02 — POWER: bq25185 + TPS61023 (INTEGRATE ON MAIN PCB)
-======================================================
+02 — POWER: bq25185 + TPS61023 (MAIN PCB)
+==========================================
 
 CHOSEN SOLUTION
 ---------------
-Copy Adafruit product #6106 onto the main PCB (open-source Eagle/KiCad):
+Integrate TI **bq25185** (charge + power path) and TI **TPS61023**
+(VSYS → fixed +5 V) on the main simulator PCB.
 
-  https://www.adafruit.com/product/6106
-  Ref files: ../../my_design/libraries/adafruit_bq25185_5v_boost/
+Working schematic: ../../my_design/Slimme_meter_Sim/SCH_1_USB_5volt_sch.kicad_sch
 
 Two ICs — **keep both**:
 
-  1) bq25185  — USB/DC charge, power path, battery BUVLO, VSYS out
+  1) bq25185  — USB charge, power path, battery BUVLO, VSYS out
   2) TPS61023 — boost VSYS → fixed +5 V (SYS_5V)
 
-Do **not** omit the boost. Do **not** use Lipo Rider Plus as the primary power design.
+Do **not** omit the boost. Do **not** use a stacked LiPo “rider” board
+as the primary power design.
 
 NETS (IMPORTANT)
 ----------------
-  VBUS / VIN   USB-C (and optional DC pads — omit solar if unused)
+  VBUS / VIN   USB-C (and optional DC pads — omit if unused)
   VBAT         1S LiPo (2-wire OK; IC has charge terminate + BUVLO)
-  VSYS / V+    bq25185 pin 1 — system rail
+  VSYS / V+    bq25185 system rail
                  • ~4.5 V with USB
                  • ~3.0–4.2 V on battery only
                  • THIS IS NOT 5 V
   SYS_5V       TPS61023 output — regulated +5 V → rest of board
-  EN           boost enable (Adafruit: pull-up to V+; can GPIO later)
+  EN           boost enable (pull-up to V+; can GPIO later)
 
 POWER FLOW
 ----------
@@ -40,12 +41,12 @@ WHY KEEP TPS61023
 - RJ12 / Ghost need ~5 V on battery (V+ alone is often 3.3–4.2 V).
 - 5→3.3 LDO needs headroom; from a near-empty cell V+ cannot make 3.3 V.
 
-WHAT TO COPY / DROP FROM #6106
-------------------------------
-Copy: USB-C charge, JST/battery, bq25185, TPS61023, input diodes, ISET/VSET,
-      boost inductor + FB resistors, status LEDs if you want.
-Drop: solar/DC terminal if unused; green 5V terminal block (use nets instead).
-Layout: keep Adafruit inductor/charger area close to their reference.
+INCLUDE / OMIT
+--------------
+Include: USB-C charge, JST/battery, bq25185, TPS61023, input protection,
+         ISET/VSET, boost inductor + FB resistors, status LEDs as needed.
+Omit: unused solar/DC terminal; green 5 V terminal block (use nets).
+Layout: keep inductor and charger ceramics tight to the ICs (TI guidance).
 
 MAIN PCB ALSO HAS
 -----------------

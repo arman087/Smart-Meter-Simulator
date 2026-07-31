@@ -11,15 +11,14 @@ Architecture is locked in [DESIGN_GUIDE.md](DESIGN_GUIDE.md) and [README.md](REA
 
 | # | Item | Example | Notes | Status |
 |---|------|---------|-------|--------|
-| A1 | Charger IC | **bq25185** | From Adafruit #6106 — USB charge, power path, BUVLO | 🔧 |
-| A2 | 5 V boost | **TPS61023** + 1 µH + FB (R3/R4) | Boosts `V+`/`VSYS` → `SYS_5V`. **Do not omit** | 🔧 |
-| A3 | Charge USB-C | Same family as #6106 | CC 5.1 kΩ; optional share data with ESP32 | 🔧 |
+| A1 | Charger IC | **bq25185** | USB charge, power path, BUVLO | 🔧 |
+| A2 | 5 V boost | **TPS61023** + 1 µH + FB | Boosts `V+`/`VSYS` → `SYS_5V`. **Do not omit** | 🔧 |
+| A3 | Charge USB-C | e.g. LCSC C165948 | CC 5.1 kΩ; optional share data with ESP32 | 🔧 |
 | A4 | Battery connector | JST-PH or pads for 2-wire LiPo | bq25185 manages charge + UVLO | ✅ |
 | A5 | 1S LiPo | 1000–3000 mAh | 2-wire OK | ✅ |
 | A6 | microSD card | 8–32 GB, FAT32 | Telegram library | ✅ |
 
-Reference schematic/PCB: `my_design/libraries/adafruit_bq25185_5v_boost/`  
-Product: https://www.adafruit.com/product/6106
+Working schematic: `my_design/Slimme_meter_Sim/` · Story: [DESIGN_REPORT.md](DESIGN_REPORT.md)
 
 **Nets:** `VBUS` → bq25185 → `V+`/`VSYS` (3.0–4.5 V) → TPS61023 → `SYS_5V` (+5 V)
 
@@ -92,7 +91,7 @@ Product: https://www.adafruit.com/product/6106
 | Feeding P1 from `V+` / VSYS | Undervoltage vs DSMR |
 | 3.3 V LDO from `V+` only | Browns out when cell ≈ 3.2 V |
 | LoRa | Not needed |
-| Lipo Rider Plus as primary | Superseded by integrated #6106 |
+| Stacked LiPo rider as primary | Superseded by integrated bq25185 + TPS61023 |
 | External SDRAM | Wrong tool |
 | Wi‑Fi as primary telegram store | Use microSD |
 
@@ -117,7 +116,7 @@ SD_*
 
 ## I. KiCad order
 
-1. bq25185 + TPS61023 (`02`) — copy #6106  
+1. bq25185 + TPS61023 (`02`) — sheet 1 in Slimme_meter_Sim  
 2. 5→3.3 (`03`)  
 3. TPS2662 (`04`)  
 4. USB-C data (`01`)  
@@ -130,7 +129,7 @@ SD_*
 
 ## J. Rough buy / BOM starters
 
-- [ ] bq25185 + TPS61023 + inductor/passives (from #6106 BOM)  
+- [ ] bq25185 + TPS61023 + inductor/passives (see Slimme_meter_Sim sheet 1)  
 - [ ] 1S LiPo + JST  
 - [ ] ESP32-C3-MINI-1-N4(U)  
 - [ ] TPS2662  

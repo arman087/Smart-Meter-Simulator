@@ -3,12 +3,12 @@
 
 WHAT THIS BLOCK IS
 ------------------
-Board USB-C for **D+/D− only** (flash + serial to ESP32-C3).
-System 5V / 3.3V / battery charging come from **Lipo Rider Plus**
-(circuit 02) — not from this connector.
+Board USB-C for **D+/D−** (flash + serial to ESP32-C3).
+System 5V / 3.3V / battery charging come from **circuit 02**
+(bq25185 + TPS61023 → SYS_5V) — not from a separate power board.
 
-You may still tie VBUS to a sense net or leave unused; do not fight
-the Lipo Rider 5V rail.
+You may share one USB-C carefully with charge, or use a second
+receptacle for data-only; do not fight the SYS_5V rail.
 
 NECESSARY PIECES
 ----------------
@@ -24,8 +24,8 @@ RECOMMENDED PARTS (lab / module-friendly)
 -----------------------------------------
 - Connector: TYPE-C-31-M-12 or Molex/Amphenol 16-pin SMD (reuse Ghost footprint).
 - ESD: USBLC6-2SC6 (same as P1 Ghost) or TPD2E001 / PESD5V0x1Bx.
-- Optional ready module for bring-up: any "USB-C breakout with CC resistors"
-  (SparkFun / Adafruit USB-C breakout) wired to a breadboard first.
+- Optional ready module for bring-up: any USB-C breakout with CC 5.1 kΩ
+  pulldowns wired to a breadboard first.
 
 DO NOT FORGET
 -------------
@@ -39,7 +39,7 @@ HUMAN / SIMILAR REFERENCES
 - Espressif ESP32-C3 hardware design guidelines (USB section):
   https://docs.espressif.com/projects/esp-hardware-design-guidelines/
 - Your own P1 Ghost sheet: USB-C + USBLC6 (last check report 02_USB_C_input).
-- Adafruit / SparkFun USB-C breakout guides (CC = 5.1k to GND for sink).
+- USB-C breakout guides (CC = 5.1k to GND for sink).
 
 KICAD
 -----

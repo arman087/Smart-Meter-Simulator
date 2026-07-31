@@ -2,7 +2,7 @@ CIRCUITS INDEX
 ==============
 
 01_usb_c_input              Board USB-C data → ESP32 (+ ESD)
-02_battery_and_power_mux    bq25185 + TPS61023 (integrate Adafruit #6106)
+02_battery_and_power_mux    bq25185 + TPS61023 (main PCB)
 03_5v_to_3v3                On-board 5V→3.3V (≥500 mA) for MCU/SD/OLED
 04_p1_5v_current_limit      TPS2662 foldback P1 +5V (DSMR / TI slvaf94)
 05_esp32_c3_mini            ESP32-C3-MINI-1 (Wi-Fi on for config/OTA)
@@ -17,10 +17,12 @@ CIRCUITS INDEX
 Buy / choose list
 -----------------
 See PARTS_CHECKLIST.md in repo root.
+Design story: DESIGN_REPORT.md
+Working KiCad: my_design/Slimme_meter_Sim/
 
 Quick buy / design
 ------------------
-- Integrate bq25185 + TPS61023 from Adafruit #6106 (ref in my_design/libraries/)
+- bq25185 + TPS61023 on main PCB (SYS_5V hub)
 - 1S LiPo (2-wire OK with bq25185 BUVLO)
 - On-board 5→3.3 regulator ≥500 mA
 - TI TPS2662 for P1 5V foldback
@@ -41,10 +43,10 @@ Skip
 - LoRa
 - Omitting TPS61023 / feeding P1 from VSYS/V+ alone
 - External SDRAM
-- Lipo Rider Plus as primary power (superseded by #6106 integrate)
+- Stacked LiPo rider board as primary power
 
 Official docs
 -------------
 - DSMR P1 Companion Standard 5.0.2 (Netbeheer Nederland)
 - TI app brief slvaf94 — foldback on smart-meter user ports (TPS2662)
-- Adafruit #6106 / bq25185 + TPS61023
+- TI bq25185 / TPS61023 datasheets

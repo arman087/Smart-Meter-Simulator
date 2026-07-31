@@ -3,7 +3,7 @@
 **Goal:** Portable **DSMR P1 meter-side** board so you can develop and field-test **P1 Ghost** (Wi‑Fi range, etc.) without asking to use real doorstep meters.
 
 **MCU:** ESP32-C3-MINI-1 (Wi‑Fi **on** for config / OTA / talk-to-device)  
-**Power (on main PCB):** Adafruit **#6106** circuit — **bq25185** (charge + `VSYS`/`V+`) + **TPS61023** (`V+` → **+5 V**) + **on-board 5→3.3 V** (≥500 mA)  
+**Power (on main PCB):** **bq25185** (charge + `VSYS`/`V+`) + **TPS61023** (`V+` → **+5 V**) + **on-board 5→3.3 V** (≥500 mA)  
 **P1 +5 V:** TI **TPS2662** foldback  
 **Store:** **microSD** telegram files  
 **Connector:** RJ12 6P6C female (meter side)  
@@ -12,7 +12,8 @@
 **Skip:** LoRa · feeding RJ12 from `V+` without the boost  
 
 Part picking: **[PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)**  
-Reference: `my_design/libraries/adafruit_bq25185_5v_boost/`
+Design story: **[DESIGN_REPORT.md](DESIGN_REPORT.md)**  
+KiCad: `my_design/Slimme_meter_Sim/`
 
 ---
 
@@ -62,7 +63,7 @@ microSD telegrams ──► ESP32-C3 ──► opto / OC UART ──► RJ12 pin
 |---|--------|---------|
 | 1 | Board USB-C (D+/D− flash) | **Required** |
 | 2 | ESP32-C3-MINI-1 + EN / caps | **Required** |
-| 3 | **bq25185** charge + power path | **Required** — integrate from #6106 |
+| 3 | **bq25185** charge + power path | **Required** |
 | 4 | **TPS61023** `V+` → `SYS_5V` | **Required** — do **not** omit |
 | 5 | On-board **5V→3.3V** (≥500 mA) | **Required** |
 | 6 | **TPS2662** SYS_5V→P1_5V | **Required** — DSMR foldback |
@@ -82,7 +83,7 @@ microSD telegrams ──► ESP32-C3 ──► opto / OC UART ──► RJ12 pin
 
 ### 3.1 What `VSYS` / `V+` is (bq25185 pin 1)
 
-Adafruit net **`V+`** = charger **VSYS**. It is **not** a 5 V rail.
+Charger **VSYS** (schematic net `V+`) is **not** a 5 V rail.
 
 | Condition | Typical voltage |
 |-----------|-----------------|
@@ -99,7 +100,7 @@ Adafruit net **`V+`** = charger **VSYS**. It is **not** a 5 V rail.
 | Rail | Source | Budget |
 |------|--------|--------|
 | `V+` / VSYS | bq25185 | Intermediate only |
-| `SYS_5V` | TPS61023 | ~**1 A** max (Adafruit); you need ≪ that |
+| `SYS_5V` | TPS61023 | ~**1 A** class IC; board load ≪ that |
 | `P1_5V` | TPS2662 | ~**250 mA** continuous, foldback on fault |
 | `VCC_3V3` | On-board regulator from `SYS_5V` | **≥500 mA** |
 
@@ -142,7 +143,7 @@ Optos in scope. True floating P1 needs isolated 5 V DC-DC + `GND_ISO`.
 
 ## 5. Reference circuit patterns
 
-### 5.1 Power (copy Adafruit #6106, then your rails)
+### 5.1 Power (main PCB)
 
 ```
 USB-C ──► bq25185 ──► V+ / VSYS
@@ -152,7 +153,7 @@ USB-C ──► bq25185 ──► V+ / VSYS
                                               └─► TPS2662 ──► P1_5V ──► RJ12 pin1
 ```
 
-Omit solar pads / green terminal if unused. **Keep both ICs.**
+Keep **both** charger and boost. Omit unused solar / DC terminal pads if not needed.
 
 ### 5.2–5.5
 
@@ -178,7 +179,7 @@ Request opto, Data opto OC, USB-C data (GPIO18/19), microSD SPI — see circuit 
 
 | Step | Subcircuit | Done when… |
 |------|------------|------------|
-| 1 | Nets + bq25185 + TPS61023 (`02`) | `V+`, `SYS_5V`, charge, battery |
+| 1 | Nets + bq25185 + TPS61023 (`02`) | `V+`, `SYS_5V`, charge, battery — **in progress in Slimme_meter_Sim** |
 | 2 | 5→3.3 (`03`) | `VCC_3V3` stable under Wi‑Fi |
 | 3 | Board USB-C (`01`) | Flash blink |
 | 4 | ESP32 (`05`) | CDC + Wi‑Fi smoke |
@@ -214,6 +215,6 @@ Request opto, Data opto OC, USB-C data (GPIO18/19), microSD SPI — see circuit 
 
 1. [DSMR P1 Companion Standard 5.0.2](https://www.netbeheernederland.nl/sites/default/files/2024-02/dsmr_5.0.2_p1_companion_standard.pdf)  
 2. [TI slvaf94 — TPS2662](https://www.ti.com/lit/pdf/slvaf94)  
-3. [Adafruit #6106](https://www.adafruit.com/product/6106) · [PCB GitHub](https://github.com/adafruit/Adafruit-bq25185-with-5V-Boost-PCB)  
-4. [PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)  
+3. [TI bq25185](https://www.ti.com/product/BQ25185) · [TI TPS61023](https://www.ti.com/product/TPS61023)  
+4. [PARTS_CHECKLIST.md](PARTS_CHECKLIST.md) · [DESIGN_REPORT.md](DESIGN_REPORT.md)  
 5. [arman087/P1_ghost](https://github.com/arman087/P1_ghost)  
