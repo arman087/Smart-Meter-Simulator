@@ -4632,6 +4632,16 @@
 	)
 	(wire
 		(pts
+			(xy 332.74 77.47) (xy 332.74 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "278307a0-ede5-44b7-aa12-4a77a19ced0d")
+	)
+	(wire
+		(pts
 			(xy 234.95 64.77) (xy 240.03 64.77)
 		)
 		(stroke
@@ -4639,6 +4649,16 @@
 			(type default)
 		)
 		(uuid "28ced08f-604e-4a8c-8c68-eeb4ebd36dea")
+	)
+	(wire
+		(pts
+			(xy 332.74 76.2) (xy 334.01 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2b534017-8aff-421d-9753-4d3f5c5e35ba")
 	)
 	(wire
 		(pts
@@ -5531,6 +5551,28 @@
 				(hide yes)
 			)
 		)
+	)
+	(hierarchical_label "+5V"
+		(shape bidirectional)
+		(at 332.74 72.39 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "0e67135f-7def-406f-b7c0-d241efdcb2c2")
+	)
+	(hierarchical_label "GND1"
+		(shape bidirectional)
+		(at 334.01 76.2 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "24293efa-8b85-4ac6-9a32-d799b87c75bf")
 	)
 	(symbol
 		(lib_id "power:VCC")
@@ -6996,6 +7038,72 @@
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
 					(reference "SW1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND1")
+		(at 332.74 77.47 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4e950071-bc8c-47b7-9582-661ec9549883")
+		(property "Reference" "#PWR041"
+			(at 332.74 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND1"
+			(at 332.74 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 332.74 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 332.74 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND1\" , ground"
+			(at 332.74 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a71b059d-e55e-46fc-b56c-98526ab3895c")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "#PWR041")
 					(unit 1)
 				)
 			)
@@ -10755,6 +10863,72 @@
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
 					(reference "#PWR013")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+5V")
+		(at 332.74 72.39 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f1e63895-24e6-42fa-8822-a63bbabd60b0")
+		(property "Reference" "#PWR040"
+			(at 332.74 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+5V"
+			(at 332.74 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 332.74 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 332.74 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
+			(at 332.74 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e3a35e22-6b49-4a54-9c4a-4ff6e7d3a09d")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "#PWR040")
 					(unit 1)
 				)
 			)

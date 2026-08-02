@@ -3,37 +3,56 @@
 
 WHAT THIS BLOCK IS
 ------------------
-When the OSM wants telegrams, it drives RJ12 pin 2 HIGH (~4.0–5.5 V).
-Your MCU must DETECT that and start UART TX. When OSM releases pin 2
-(high‑Z), stop sending.
+When Ghost / OSM wants telegrams, it drives RJ12 pin 2 HIGH (~4–5.5 V).
+MCU must DETECT that and start UART TX. When pin 2 goes high‑Z, stop.
 
 You NEVER drive pin 2 from the MCU.
 
-CHOSEN APPROACH (THIS BUILD)
-----------------------------
-**Optocoupler / digital isolator** (see circuit 11) — DSMR-like.
 
-Fallback for bring-up only: resistor divider (10k/10k) if opto not stuffed.
+TWO VOLTAGE DOMAINS (this is the whole point of the opto)
+----------------------------------------------------------
+  P1 / RJ12 side     ≈ 5 V   (Request comes from Ghost)
+  MCU side           = 3.3 V (ESP32 GPIO only)
 
-NECESSARY PIECES
-----------------
-1. Opto LED path on P1 / Request side (series resistor).
-2. Opto output into 3.3 V GPIO (pull-up to VCC_3V3 as needed).
-3. ESD (circuit 09).
-4. Firmware: interrupt or poll → gate telegram stream.
+The opto LED sits on the 5 V Request path.
+The opto transistor sits on the 3.3 V GPIO path.
+They only couple by light — GPIO never sees 5 V.
 
-RECOMMENDED PARTS
------------------
-- TLP2361 / 6N137 / Si86xx — prefer over PC817
-- Series LED resistor sized for CTR + speed
-- Document active-high vs active-low after opto
+
+EXAMPLE WIRING
+--------------
+  RJ12 pin2 (P1_REQ)
+       │
+      Rser (size for ~5–10 mA LED; start ~470 Ω–1 kΩ, check CTR)
+       │
+       ▼
+    opto LED anode
+    opto LED cathode ── GND
+
+    opto collector ──┬── Rpu (10 kΩ) ── VCC_3V3
+                     └── ESP32 GPIO (e.g. free input)
+    opto emitter ── GND
+
+Polarity: document whether GPIO is HIGH or LOW when Request is active
+(depends on transistor wiring). Firmware gates TX on that level.
+
+
+PARTS
+-----
+Fast digital opto @ 115200-class edges if you share family with Data path:
+  TLP2361, 6N137, Si86xx, etc. — NOT slow PC817 for the Data TX path;
+  Request is DC-ish so a slower opto can work, but one fast dual is cleaner.
+
+Fallback bring-up: 10k/10k divider pin2 → GPIO (no isolation).
+
 
 KICAD
 -----
-Nets: P1_REQ (RJ12), P1_REQ_MCU (GPIO).
-Silk: "REQ IN".
+Nets: P1_REQ, P1_REQ_MCU.
+Place near RJ12. Silk: REQ.
+
 
 TEST
 ----
-Float pin2 → MCU inactive.
-Apply 5 V on pin2 → MCU active → start send. Remove → stop.
+Float pin2 → MCU idle (no TX).
+Apply ~5 V on pin2 → MCU sees Request → start send. Remove → stop.

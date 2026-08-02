@@ -12,27 +12,22 @@ empty battery, so a 3.3 V LDO from V+ will brown out).
 FLOW
 ----
     SYS_5V (+5 V from TPS61023)
-         ──► 5→3.3 regulator ──► VCC_3V3 ──► ESP32, microSD, OLED, logic
+         ──► SY8088 (or other ≥500 mA buck) ──► VCC_3V3 ──► ESP32, microSD, logic
 
 NECESSARY PIECES
 ----------------
-1. Regulator IC or your proven 5→3.3 module/circuit.
+1. Regulator IC — **SY8088** locked on Slimme_meter_Sim sheet 2.
 2. Input ceramic near VIN (e.g. 10 µF).
 3. Output ceramic + bulk near VOUT (e.g. 10 µF + 100 nF).
 4. Extra 100 nF at ESP32 VDD pins (circuit 05).
 
 CANDIDATE PARTS (pick one family and lock PN)
 ---------------------------------------------
-LDO (simple, some heat at high Iq):
-  - AP2112K-3.3 (600 mA) — common, SOT-23-5
-  - TLV1117LV-33 / AMS1117-3.3 (check dropout + heat from 5V)
+**Chosen:** SY8088A-AC (or project MPN on sheet 2) — 5→3.3 buck.
 
-Buck (cooler, more efficient for Wi-Fi peaks):
-  - Small 5→3.3 buck module you already trust
-  - Or IC e.g. TPS62840 / similar 1 A class (verify stock/footprint)
-
-If you already have a working 5→3.3 daughterboard from earlier work:
-  reuse that schematic/footprint here.
+Alternatives if restuffing:
+  - AP2112K-3.3 LDO (simpler, more heat)
+  - Other ≥500 mA bucks with JLCPCB stock
 
 KICAD
 -----

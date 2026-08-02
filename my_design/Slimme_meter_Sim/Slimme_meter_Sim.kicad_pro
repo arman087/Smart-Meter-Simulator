@@ -647,6 +647,10 @@
     [
       "5e636416-256f-40d4-bd94-a88f282663f2",
       "SCH_1_USB_5volt"
+    ],
+    [
+      "83fb2266-046b-478e-8047-fe792468e87b",
+      "SCH_2_power_supplies"
     ]
   ],
   "text_variables": {}

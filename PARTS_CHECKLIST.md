@@ -22,6 +22,44 @@ Working schematic: `my_design/Slimme_meter_Sim/` · Story: [DESIGN_REPORT.md](DE
 
 **Nets:** `VBUS` → bq25185 → `V+`/`VSYS` (3.0–4.5 V) → TPS61023 → `SYS_5V` (+5 V)
 
+### A7 — Selectable charge current (bq25185 ISET)
+
+**You want:** **250 / 500 / 1000 mA**, only **one** path on at a time.  
+That means **one** 3-channel selector (SP3T) or **one** jumper — not three switches.
+
+Formula: **ICHG ≈ 300 / RISET**. Use **±1%** resistors.
+
+| Target ICHG | RISET | Part (1%) | LCSC |
+|-------------|-------|-----------|------|
+| **250 mA** | **1.20 kΩ** | 1200 Ω | search `1200R 1% 0603` |
+| **500 mA** | **604 Ω** | 604 Ω | [C32183](https://www.lcsc.com/product-detail/C32183.html) |
+| **1000 mA** | **301 Ω** | 301 Ω | search `301R 1% 0603` |
+
+#### Option A — one SP3T slide (recommended)
+
+**One** switch, three throws, hardware guarantees only one channel:
+
+| Part | LCSC |
+|------|------|
+| **SHOU HAN MSK13C02** (SP3T) | **[C2681567](https://www.lcsc.com/product-detail/C2681567.html)** |
+
+```
+                    ┌── throw1 ── 1.20 kΩ ── GND   → 250 mA
+  ISET ── COM ──────┼── throw2 ── 604 Ω   ── GND   → 500 mA
+                    └── throw3 ── 301 Ω   ── GND   → 1000 mA
+```
+
+Silk: `0.25A / 0.5A / 1A`.
+
+#### Option B — 1×3 header + one Dupont jumper
+
+Same idea as a jumper block: common = ISET; move **one** jumper to pick the current.
+
+KiCad: `Conn_01x03` + `PinHeader_1x03_P2.54mm_Vertical`  
+LCSC: search `2.54mm 1x3P` male pin header.
+
+Do **not** change ILIM/VSET (13 kΩ) — that is not ICHG.
+
 ---
 
 ## B. Rails after SYS_5V
@@ -33,6 +71,22 @@ Working schematic: `my_design/Slimme_meter_Sim/` · Story: [DESIGN_REPORT.md](DE
 | B3 | **TPS2662** P1 eFuse | **TPS2662x** | [slvaf94](https://www.ti.com/lit/pdf/slvaf94) ILIM ≈ 250–300 mA | `04` |
 | B4 | TPS2662 support | RILIM, soft-start C, FLT, ceramics | Per datasheet | `04` |
 | B5 | P1 bulk near RJ12 | 47–100 µF + 100 nF | Ghost inrush | `04`/`06` |
+| B6 | **Selectable P1 ILIM** ○ | Jumper + RILIM set | Lab only — see below | `04` |
+
+### B6 — Selectable P1 current limit (TPS2662 RILIM) — optional
+
+Formula: **IOL ≈ 6.636 / RILIM** with RILIM in **kΩ**, IOL in **A**.  
+DSMR continuous target ≈ **250 mA** → RILIM ≈ **26.5 kΩ** (use **26.7 kΩ** 1%).
+
+| Target IOL | RILIM (calc) | Use (E96 1%) |
+|------------|--------------|--------------|
+| 100 mA | 66.4 kΩ | **66.5 kΩ** |
+| 150 mA | 44.2 kΩ | **44.2 kΩ** |
+| 250 mA | 26.5 kΩ | **26.7 kΩ** (default / production) |
+| 300 mA | 22.1 kΩ | **22.1 kΩ** |
+
+Same exclusive-jumper pattern as ISET: common = `ILIM` pin, one jumper only.  
+Production boards can stuff only **26.7 kΩ** and omit the header.
 
 ---
 
@@ -80,6 +134,27 @@ Working schematic: `my_design/Slimme_meter_Sim/` · Story: [DESIGN_REPORT.md](DE
 | F2 | Button | Profile select | `10` |
 | F3 | OLED | Optional | `10` ○ |
 | F4 | Test points | `V+`, `SYS_5V`, `P1_5V`, `VCC_3V3`, `P1_REQ`, `P1_DATA` | — |
+| F5 | **2×5 pin header** | Debug / jumpers / ribbon — see below | `10` |
+
+### F5 — 2×5 male pin header (PEC05DAAN class)
+
+Classic black “Dupont” style: **10-position (2×5)**, **2.54 mm (0.100")** pitch, dual-row, **vertical through-hole male** pin header. Used on the Smart Meter Simulator for ribbon cable or jumper access (GPIO / rails / bring-up).
+
+You do **not** need the Sullins **PEC05DAAN** brand part (Western premium pricing). Any standard Asian LCSC equivalent that matches the same footprint is fine (usually a few cents).
+
+**Search on LCSC:** `2x5P 2.54mm` or `Pin Header 10 Position 2.54mm Dual Row`  
+Filter for **Pin Headers** (open male pins), **straight / vertical**, through-hole — not right-angle, not female sockets, not shrouded IDC box headers unless you specifically want IDC.
+
+Brands that usually stock drop-ins: **BOOMELE**, **XFCN**, **Wcon** (e.g. BOOMELE `2.54-2*5P` in the pin-header category). Confirm photo = open Dupont pins before ordering (many LCSC SKUs share the same MPN string).
+
+**KiCad (built-in — no custom lib):**
+
+| | Library entry |
+|--|----------------|
+| Symbol | `Connector_Generic:Conn_02x05_Odd_Even` |
+| Footprint | `Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical` |
+
+That places the exact 2×5 TH grid for a standard ribbon or Dupont jumpers.
 
 ---
 
@@ -139,6 +214,7 @@ SD_*
 - [ ] High-speed optos ×2  
 - [ ] microSD holder + card  
 - [ ] LED, button, optional OLED  
+- [ ] 2×5 2.54 mm male pin header (LCSC pin-header equiv. of PEC05DAAN)  
 - [ ] Optional: iso 5V DC-DC  
 
 Detail: `circuits/*/NOTES.txt`

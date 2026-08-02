@@ -9,6 +9,66 @@
 		(date "2026-07-30")
 	)
 	(lib_symbols)
+	(wire
+		(pts
+			(xy 99.06 40.64) (xy 101.6 40.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "028b5f42-ac38-4fc4-8b86-e8e40808a4df")
+	)
+	(wire
+		(pts
+			(xy 99.06 45.72) (xy 104.14 45.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1a75f701-92d4-40b9-b993-280f6749b580")
+	)
+	(wire
+		(pts
+			(xy 99.06 76.2) (xy 101.6 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20040319-dd05-4fe1-a984-65b2dcbdb699")
+	)
+	(wire
+		(pts
+			(xy 101.6 40.64) (xy 101.6 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9f496e24-b1a4-4100-8c61-361e0222f199")
+	)
+	(wire
+		(pts
+			(xy 104.14 45.72) (xy 104.14 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b69b1be9-16bf-4a93-ad3a-2d2f2aecc134")
+	)
+	(wire
+		(pts
+			(xy 104.14 81.28) (xy 99.06 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "daf4b45c-992f-450f-aa5e-327404fb554f")
+	)
 	(sheet
 		(at 40.64 29.21)
 		(size 58.42 24.13)
@@ -45,10 +105,92 @@
 				(justify left top)
 			)
 		)
+		(pin "+5V" bidirectional
+			(at 99.06 40.64 0)
+			(uuid "2832bdb6-ac23-4a5d-86c9-b1e3364f30a8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GND1" bidirectional
+			(at 99.06 45.72 0)
+			(uuid "eb1dbe63-f1d1-43c8-8578-40bff24bb494")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
 		(instances
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22"
 					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 41.91 67.31)
+		(size 57.15 24.13)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "83fb2266-046b-478e-8047-fe792468e87b")
+		(property "Sheetname" "SCH_2_power_supplies"
+			(at 41.91 66.5984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "SCH_2_power_supplies.kicad_sch"
+			(at 41.91 92.0246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "+5V" bidirectional
+			(at 99.06 76.2 0)
+			(uuid "d6e7d15d-2234-43c5-98ec-fe593185eaab")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GND1" bidirectional
+			(at 99.06 81.28 0)
+			(uuid "ad01e2de-d1ea-418e-ada8-59265161dbfc")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22"
+					(page "3")
 				)
 			)
 		)

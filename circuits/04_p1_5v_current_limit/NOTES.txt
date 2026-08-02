@@ -66,6 +66,20 @@ KICAD
 Place TPS2662 on SYS_5V → P1_5V. Follow slvaf94 schematic (RILIM, soft-start,
 FLT, optional MCU ILIM boost). Thick P1_5V / GND to RJ12.
 
+OPTIONAL: JUMPER-SELECT RILIM (LAB)
+----------------------------------
+IOL ≈ 6.636 / RILIM_kΩ  (amps). Exclusive jumper — one resistor only:
+
+  250 mA → 26.7 kΩ   ← default / DSMR-like
+  500 mA → 13.3 kΩ
+ 1000 mA → 6.65 kΩ
+
+UVLO=4 V / OVP=9 V divider (not EVM 18/30 V values):
+  R1=158 kΩ, R2=37.4 kΩ, R3=30.1 kΩ
+  Calculator: calc_tps2662_resistors.py
+
+See PARTS_CHECKLIST § B6. Production: hard-wire 26.7 kΩ, no header.
+
 
 TEST
 ----

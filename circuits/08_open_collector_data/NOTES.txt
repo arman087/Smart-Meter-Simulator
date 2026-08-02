@@ -3,42 +3,63 @@
 
 WHAT THIS BLOCK IS
 ------------------
-Per DSMR, Data (pin 5) is open-collector / open-drain:
-you only PULL LOW; the OSM pull-up (1–10 kΩ) makes HIGH.
-Real meters use an optocoupler on the TX path.
+DSMR Data (RJ12 pin 5) is open-collector:
+  - Meter / simulator only PULLS LOW
+  - Ghost / OSM pull-up (1–10 kΩ to ~5 V) makes HIGH
+Real meters use an optocoupler on this path.
 
-CHOSEN APPROACH (THIS BUILD)
-----------------------------
-**Optocoupler (or digital isolator) output stage** — see circuit 11.
-Must work cleanly at **115200** baud → use a **fast** part.
 
-Bring-up fallback: discrete N-MOSFET OC (BSS138) if opto not stuffed.
+5 V vs 3.3 V — ANSWER
+---------------------
+ESP32 UART TX stays on **3.3 V**. It does NOT drive pin 5 directly.
 
-NECESSARY PIECES
-----------------
-1. Opto LED driven from ESP32 TX (series R on 3.3 V domain).
-2. Opto transistor / OC on P1 side → RJ12 pin5.
-3. Optional local pull-up 4.7 kΩ pin5 → P1_5V (bench without OSM).
-4. ESD on pin 5 (circuit 09).
-5. Firmware: send only while Request active; watch invert flag.
+  • 3.3 V domain: ESP32 TX → series R → opto LED → GND
+  • 5 V / P1 domain: opto transistor collector → RJ12 pin 5 (OC)
+                     emitter → GND
+                     optional 4.7 kΩ pin5 → P1_5V for bench without Ghost
 
-MOSFET FALLBACK
----------------
-  ESP32 TX → Gate; Source → GND; Drain → pin5 (+ optional 4.7k to P1_5V)
-  Parts: BSS138 / 2N7002
+So: “Data uses 5 V” means the **RJ12 wire** is in the 5 V OC world.
+Your MCU pin never becomes a 5 V output.
 
-RECOMMENDED PARTS (OPTO PATH)
------------------------------
-- TLP2361, 6N137, or Si86xx + FET if needed for true OC
-- Do NOT drive pin5 with push-pull 3.3 V UART directly
+
+EXAMPLE WIRING
+--------------
+  ESP32 TX (GPIO, 3.3 V UART)
+       │
+      R_LED (~220–470 Ω; set LED current for CTR + speed)
+       │
+       ▼
+    opto LED ── GND
+
+    RJ12 pin5 (P1_DATA) ── collector (open collector)
+    emitter ── GND
+    optional: 4.7 kΩ from pin5 to P1_5V
+
+Idle: TX such that LED is OFF → transistor OFF → pin5 pulled high by Ghost.
+Mark: TX such that LED ON → transistor ON → pin5 LOW.
+
+Firmware: inverted UART is common on P1 — if gibberish, toggle invert.
+Send only while Request (circuit 07) is active.
+
+
+PARTS
+-----
+Must be fast enough for **115200** 8N1:
+  TLP2361 / 6N137 / Si86xx (+ FET if needed for stronger OC)
+Do NOT use slow PC817 for Data.
+
+MOSFET bring-up fallback (no opto):
+  ESP32 TX → gate; source → GND; drain → pin5 (+ 4.7k to P1_5V)
+  BSS138 / 2N7002
+
 
 KICAD
 -----
-Nets: MCU_P1_TX → opto LED; P1_DATA → RJ12 pin5.
-Place near RJ12.
+Nets: MCU_P1_TX, P1_DATA.
+Place near RJ12. Never route ESP32 TX copper onto pin5.
+
 
 TEST
 ----
-4.7k to P1_5V on pin5, scope: idle high; "U" chars → clean edges.
-Ghost receives valid telegrams when Request high.
-If gibberish: toggle UART invert (double-invert is a common bug).
+4.7k to P1_5V on pin5, scope: idle HIGH; "U" stream → clean edges.
+Ghost + Request high → valid telegram.

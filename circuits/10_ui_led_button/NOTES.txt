@@ -16,16 +16,26 @@ OPTIONAL (RECOMMENDED FOR FIELD USE)
 ------------------------------------
 4. 0.96" OLED SSD1306 I2C — show profile name, REQ, SD OK.
    Power from VCC_3V3; SDA/SCL to free GPIOs.
+5. 2×5 2.54 mm male pin header for debug / jumpers / ribbon
+   (PEC05DAAN class — see PARTS_CHECKLIST § F5).
 
 RECOMMENDED PARTS
 -----------------
 - 0603 LED + 1k–3.3k
 - 6×6 mm tactile switch
 - Optional: SSD1306 0.96" module or bare panel + footprint
+- Debug header: any LCSC 2×5P 2.54 mm vertical male pin header
+  (BOOMELE / XFCN / Wcon). Do not buy Sullins PEC05DAAN for JLCPCB —
+  same footprint, higher price. Search "2x5P 2.54mm" Pin Headers;
+  confirm open Dupont pins (not IDC shroud, not R/A, not female).
 
 KICAD
 -----
 Silk labels for LED meaning. OLED away from antenna if possible.
+
+2×5 debug header (built-in libs, no custom download):
+  Symbol:     Connector_Generic:Conn_02x05_Odd_Even
+  Footprint:  Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical
 
 TEST
 ----

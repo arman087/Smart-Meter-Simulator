@@ -150,9 +150,12 @@ Ghost on a 250 mA P1 budget: LoRa-only TX is comfortable; Wi‑Fi-only is tight;
 |------|--------|
 | Problem / product role | Locked |
 | Rail architecture (VSYS → SYS_5V → 3V3 + P1) | Locked |
-| KiCad: USB → charge → boost → **5 V** | **Drawn** |
-| KiCad: 3.3 V, TPS2662, RJ12, MCU, SD, optos | Next |
-| Firmware / telegram player | Later |
+| KiCad: USB → charge → boost → **SYS_5V** | **Drawn** (sheet 1) |
+| KiCad: **TPS26625**, RJ12, caps, P1 LED, test points | **Drawn** (sheet 2) |
+| KiCad: **SY8088** → 3.3 V, **ESP32-C3**, USB D+/D−, RGB LED | **Drawn** |
+| PCB: components placed, not routed | In progress |
+| KiCad: Request + Data **optos** | **Next** |
+| microSD / ESD polish / firmware | Later |
 
 ---
 
