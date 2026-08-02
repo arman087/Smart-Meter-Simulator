@@ -13,7 +13,7 @@ Park it on battery in a building corner, plug in [P1 Ghost](https://github.com/a
 **MCU:** ESP32-C3-MINI-1 (Wi‑Fi on for config / OTA) · **P1 serial:** 115200 8N1 inverted open-drain  
 **Telegram store:** microSD · **Build volume:** ~5 boards (JLCPCB)
 
-**Why / how:** **[DESIGN_REPORT.md](DESIGN_REPORT.md)** · **KiCad:** `my_design/Slimme_meter_Sim/`
+**Why / how:** **[DESIGN_REPORT.md](DESIGN_REPORT.md)** · **Firmware:** **[FIRMWARE_GUIDE.md](FIRMWARE_GUIDE.md)** · **KiCad:** `my_design/Slimme_meter_Sim/`
 
 ---
 
@@ -22,15 +22,17 @@ Park it on battery in a building corner, plug in [P1 Ghost](https://github.com/a
 | Block | Status |
 |-------|--------|
 | USB-C → bq25185 → TPS61023 → **SYS_5V** | Drawn (`SCH_1_USB_5volt_sch`) |
-| **TPS26625** eFuse → `P1_5V`, caps, green power LED, test points, RJ12 placed | Drawn (sheet 2 / power) |
+| **TPS26625** eFuse → `P1_5V`, caps, green power LED, test points, RJ12 | Drawn |
 | **SY8088** buck → **VCC_3V3** | Drawn |
-| **ESP32-C3-MINI-1** on 3V3; EN RC; GPIO2/8 pull-ups; USB D−/D+ = GPIO18/19 | Drawn |
-| RGB status **LED5050** (WS-class) on GPIO10 via 300 Ω; VDD from SYS_5V via Schottky (~4.5 V) + 100 nF | Drawn |
-| PCB placement started (not routed yet) | In progress |
-| Request opto (pin 2) + Data OC opto (pin 5) | **Next** |
-| microSD, ESD polish, optional button | Later |
+| **ESP32-C3-MINI-1** on 3V3; EN RC; GPIO2/8 pull-ups; USB = GPIO18/19 | Drawn |
+| RGB on GPIO10; Schottky-fed LED supply | Drawn |
+| **6N137S** Data TX (GPIO21 / `ESP32_TX` → pin 5) + Request (`RJ12_pin2` → `ESP32_enable`) | Drawn |
+| PCB placement / routing | In progress |
+| microSD, ESD polish | Later |
 
 Sheets: `SCH_1_USB_5volt_sch.kicad_sch` · `SCH_2_power_supplies.kicad_sch`
+
+**Firmware pin polarities / UART invert:** see **[FIRMWARE_GUIDE.md](FIRMWARE_GUIDE.md)** (Request = active **LOW**, Data via OC opto).
 
 ---
 

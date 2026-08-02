@@ -44,8 +44,18 @@ Send only while Request (circuit 07) is active.
 
 PARTS
 -----
-Must be fast enough for **115200** 8N1:
-  TLP2361 / 6N137 / Si86xx (+ FET if needed for stronger OC)
+**Same as Request — open-collector high-speed opto:**
+
+| Qty | Part | Brand | LCSC search |
+|-----|------|-------|-------------|
+| 1 (of 2 total) | **6N137SDM** (or 6N137) | **onsemi** | `6N137SDM` |
+| alt dual | VO2630 / HCPL-2631 | Vishay / Broadcom | one IC for Req+Data |
+
+6N137 VO is **open collector** → wire collector to RJ12 pin5 (and optional 4.7k to P1_5V). Perfect DSMR match.
+
+Toshiba **TLP2361** ([C123773](https://www.lcsc.com/product-detail/C123773.html)) is faster/nicer SMD but **totem-pole** — do **not** tie VO to pin5; use TLP2361 → BSS138 → pin5 instead.
+
+Bypass: **100 nF** on opto VCC–GND.
 Do NOT use slow PC817 for Data.
 
 MOSFET bring-up fallback (no opto):
@@ -63,3 +73,9 @@ TEST
 ----
 4.7k to P1_5V on pin5, scope: idle HIGH; "U" stream → clean edges.
 Ghost + Request high → valid telegram.
+
+FIRMWARE
+--------
+See ../../FIRMWARE_GUIDE.md
+Locked nets: ESP32_TX (GPIO21 / TXD0) → 220 Ω → U8 → RJ12_Tx_pin5.
+UART 115200 8N1; likely TX invert. Gate on Request (ESP32_enable LOW).

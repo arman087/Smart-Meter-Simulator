@@ -39,11 +39,22 @@ Polarity: document whether GPIO is HIGH or LOW when Request is active
 
 PARTS
 -----
-Fast digital opto @ 115200-class edges if you share family with Data path:
-  TLP2361, 6N137, Si86xx, etc. — NOT slow PC817 for the Data TX path;
-  Request is DC-ish so a slower opto can work, but one fast dual is cleaner.
+**Locked pick (same type for Request + Data): high-speed logic opto with open-collector output**
 
-Fallback bring-up: 10k/10k divider pin2 → GPIO (no isolation).
+| Qty | Part | Brand | Why |
+|-----|------|-------|-----|
+| **2** | **6N137** (SMD: e.g. **6N137SDM**) | **onsemi** (or Vishay / Broadcom HCPL-2611) | **10 MBd**, open-collector VO — correct for pin 5 Data; Request uses VO + pull-up to 3.3 V |
+| 1 | Optional dual | **Vishay VO2630** / Broadcom **HCPL-2631** | Same speed, **two channels in one IC** |
+
+Search LCSC: `6N137SDM` or `6N137` SOIC-8. Prefer **onsemi / Vishay / Broadcom** — not no-name.
+
+**Premium modern SMD (Toshiba)** — great for Request, **not** alone on pin 5:
+  Toshiba **TLP2361** — LCSC **[C123773](https://www.lcsc.com/product-detail/C123773.html)** — 15 Mbps, 2.7–5.5 V VCC.
+  Output is **totem-pole (inverted)** → fine into a GPIO; for Data add **BSS138** (drain → pin5) so you stay open-drain.
+
+Do **not** use PC817 / EL817 for Data @ 115200.
+
+Always put **100 nF** between VCC and GND of each 6N137 / TLP2361, right at the package.
 
 
 KICAD
@@ -56,3 +67,9 @@ TEST
 ----
 Float pin2 → MCU idle (no TX).
 Apply ~5 V on pin2 → MCU sees Request → start send. Remove → stop.
+
+FIRMWARE
+--------
+See ../../FIRMWARE_GUIDE.md
+Locked nets: RJ12_pin2 → 330 Ω → U9 → ESP32_enable (10 kΩ to 3V3).
+Request active = ESP32_enable LOW. Tie that net to a free GPIO and record it in FIRMWARE_GUIDE.md.

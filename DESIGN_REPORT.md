@@ -154,8 +154,11 @@ Ghost on a 250 mA P1 budget: LoRa-only TX is comfortable; Wi‑Fi-only is tight;
 | KiCad: **TPS26625**, RJ12, caps, P1 LED, test points | **Drawn** (sheet 2) |
 | KiCad: **SY8088** → 3.3 V, **ESP32-C3**, USB D+/D−, RGB LED | **Drawn** |
 | PCB: components placed, not routed | In progress |
-| KiCad: Request + Data **optos** | **Next** |
-| microSD / ESD polish / firmware | Later |
+| KiCad: Request + Data **6N137S** optos | **Drawn** |
+| Firmware pin / polarity notes | **[FIRMWARE_GUIDE.md](FIRMWARE_GUIDE.md)** |
+| microSD / ESD polish / firmware app | Later |
+
+Architecture checklist and KiCad order: [DESIGN_GUIDE.md](DESIGN_GUIDE.md) · Parts: [PARTS_CHECKLIST.md](PARTS_CHECKLIST.md) · Firmware: [FIRMWARE_GUIDE.md](FIRMWARE_GUIDE.md)
 
 ---
 
@@ -166,5 +169,5 @@ Ghost on a 250 mA P1 budget: LoRa-only TX is comfortable; Wi‑Fi-only is tight;
 3. [TI TPS61023 datasheet](https://www.ti.com/product/TPS61023) — VSYS → 5 V boost  
 4. [TI slvaf94](https://www.ti.com/lit/pdf/slvaf94) — foldback on smart-meter user ports (TPS2662)  
 5. [arman087/P1_ghost](https://github.com/arman087/P1_ghost) — reader under test  
+6. [FIRMWARE_GUIDE.md](FIRMWARE_GUIDE.md) — pins, opto polarity, UART  
 
-Architecture checklist and KiCad order: [DESIGN_GUIDE.md](DESIGN_GUIDE.md) · Parts: [PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)

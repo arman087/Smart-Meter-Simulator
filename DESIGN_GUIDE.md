@@ -161,17 +161,20 @@ Request opto, Data opto OC, USB-C data (GPIO18/19), microSD SPI — see circuit 
 
 ---
 
-## 6. Suggested ESP32-C3 pin assignment
+## 6. ESP32-C3 pin assignment (locked for firmware)
 
-| GPIO | Function |
-|------|----------|
-| 18 / 19 | USB D− / D+ |
-| Free UART TX | → Data opto |
-| Free GPIO in | Request after opto |
-| SPI | microSD |
-| I²C optional | OLED |
-| Free GPIO | LED / button |
-| EN | Reset RC |
+Full detail: **[FIRMWARE_GUIDE.md](FIRMWARE_GUIDE.md)**
+
+| GPIO / pin | Net | Function |
+|------------|-----|----------|
+| 18 / 19 | `USB_D-` / `USB_D+` | Native USB flash / CDC |
+| **21 (`TXD0`)** | `ESP32_TX` | P1 Data TX → 6N137S (U8) → RJ12 pin 5 |
+| (free input) | `ESP32_enable` | P1 Request from U9 — **active LOW** |
+| 10 | `Smart_RGB_LED_DIN` | RGB LED data |
+| 2 / 8 | — | Strapping; PCB pull-ups |
+| 20 (`RXD0`) | — | Unused for P1 |
+
+**Reminders:** Request LOW = start TX; UART may need **invert**; never 5 V on GPIO; no pull-up on pin 5 on this PCB.
 
 ---
 
