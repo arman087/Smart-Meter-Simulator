@@ -41,6 +41,16 @@
 	)
 	(wire
 		(pts
+			(xy 85.09 53.34) (xy 85.09 67.31)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4b1e13b5-aec3-4ea8-90ed-2f849449f405")
+	)
+	(wire
+		(pts
 			(xy 101.6 40.64) (xy 101.6 76.2)
 		)
 		(stroke
@@ -48,6 +58,16 @@
 			(type default)
 		)
 		(uuid "9f496e24-b1a4-4100-8c61-361e0222f199")
+	)
+	(wire
+		(pts
+			(xy 87.63 53.34) (xy 87.63 67.31)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b11c6b03-eba0-47dd-be49-dd329d9dbdcd")
 	)
 	(wire
 		(pts
@@ -125,6 +145,26 @@
 				(justify right)
 			)
 		)
+		(pin "D+" bidirectional
+			(at 85.09 53.34 270)
+			(uuid "029707c3-b3be-49a9-8bc5-2c465970272a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "D-" bidirectional
+			(at 87.63 53.34 270)
+			(uuid "9a6a5844-167d-4f3c-88e6-e1960d38eca6")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
 		(instances
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22"
@@ -180,6 +220,26 @@
 		(pin "GND1" bidirectional
 			(at 99.06 81.28 0)
 			(uuid "ad01e2de-d1ea-418e-ada8-59265161dbfc")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "D+" bidirectional
+			(at 85.09 67.31 90)
+			(uuid "2604f9a7-3a27-4d26-abd0-61e19b4df5bd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "D-" bidirectional
+			(at 87.63 67.31 90)
+			(uuid "7e614e94-80dc-40b5-8b17-f5bc061a339a")
 			(effects
 				(font
 					(size 1.27 1.27)

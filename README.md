@@ -13,11 +13,11 @@ Park it on battery in a building corner, plug in [P1 Ghost](https://github.com/a
 **MCU:** ESP32-C3-MINI-1 (Wi‑Fi on for config / OTA) · **P1 serial:** 115200 8N1 inverted open-drain  
 **Telegram store:** microSD · **Build volume:** ~5 boards (JLCPCB)
 
-**Why / how:** **[DESIGN_REPORT.md](DESIGN_REPORT.md)** · **Firmware:** **[FIRMWARE_GUIDE.md](FIRMWARE_GUIDE.md)** · **KiCad:** `my_design/Slimme_meter_Sim/`
+**Why / how:** **[DESIGN_REPORT.md](DESIGN_REPORT.md)** · **Firmware:** **[FIRMWARE_GUIDE.md](FIRMWARE_GUIDE.md)** · **Pause / next:** **[NEXT_STEPS.md](NEXT_STEPS.md)** · **KiCad:** `my_design/Slimme_meter_Sim/`
 
 ---
 
-## Progress (schematic — Aug 2026)
+## Progress (schematic + PCB — Aug 2026)
 
 | Block | Status |
 |-------|--------|
@@ -27,7 +27,9 @@ Park it on battery in a building corner, plug in [P1 Ghost](https://github.com/a
 | **ESP32-C3-MINI-1** on 3V3; EN RC; GPIO2/8 pull-ups; USB = GPIO18/19 | Drawn |
 | RGB on GPIO10; Schottky-fed LED supply | Drawn |
 | **6N137S** Data TX (GPIO21 / `ESP32_TX` → pin 5) + Request (`RJ12_pin2` → `ESP32_enable`) | Drawn |
-| PCB placement / routing | In progress |
+| PCB placement / routing | In progress (saved in KiCad) |
+| Assemble first board (stencil + hot air) | See [NEXT_STEPS.md](NEXT_STEPS.md) |
+| Optional: Pi as alternate “brain” (own PSU; board keeps P1 power path) | Parked in [NEXT_STEPS.md](NEXT_STEPS.md) |
 | microSD, ESD polish | Later |
 
 Sheets: `SCH_1_USB_5volt_sch.kicad_sch` · `SCH_2_power_supplies.kicad_sch`

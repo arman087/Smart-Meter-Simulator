@@ -1171,6 +1171,177 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "EasyEDA:CL05B104KO5NNNC"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "CL05B104KO5NNNC"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "EasyEDA:C0402"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://lcsc.com/product-detail/Multilayer-Ceramic-Capacitors-MLCC-SMD-SMT_SAMSUNG_CL05B104KO5NNNC_100nF-104-10-16V_C1525.html"
+				(at 0 -10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "100nF (104) ±10% 16V"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "SAMSUNG(三星)"
+				(at 0 -12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "CL05B104KO5NNNC"
+				(at 0 -15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part" "C1525"
+				(at 0 -17.78 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "Multilayer Ceramic Capacitors MLCC - SMD/SMT"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "CL05B104KO5NNNC_0_1"
+				(polyline
+					(pts
+						(xy -0.51 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.51 -2.03) (xy -0.51 2.03)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.51 2.03) (xy 0.51 -2.03)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 0.51 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "EasyEDA:FRC0402F7323TS"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -4493,6 +4664,12 @@
 		(uuid "6b2c8c34-8954-4452-beb1-812f658aa31f")
 	)
 	(junction
+		(at 106.68 109.22)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7e58955a-4df1-4ff5-af1e-34171a5895b2")
+	)
+	(junction
 		(at 121.92 135.89)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4509,6 +4686,24 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "8b4074d9-4994-4d91-bc3e-e1e170cb5351")
+	)
+	(junction
+		(at 223.52 87.63)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b076133d-a20f-4958-8658-1e4e02d3fcfd")
+	)
+	(junction
+		(at 223.52 93.98)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b0a79adb-b636-4c71-b609-52d84557ff6a")
+	)
+	(junction
+		(at 120.65 125.73)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "df537529-1b97-4c9f-933c-e5333ee702a0")
 	)
 	(junction
 		(at 115.57 36.83)
@@ -4539,6 +4734,16 @@
 	(no_connect
 		(at 139.7 46.99)
 		(uuid "bbb82e01-4858-4422-8b91-3529c5c933a9")
+	)
+	(wire
+		(pts
+			(xy 223.52 87.63) (xy 226.06 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "008b737e-89df-4360-a3df-d3864f562416")
 	)
 	(wire
 		(pts
@@ -4602,6 +4807,26 @@
 	)
 	(wire
 		(pts
+			(xy 223.52 93.98) (xy 223.52 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "170bbc0e-2ca6-4e98-a709-84576ca0db9d")
+	)
+	(wire
+		(pts
+			(xy 120.65 125.73) (xy 129.54 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1acc575d-d89c-46e9-94cf-41b09c82433d")
+	)
+	(wire
+		(pts
 			(xy 157.48 54.61) (xy 160.02 54.61)
 		)
 		(stroke
@@ -4622,7 +4847,7 @@
 	)
 	(wire
 		(pts
-			(xy 118.11 116.84) (xy 118.11 125.73)
+			(xy 129.54 116.84) (xy 129.54 125.73)
 		)
 		(stroke
 			(width 0)
@@ -4639,6 +4864,16 @@
 			(type default)
 		)
 		(uuid "278307a0-ede5-44b7-aa12-4a77a19ced0d")
+	)
+	(wire
+		(pts
+			(xy 259.08 85.09) (xy 259.08 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2816e94a-e3c3-4c67-9cf7-9739c89f0888")
 	)
 	(wire
 		(pts
@@ -4712,6 +4947,16 @@
 	)
 	(wire
 		(pts
+			(xy 213.36 93.98) (xy 223.52 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "34b156a5-4b09-4b5e-82ed-5e0db8816054")
+	)
+	(wire
+		(pts
 			(xy 252.73 85.09) (xy 252.73 64.77)
 		)
 		(stroke
@@ -4729,6 +4974,16 @@
 			(type default)
 		)
 		(uuid "4280d316-702d-439a-8652-c18f4de28315")
+	)
+	(wire
+		(pts
+			(xy 223.52 87.63) (xy 223.52 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4814bb28-6c2e-41c7-beb9-30322b50e38e")
 	)
 	(wire
 		(pts
@@ -4769,6 +5024,16 @@
 			(type default)
 		)
 		(uuid "4e174a66-e10b-42e7-8474-ac377f08a80e")
+	)
+	(wire
+		(pts
+			(xy 259.08 72.39) (xy 259.08 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4eed9af1-0f10-4453-ba08-a1e1ca4c3c79")
 	)
 	(wire
 		(pts
@@ -4872,7 +5137,7 @@
 	)
 	(wire
 		(pts
-			(xy 118.11 102.87) (xy 118.11 106.68)
+			(xy 129.54 102.87) (xy 129.54 106.68)
 		)
 		(stroke
 			(width 0)
@@ -4912,6 +5177,16 @@
 	)
 	(wire
 		(pts
+			(xy 120.65 113.03) (xy 120.65 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6bda73e6-5654-43f8-8809-0cac7f54d01d")
+	)
+	(wire
+		(pts
 			(xy 218.44 78.74) (xy 218.44 82.55)
 		)
 		(stroke
@@ -4922,7 +5197,7 @@
 	)
 	(wire
 		(pts
-			(xy 48.26 50.8) (xy 41.91 50.8)
+			(xy 48.26 50.8) (xy 29.21 50.8)
 		)
 		(stroke
 			(width 0)
@@ -4952,7 +5227,7 @@
 	)
 	(wire
 		(pts
-			(xy 220.98 87.63) (xy 226.06 87.63)
+			(xy 220.98 87.63) (xy 223.52 87.63)
 		)
 		(stroke
 			(width 0)
@@ -4969,6 +5244,16 @@
 			(type default)
 		)
 		(uuid "7e2d857d-1eb9-4136-9c6b-db77b4475a20")
+	)
+	(wire
+		(pts
+			(xy 120.65 123.19) (xy 120.65 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8291db4d-51a4-498a-85ae-0d627208a288")
 	)
 	(wire
 		(pts
@@ -5032,6 +5317,16 @@
 	)
 	(wire
 		(pts
+			(xy 213.36 96.52) (xy 213.36 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9a7b7b21-f06a-46dd-bf61-e8d2a2a33c6c")
+	)
+	(wire
+		(pts
 			(xy 218.44 82.55) (xy 223.52 82.55)
 		)
 		(stroke
@@ -5079,6 +5374,26 @@
 			(type default)
 		)
 		(uuid "a3d4bcd4-c4d8-4d37-8ca8-8e17c77a5515")
+	)
+	(wire
+		(pts
+			(xy 213.36 106.68) (xy 213.36 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a4508887-5e7a-4745-985f-c3315eafd7fa")
+	)
+	(wire
+		(pts
+			(xy 106.68 109.22) (xy 106.68 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ab93b9dd-7ffa-41a7-b935-0cabf8bad4e9")
 	)
 	(wire
 		(pts
@@ -5162,6 +5477,16 @@
 	)
 	(wire
 		(pts
+			(xy 107.95 102.87) (xy 107.95 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6483a76-f167-4662-8e7d-51ead58b98e2")
+	)
+	(wire
+		(pts
 			(xy 160.02 46.99) (xy 160.02 49.53)
 		)
 		(stroke
@@ -5182,6 +5507,16 @@
 	)
 	(wire
 		(pts
+			(xy 106.68 105.41) (xy 106.68 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cb9b0987-24d2-4a98-9efe-99927e9b9713")
+	)
+	(wire
+		(pts
 			(xy 53.34 110.49) (xy 53.34 111.76)
 		)
 		(stroke
@@ -5192,7 +5527,7 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 33.02) (xy 48.26 33.02)
+			(xy 27.94 33.02) (xy 48.26 33.02)
 		)
 		(stroke
 			(width 0)
@@ -5232,6 +5567,16 @@
 	)
 	(wire
 		(pts
+			(xy 120.65 109.22) (xy 106.68 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d67e3bde-5037-494c-9a4d-a705155915ca")
+	)
+	(wire
+		(pts
 			(xy 176.53 130.81) (xy 162.56 130.81)
 		)
 		(stroke
@@ -5249,6 +5594,16 @@
 			(type default)
 		)
 		(uuid "d8a0bd17-ccb6-4dd6-b216-7678536c8626")
+	)
+	(wire
+		(pts
+			(xy 107.95 105.41) (xy 106.68 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d985b395-c6f4-46d2-ae44-56a6b18a4aac")
 	)
 	(wire
 		(pts
@@ -5302,7 +5657,7 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 125.73) (xy 118.11 125.73)
+			(xy 106.68 125.73) (xy 120.65 125.73)
 		)
 		(stroke
 			(width 0)
@@ -5319,6 +5674,16 @@
 			(type default)
 		)
 		(uuid "ee0e6783-f66d-4114-86e4-a4d69e00d8e4")
+	)
+	(wire
+		(pts
+			(xy 223.52 107.95) (xy 223.52 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f0b77382-bcbc-4903-a0d5-409711912dec")
 	)
 	(wire
 		(pts
@@ -5444,7 +5809,7 @@
 	)
 	(global_label "USB_D-"
 		(shape input)
-		(at 41.91 50.8 180)
+		(at 29.21 50.8 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5454,7 +5819,7 @@
 		)
 		(uuid "269cdf45-0048-4b23-b786-41105720704a")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 31.3048 50.8 0)
+			(at 18.6048 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5488,7 +5853,7 @@
 	)
 	(global_label "5V_usb"
 		(shape input)
-		(at 118.11 102.87 90)
+		(at 129.54 102.87 90)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5498,7 +5863,7 @@
 		)
 		(uuid "46968df5-2a34-420c-8610-e7fcda0a3b5d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 118.11 93.293 90)
+			(at 129.54 93.293 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5510,7 +5875,7 @@
 	)
 	(global_label "USB_D+"
 		(shape input)
-		(at 41.91 33.02 180)
+		(at 27.94 33.02 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5520,7 +5885,7 @@
 		)
 		(uuid "9d312c2a-efcf-43d5-83ee-a7d1833a7cbd")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 31.3048 33.02 0)
+			(at 17.3348 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5563,6 +5928,17 @@
 		)
 		(uuid "0e67135f-7def-406f-b7c0-d241efdcb2c2")
 	)
+	(hierarchical_label "D+"
+		(shape bidirectional)
+		(at 36.83 33.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "1cf4fe6e-9f50-4894-959f-fbbfaaf080ea")
+	)
 	(hierarchical_label "GND1"
 		(shape bidirectional)
 		(at 334.01 76.2 0)
@@ -5573,6 +5949,17 @@
 			(justify left)
 		)
 		(uuid "24293efa-8b85-4ac6-9a32-d799b87c75bf")
+	)
+	(hierarchical_label "D-"
+		(shape bidirectional)
+		(at 36.83 50.8 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "44f73cd9-d34d-4d03-8256-08ec7924e9ab")
 	)
 	(symbol
 		(lib_id "power:VCC")
@@ -5740,7 +6127,7 @@
 	)
 	(symbol
 		(lib_id "power:GND1")
-		(at 106.68 115.57 180)
+		(at 107.95 102.87 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5749,7 +6136,7 @@
 		(fields_autoplaced yes)
 		(uuid "04baf863-78fc-4cc1-b7d7-bb4c1b3faa45")
 		(property "Reference" "#PWR07"
-			(at 106.68 109.22 0)
+			(at 107.95 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5758,7 +6145,7 @@
 			)
 		)
 		(property "Value" "GND1"
-			(at 106.68 110.49 0)
+			(at 107.95 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5766,7 +6153,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 106.68 115.57 0)
+			(at 107.95 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5775,7 +6162,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 106.68 115.57 0)
+			(at 107.95 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5784,7 +6171,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND1\" , ground"
-			(at 106.68 115.57 0)
+			(at 107.95 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5864,6 +6251,71 @@
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
 					(reference "#PWR028")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND1")
+		(at 259.08 86.36 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "09fe4925-931c-4e5c-b99e-57897f29a65e")
+		(property "Reference" "#PWR078"
+			(at 259.08 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND1"
+			(at 258.064 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 259.08 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 259.08 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND1\" , ground"
+			(at 259.08 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a4e9abc3-0a88-476a-a705-aa32d695c938")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "#PWR078")
 					(unit 1)
 				)
 			)
@@ -6418,6 +6870,102 @@
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
 					(reference "R6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "EasyEDA:CL05B104KO5NNNC")
+		(at 120.65 118.11 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "32ee5216-d324-443a-bd54-a06a51ffc019")
+		(property "Reference" "C20"
+			(at 122.682 114.808 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CL05B104KO5NNNC"
+			(at 116.078 103.632 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "EasyEDA:C0402"
+			(at 113.03 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Multilayer-Ceramic-Capacitors-MLCC-SMD-SMT_SAMSUNG_CL05B104KO5NNNC_100nF-104-10-16V_C1525.html"
+			(at 110.49 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "100nF (104) ±10% 16V"
+			(at 120.65 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "SAMSUNG(三星)"
+			(at 107.95 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL05B104KO5NNNC"
+			(at 105.41 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C1525"
+			(at 102.87 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "89b81500-aba7-4aa3-a069-d3568b23f3d3")
+		)
+		(pin "2"
+			(uuid "2284e543-fa8d-4dab-9a41-c15363d95dd3")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "C20")
 					(unit 1)
 				)
 			)
@@ -7038,6 +7586,72 @@
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
 					(reference "SW1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND1")
+		(at 223.52 110.49 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4e6667da-1705-4e72-984d-23f1ae4255b8")
+		(property "Reference" "#PWR076"
+			(at 223.52 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND1"
+			(at 223.52 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 223.52 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 223.52 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND1\" , ground"
+			(at 223.52 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "bbbd3d47-9594-4d3c-b92d-b497166d6b0f")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "#PWR076")
 					(unit 1)
 				)
 			)
@@ -8147,6 +8761,72 @@
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
 					(reference "#PWR039")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND1")
+		(at 213.36 110.49 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "79031b45-7164-4a8b-9b93-b22a9f04cfbe")
+		(property "Reference" "#PWR077"
+			(at 213.36 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND1"
+			(at 213.36 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 213.36 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 213.36 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND1\" , ground"
+			(at 213.36 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "61de928a-6b10-44e8-9b1e-f0fb1d6adffd")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "#PWR077")
 					(unit 1)
 				)
 			)
@@ -10050,6 +10730,102 @@
 		)
 	)
 	(symbol
+		(lib_id "EasyEDA:CL05B104KO5NNNC")
+		(at 259.08 80.01 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c9536a76-2e1e-49a2-b441-21451bb54e19")
+		(property "Reference" "C23"
+			(at 261.112 76.708 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CL05B104KO5NNNC"
+			(at 259.08 92.456 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "EasyEDA:C0402"
+			(at 251.46 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Multilayer-Ceramic-Capacitors-MLCC-SMD-SMT_SAMSUNG_CL05B104KO5NNNC_100nF-104-10-16V_C1525.html"
+			(at 248.92 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "100nF (104) ±10% 16V"
+			(at 259.08 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "SAMSUNG(三星)"
+			(at 246.38 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL05B104KO5NNNC"
+			(at 243.84 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C1525"
+			(at 241.3 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "133b1432-c4fb-454e-a372-6c3142de7d41")
+		)
+		(pin "2"
+			(uuid "bf5899eb-f561-4453-a124-95f027ae4ea3")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "C23")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND1")
 		(at 115.57 26.67 270)
 		(unit 1)
@@ -10441,8 +11217,74 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+5V")
+		(at 259.08 72.39 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e392071d-2484-4534-9b1f-cfd7831c22d0")
+		(property "Reference" "#PWR079"
+			(at 259.08 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+5V"
+			(at 259.08 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 259.08 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 259.08 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
+			(at 259.08 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "79b57c76-a78b-4f25-bb1a-8b080f51479d")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "#PWR079")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "EasyEDA:NSR0320MW2T1G")
-		(at 118.11 111.76 90)
+		(at 129.54 111.76 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10451,7 +11293,7 @@
 		(fields_autoplaced yes)
 		(uuid "e399f94f-c289-4f14-913e-72d5d3247b15")
 		(property "Reference" "D1"
-			(at 120.65 110.4899 90)
+			(at 132.08 110.4899 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10460,7 +11302,7 @@
 			)
 		)
 		(property "Value" "NSR0320MW2T1G"
-			(at 120.65 113.0299 90)
+			(at 132.08 113.0299 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10470,7 +11312,7 @@
 			)
 		)
 		(property "Footprint" "EasyEDA:SOD-323_L1.8-W1.3-LS2.5-RD"
-			(at 125.73 111.76 0)
+			(at 137.16 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10479,7 +11321,7 @@
 			)
 		)
 		(property "Datasheet" "https://lcsc.com/product-detail/Schottky-Barrier-Diodes-SBD_ON_NSR0320MW2T1G_NSR0320MW2T1G_C48192.html"
-			(at 128.27 111.76 0)
+			(at 139.7 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10488,7 +11330,7 @@
 			)
 		)
 		(property "Description" "NSR0320MW2T1G"
-			(at 118.11 111.76 0)
+			(at 129.54 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10497,7 +11339,7 @@
 			)
 		)
 		(property "Manufacturer" "onsemi(安森美)"
-			(at 130.81 111.76 0)
+			(at 142.24 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10506,7 +11348,7 @@
 			)
 		)
 		(property "MPN" "NSR0320MW2T1G"
-			(at 133.35 111.76 0)
+			(at 144.78 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10515,7 +11357,7 @@
 			)
 		)
 		(property "LCSC Part" "C48192"
-			(at 135.89 111.76 0)
+			(at 147.32 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10736,6 +11578,103 @@
 		)
 	)
 	(symbol
+		(lib_id "EasyEDA:FS31X226M160EPG")
+		(at 213.36 101.6 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ed42be29-d23b-4daf-ba08-eddbeff5dd4e")
+		(property "Reference" "C22"
+			(at 215.138 99.822 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "FS31X226M160EPG"
+			(at 210.312 88.138 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Footprint" "EasyEDA:C1206"
+			(at 205.74 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C3036083.pdf"
+			(at 203.2 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 213.36 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "PSA(信昌电陶)"
+			(at 200.66 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "FS31X226M160EPG"
+			(at 198.12 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C3036083"
+			(at 195.58 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2a7c20fa-1d99-462e-8136-fbfeb19f7ea0")
+		)
+		(pin "2"
+			(uuid "8ac50a85-d1bf-416c-999d-fd3b6014fdf3")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "C22")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND1")
 		(at 259.08 138.43 0)
 		(unit 1)
@@ -10796,6 +11735,102 @@
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
 					(reference "#PWR024")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "EasyEDA:CL05B104KO5NNNC")
+		(at 223.52 102.87 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f0836cfc-c1ec-4d08-b71b-7f4a261b84a9")
+		(property "Reference" "C21"
+			(at 225.552 99.568 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CL05B104KO5NNNC"
+			(at 229.362 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "EasyEDA:C0402"
+			(at 215.9 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Multilayer-Ceramic-Capacitors-MLCC-SMD-SMT_SAMSUNG_CL05B104KO5NNNC_100nF-104-10-16V_C1525.html"
+			(at 213.36 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "100nF (104) ±10% 16V"
+			(at 223.52 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "SAMSUNG(三星)"
+			(at 210.82 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL05B104KO5NNNC"
+			(at 208.28 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C1525"
+			(at 205.74 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4d18b06e-6317-4180-8583-fc147287e30a")
+		)
+		(pin "2"
+			(uuid "82702168-bf61-422f-b77e-0edc8aaf442c")
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22/5e636416-256f-40d4-bd94-a88f282663f2"
+					(reference "C21")
 					(unit 1)
 				)
 			)

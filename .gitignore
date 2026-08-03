@@ -4,3 +4,8 @@
 **/~*.lck
 **/*-backups/
 *.kicad_pcb.lck
+
+# KiCad footprint cache / autosave leftovers
+**/fp-info-cache
+**/#auto_saved_files#
+
