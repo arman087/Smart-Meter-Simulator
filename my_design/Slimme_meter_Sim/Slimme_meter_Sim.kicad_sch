@@ -61,6 +61,16 @@
 	)
 	(wire
 		(pts
+			(xy 81.28 53.34) (xy 81.28 67.31)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aafb99ac-3a06-4996-a1f2-87fb4719308e")
+	)
+	(wire
+		(pts
 			(xy 87.63 53.34) (xy 87.63 67.31)
 		)
 		(stroke
@@ -165,6 +175,16 @@
 				(justify left)
 			)
 		)
+		(pin "GPIO4_Battery" bidirectional
+			(at 81.28 53.34 270)
+			(uuid "7dbd9325-8244-4cf0-b7a3-22a3eb676415")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
 		(instances
 			(project "Slimme_meter_Sim"
 				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22"
@@ -240,6 +260,16 @@
 		(pin "D-" bidirectional
 			(at 87.63 67.31 90)
 			(uuid "7e614e94-80dc-40b5-8b17-f5bc061a339a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GPIO4_Battery" bidirectional
+			(at 81.28 67.31 90)
+			(uuid "60e11731-ce33-479f-af37-765795c8a260")
 			(effects
 				(font
 					(size 1.27 1.27)

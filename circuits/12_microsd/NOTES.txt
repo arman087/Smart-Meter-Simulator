@@ -8,41 +8,37 @@ Not SDRAM/PSRAM — those are volatile and the wrong tool.
 
 Field flow:
   1. At home: copy .txt telegrams onto the card (or upload via Wi-Fi UI).
-  2. In building: ESP32 reads file → plays on P1 when Request is high.
+  2. In building: ESP32 reads file → plays on P1 when Request is active.
 
-NECESSARY PIECES
-----------------
-1. microSD push-push or push-pull PCB holder.
-2. SPI wiring to ESP32-C3 (simplest) OR SDMMC 1-bit/4-bit.
-3. 3.3 V power from VCC_3V3 (circuit 03) — card must NOT see 5 V.
-4. Optional card-detect switch → GPIO.
-5. Decoupling 100 nF (+ 10 µF) next to card VDD.
+PART
+----
+Hirose DM3AT-SF-PEJM5 (Card1). SPI only. VCC_3V3 only (never 5 V).
 
-SPI PIN PLAN (starter — adjust to free GPIOs)
----------------------------------------------
-  CS, MOSI, MISO, SCK → free GPIOs (avoid USB 18/19 and straps).
-  Document final map in schematic silk / firmware.
+LOCKED SPI MAP (see FIRMWARE_GUIDE.md)
+--------------------------------------
+  SD_SCK  → GPIO0  → connector CLK  (pin 5)
+  SD_MOSI → GPIO1  → connector CMD  (pin 3)
+  SD_MISO → GPIO3  → connector DAT0 (pin 7)
+  SD_CS   → GPIO6  → connector DAT3 (pin 2)
+
+  VDD pin4 → VCC_3V3 + 10 µF + 100 nF
+  VSS pin6 + shell pins → GND
+  DAT1/DAT2 → NC (or 10 kΩ to 3V3)
+  SW_A / SW_B → unused for v1 (no SD_CD GPIO)
+
+Optional 33–47 Ω series on SPI lines.
 
 FIRMWARE
 --------
-- FAT filesystem (FatFS)
-- Folder e.g. /telegrams/*.txt
-- Button or Wi-Fi UI selects which file to replay
-- CRC16 check optional before send
-
-RECOMMENDED PARTS
------------------
-- microSD connector (JLCPCB / DigiKey common push-push)
-- 8–32 GB microSD (FAT32)
-- Optional: 33–47 Ω series on SPI lines for EMI
+- FatFS, folder e.g. /telegrams/*.txt
+- Detect card via SD.begin() / mount errors (no CD switch)
+- MODE (GPIO9) or Wi-Fi UI selects file
 
 KICAD
 -----
-Place holder away from ESP32 antenna keep-out.
-Short SPI traces; GND under connector.
+Away from ESP32 antenna keep-out. Short SPI traces; GND under connector.
 
 TEST
 ----
 Mount card → list files over USB serial.
-Select telegram → with Request high, Ghost receives valid frame.
-Hot-plug optional; cold boot with card inserted is enough for v1.
+Select telegram → with Request active, Ghost receives valid frame.
