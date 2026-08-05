@@ -1,12 +1,19 @@
 {
   "board": {
-    "active_layer": 0,
+    "active_layer": 2,
     "active_layer_preset": "",
     "auto_track_width": true,
-    "hidden_netclasses": [],
-    "hidden_nets": [],
+    "hidden_netclasses": [
+      "GND",
+      "Power_BAT"
+    ],
+    "hidden_nets": [
+      "GND1",
+      "VBATT",
+      "/SCH_1_USB_5volt/V_batt_port"
+    ],
     "high_contrast_mode": 0,
-    "net_color_mode": 1,
+    "net_color_mode": 2,
     "opacity": {
       "images": 0.6,
       "pads": 1.0,
@@ -20,7 +27,7 @@
       "footprints": true,
       "graphics": true,
       "keepouts": true,
-      "lockedItems": false,
+      "lockedItems": true,
       "otherItems": true,
       "pads": true,
       "text": true,
@@ -50,8 +57,8 @@
       "conflict_shadows",
       "shapes"
     ],
-    "visible_layers": "ffffffff_ffffffff_fffffff7_ffffffff",
-    "zone_display_mode": 1
+    "visible_layers": "ffffffff_ffffffff_fffffff7_fffffffb",
+    "zone_display_mode": 0
   },
   "git": {
     "integration_disabled": false,
@@ -89,16 +96,16 @@
       9
     ],
     "col_widths": [
-      162,
-      147,
-      91,
-      67,
-      91,
-      91,
-      91,
-      71,
-      91,
-      91
+      65,
+      59,
+      36,
+      27,
+      36,
+      36,
+      36,
+      28,
+      36,
+      858
     ],
     "custom_group_rules": [],
     "expanded_rows": [],
