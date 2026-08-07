@@ -1,93 +1,86 @@
-# Architecture — big / hand-build direction
+# Architecture — DevKit + slim P1 carrier
 
-Active project folder: `my_design/Slimme_meter_Sim -big-modular/`  
-Parent repo docs under `Smart Meter Simulator/` root are **frozen** for this path — edit here instead.
+## Locked direction
 
----
+1. **Brain:** SparkFun **Thing Plus ESP32-S3** (or equal premium S3 board with USB-C + SD + headers).  
+2. **Carrier PCB:** P1 electrical interface only — powered from DevKit **`V_USB` / 5 V header** (and optionally `VBAT` boost).
 
-## Product
-
-Portable DSMR **P1 meter-side** simulator for testing P1 Ghost (Wi‑Fi range, etc.) without a real meter.
-
-- Female RJ12: source +5 V, sense Request, OC/opto Data  
-- Telegrams from **microSD** (module)  
-- Wi‑Fi on ESP32 for config / OTA (DevKit or module)
+Parent `Smart Meter Simulator/` root docs stay untouched.
 
 ---
 
-## Modular vs on-board
-
-### Modular only
-
-1. **USB-C data** breakout → ESP32 D+/D− (flash / CDC)  
-2. **microSD** breakout → SPI  
-3. **ESP32** — DevKit on headers **or** ESP32-C3-MINI-1 soldered module  
-
-### Integrate on PCB (not modular)
-
-1. Charge USB-C + **LiPo charger**  
-2. **5 V boost** (battery / SYS → `SYS_5V`)  
-3. **5→3.3** regulator (large footprint)  
-4. **TPS2553** → `P1_5V`  
-5. **INA219/226** current sense on P1 output  
-6. **6N137** Request + Data  
-7. RJ12, UI, ESD  
-
----
-
-## Nets
+## Block diagram
 
 ```
-VBAT          LiPo
-SYS_5V        Boost output (+5 V board rail)
-VCC_3V3       Regulator → ESP32
-P1_5V         After TPS2553 (+ after shunt/INA)
-P1_REQ        RJ12 pin2
-P1_DATA       RJ12 pin5
-I2C_SDA/SCL   INA (GPIO5 may be one of these)
+┌─────────────────────────────────────┐
+│  SparkFun Thing Plus ESP32-S3       │
+│  USB-C · LiPo · SD · 3V3 · Wi‑Fi    │
+│  Headers: V_USB, 3V3, VBAT, GPIO    │
+└──────────────┬──────────────────────┘
+               │ V_USB (5V*) · GPIOs · GND · (VBAT)
+               ▼
+┌─────────────────────────────────────┐
+│  Slim P1 carrier (your KiCad)       │
+│  TPS2553 → INA → RJ12 pin1          │
+│  6N137 Request / Data               │
+│  RJ12 · ESD · optional VBAT→5V boost│
+└─────────────────────────────────────┘
+* 5 V on V_USB when USB-C powered; see README for battery-only.
 ```
 
 ---
 
-## P1 current limit + measurement
+## Slim PCB contents
 
-```
-SYS_5V ──► TPS2553 ──► sense (INA shunt) ──► RJ12 pin1
-                │              │
-             FAULT ── GPIO   I²C ── ESP32
-```
-
-- Limit: ~250–300 mA via TPS2553 `RILIM`  
-- Measure: INA reports mA → firmware can show power ≈ 5 × I  
-- Optional: FAULT pin when limit hit  
-- **Do not** wire analog Hall to GPIO5 (not ADC on ESP32-C3)
-
-TPS2553 = current **limit** (constant-current). Not full DSMR foldback to ≤50 mA (that was TPS2662). Acceptable for lab Ghost testing.
+| Block | Part | Notes |
+|-------|------|--------|
+| Input | Feather/Thing Plus female headers | Mechanically stack or cable |
+| P1 5 V limit | **TPS2553** | ~250–300 mA |
+| Current sense | **INA226** / **INA219** | After eFuse |
+| Optos | **6N137** DIP-8 ×2 | Request + Data |
+| Connector | RJ12 6P6C female | Meter side |
+| Optional | Boost VBAT→5 V | Battery-only P1 power |
+| Optional | LED / button | Status |
 
 ---
 
-## Optocouplers
+## DevKit responsibilities
 
-- **Data:** 6N137 DIP-8 (115200)  
-- **Request:** 6N137 DIP-8 (or slower DIP OK)  
-
----
-
-## What we skip on this path
-
-- Full JLCPCB assembly of tiny QFN-only boards as the only option  
-- Modular charger / boost / opto “stacks”  
-- SY8089AAC as final 3.3 V (too small) — use SOT-223 class  
-- LoRa  
-- Analog Hall on GPIO5  
+| Need | Thing Plus |
+|------|------------|
+| MCU + Wi‑Fi | ESP32-S3 |
+| Flash / serial | USB-C |
+| Telegram files | microSD |
+| Charge LiPo | On-board MCP73831 + gauge |
+| 3.3 V for MCU | On-board regulator |
+| Feed carrier | `V_USB` pin ≈ 5 V (USB present) |
 
 ---
 
-## Suggested work order in KiCad (this folder)
+## Pin plan (starter — confirm against Thing Plus pinout)
 
-1. Power sheet: charger + boost → `SYS_5V`  
-2. 3.3 V + TPS2553 + INA → `P1_5V`  
-3. Headers for ESP32 DevKit / module, USB-C data module, SD module  
-4. RJ12 + 6N137 ×2  
-5. UI + ESD  
-6. ERC / hand-solder BOM (large packages preferred)
+| Function | DevKit side |
+|----------|-------------|
+| GND | GND |
+| 5 V to carrier | **V_USB** |
+| Optional boost in | **VBAT** |
+| UART TX → Data opto | Free UART TX |
+| Request GPIO | Free input |
+| I²C SDA/SCL | INA (Qwiic possible if wiring matches) |
+| FAULT | Free GPIO |
+
+Use SparkFun’s pinout PDF when assigning exact numbers:  
+https://docs.sparkfun.com/SparkFun_Thing_Plus_ESP32-S3/
+
+---
+
+## KiCad work order (this folder)
+
+1. Thing Plus / Feather **header footprint** + silk  
+2. `V_USB` → TPS2553 → INA → RJ12 pin1  
+3. Optos + RJ12 pins 2 & 5  
+4. Optional VBAT boost for battery-only 5 V  
+5. ESD + test points  
+6. Stack height / mounting holes matching Thing Plus  
+
+Schematics already in tree (`SCH_1_*`, `SCH_2_*`) can be stripped down to this slim carrier.

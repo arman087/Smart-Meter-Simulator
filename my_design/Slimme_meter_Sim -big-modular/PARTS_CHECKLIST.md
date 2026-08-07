@@ -1,79 +1,57 @@
-# Parts checklist — big / hand-build
+# Parts checklist — DevKit + slim P1 carrier
 
-Work only in this folder’s KiCad project. Prefer **0603+ / SOT-223 / DIP / SOIC** where possible.
+## Buy (brain)
 
-**Legend:** 🔧 on PCB · 🔌 module / kit · ○ optional
-
----
-
-## Modular
-
-| # | Item | Example | Status |
-|---|------|---------|--------|
-| M1 | USB-C **data** | Breakout → ESP32 D+/D− | 🔌 |
-| M2 | microSD | SPI breakout, 2.54 mm headers | 🔌 |
-| M3 | MCU | ESP32-C3 **DevKit** headers **or** MINI-1 module | 🔌 |
-
----
-
-## Power on PCB
-
-| # | Item | Candidate | Notes | Status |
-|---|------|-----------|-------|--------|
-| P1 | LiPo charger | bq25185 / similar with terminate + UVLO | Hot air/oven OK | 🔧 |
-| P2 | Charge USB-C | On-PCB receptacle + CC 5.1 kΩ | Separate from data USB | 🔧 |
-| P3 | Battery | 1S LiPo, JST or pads | | 🔧 |
-| P4 | 5 V boost | ~2 A class discrete (not MT3608 junk) | Layout critical | 🔧 |
-| P5 | 5→3.3 V | **AMS1117-3.3 SOT-223** (or LM1117) | From `SYS_5V` | 🔧 |
-| P6 | P1 limit | **TPS2553DBVR** | RILIM ≈ 250–300 mA | 🔧 |
-| P7 | P1 current | **INA226** or **INA219** | After TPS2553; I²C | 🔧 |
-
----
-
-## P1 / isolation / UI
-
-| # | Item | Candidate | Status |
+| # | Item | Link / PN | Notes |
 |---|------|-----------|--------|
-| S1 | RJ12 6P6C female | Meter jack | 🔧 |
-| S2 | Request opto | **6N137** DIP-8 | 🔧 |
-| S3 | Data opto | **6N137** DIP-8 | 🔧 |
-| S4 | ESD | USB + RJ12 TVS | 🔧 |
-| S5 | LED + button | Large tact + 0603/0805 LED | 🔧 |
-| S6 | OLED | Optional I²C | ○ |
+| D1 | **SparkFun Thing Plus ESP32-S3** | [sparkfun.com](https://www.sparkfun.com/sparkfun-thing-plus-esp32-s3.html) | USB-C, SD, LiPo charge, V_USB header |
+| D2 | 1S LiPo JST | Match Thing Plus JST | For portable brain |
+| D3 | microSD card | FAT32 | Telegrams |
+| D4 | USB-C cable | | Flash / power |
+
+**Alt brain:** Adafruit Feather ESP32-S3 — add SD FeatherWing if you need on-board SD.
 
 ---
 
-## Skip
+## Design on slim PCB
 
-| Item | Why |
-|------|-----|
-| SY8089AAC as final choice | SOT-23-5 too small for this path |
-| Hall analog → GPIO5 | ESP32-C3 GPIO5 has no ADC |
-| Modular charger/boost stacks | Everything power stays on PCB |
-| TPS2662 requirement | Replaced by TPS2553 for hand-build lab use |
-
----
-
-## Pin / GPIO notes (ESP32-C3)
-
-- USB D−/D+ : IO18 / IO19 (from data USB module)  
-- ADC only : GPIO0–4  
-- INA I²C : any free GPIOs; **GPIO5 OK**  
-- TPS2553 FAULT : free GPIO  
-- SPI : SD module  
+| # | Item | Candidate | Notes |
+|---|------|-----------|--------|
+| C1 | Headers | Feather / Thing Plus compatible | Stack or jumper wires |
+| C2 | P1 limit | **TPS2553DBVR** | RILIM ≈ 250–300 mA |
+| C3 | Current sense | **INA226** or **INA219** | After TPS2553 |
+| C4 | Optos | **6N137** DIP-8 ×2 | Request + Data |
+| C5 | RJ12 | 6P6C female | Meter |
+| C6 | ESD | TVS on P1 pins | |
+| C7 | Optional boost | VBAT→5 V ~1 A | **Only if** battery-only P1 needed |
+| C8 | LED / button | ○ | |
 
 ---
 
-## Rough buy list
+## Do not put on slim PCB
 
-- [ ] Charger IC + charge USB-C + JST  
-- [ ] Boost IC + inductor + ceramics  
-- [ ] AMS1117-3.3 SOT-223  
-- [ ] TPS2553DBVR + RILIM  
-- [ ] INA226 or INA219  
-- [ ] 6N137 ×2 DIP-8  
-- [ ] RJ12 female  
-- [ ] ESP32-C3 DevKit or MINI-1  
-- [ ] USB-C data breakout  
-- [ ] microSD breakout + card  
-- [ ] LiPo 1S  
+- ESP32 module / DevKit MCU  
+- USB-C for MCU (use Thing Plus)  
+- microSD socket (use Thing Plus)  
+- Main 3.3 V for MCU  
+- Full LiPo charger (unless you abandon Thing Plus charging)
+
+---
+
+## Power modes
+
+| Mode | Carrier 5 V source |
+|------|--------------------|
+| USB into Thing Plus | **`V_USB`** → TPS2553 |
+| Battery only | **`VBAT` → boost → 5 V** on carrier, or USB power bank into Thing Plus |
+
+---
+
+## Rough cart
+
+- [ ] SparkFun Thing Plus ESP32-S3  
+- [ ] LiPo + microSD  
+- [ ] TPS2553 + INA226/219  
+- [ ] 6N137 ×2  
+- [ ] RJ12 + headers (Feather pitch)  
+- [ ] Optional: boost IC for VBAT→5 V  

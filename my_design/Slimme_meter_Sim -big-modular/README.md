@@ -1,53 +1,75 @@
-# Slimme meter Sim — big / hand-build (modular only where needed)
+# Slimme meter Sim — DevKit brain + slim P1 board
 
-**This folder is the active design path.**  
-Do not treat the parent `Smart Meter Simulator/` docs as the source of truth for this board.
+**Active path:** this folder only.
 
-## Build philosophy
+## Idea
 
-| On main PCB (hand solder / oven) | Modular (headers / kit) |
-|----------------------------------|-------------------------|
-| LiPo charger IC + passives | **USB-C data** breakout → ESP32 |
-| 5 V boost IC + inductor | **microSD** breakout → SPI |
-| 5 V → 3.3 V (large package, e.g. SOT-223) | **ESP32** DevKit *or* C3-MINI-1 footprint |
-| **TPS2553** P1 current limit | |
-| **INA219 / INA226** P1 current sense (I²C) | |
-| Optocouplers **6N137 DIP-8** (Request + Data) | |
-| RJ12, LED, button, ESD | |
+Use a **premium ESP32-S3 development board** that already has USB-C, microSD, 3.3 V regulation, and (ideally) LiPo charge.  
+Your custom PCB is **only the P1 meter front-end**: take **5 V from the DevKit headers** → eFuse → RJ12 + optos (+ current sense).
 
-**Not modular:** charger, boost, 3.3 V, eFuse, current sense, optos, RJ12.
+## Recommended DevKit
 
-## Power flow
+**[SparkFun Thing Plus — ESP32-S3](https://www.sparkfun.com/sparkfun-thing-plus-esp32-s3.html)** (Feather / Thing Plus footprint)
+
+| Built-in | You get |
+|----------|---------|
+| ESP32-S3 | Wi‑Fi, strong MCU, PSRAM/flash options |
+| USB-C | Power + programming |
+| microSD | Telegram store (no SD module on your PCB) |
+| 3.3 V regulator | Powers the S3 |
+| LiPo JST + charger + fuel gauge | Portable brain |
+| Headers | **`V_USB` (5 V)**, `3V3`, `VBAT`, GPIOs, Qwiic |
+
+Docs: https://docs.sparkfun.com/SparkFun_Thing_Plus_ESP32-S3/
+
+**Alt:** Adafruit Feather ESP32-S3 (excellent, LiPo, USB pin) — **no on-board SD** (needs Adalogger / extra).
+
+## Split
+
+| SparkFun Thing Plus (buy) | Your slim PCB (design) |
+|---------------------------|-------------------------|
+| ESP32-S3, USB-C, SD, LiPo charge, 3.3 V | Header footprint matching Thing Plus / Feather |
+| | **`V_USB` → TPS2553 → INA → RJ12 pin1** |
+| | Optos **6N137** Request + Data |
+| | RJ12, ESD, LED/button optional |
+| | Optional: small **VBAT→5 V boost** if you need P1 5 V on battery-only |
 
 ```
-Charge USB-C (on PCB) ──► charger IC ──► LiPo
-                              │
-                              └──► 5 V boost ──► SYS_5V
-                                      ├─► 3.3 V reg ──► ESP32 DevKit / module
-                                      ├─► TPS2553 ──► INA ──► RJ12 pin1 (P1_5V)
-                                      └─► opto / UI supplies as needed
-
-Data USB-C module ──► ESP32 (flash / serial)
-microSD module     ──► ESP32 SPI
+Thing Plus USB-C / LiPo
+        │
+        ├─ 3V3, MCU, SD, Wi‑Fi          (on DevKit)
+        │
+        └─ V_USB (5 V when USB present) ──► slim PCB
+                                              TPS2553 ──► INA ──► RJ12 pin1
+                                              optos ◄──► GPIO from DevKit headers
 ```
 
-## Key part choices (this branch)
+## Important: 5 V on battery-only
 
-| Role | Part | Notes |
-|------|------|--------|
-| P1 limit | **TPS2553DBVR** | Set ~250–300 mA; constant-current (not DSMR foldback) |
-| P1 current monitor | **INA226** or **INA219** | After TPS2553 → RJ12; I²C (GPIO5 OK for SCL/SDA — **not** ADC) |
-| 3.3 V | **AMS1117-3.3** SOT-223 (or equal) | From `SYS_5V`; replace tiny SY8089AAC |
-| Optos | **6N137** DIP-8 ×2 | Data needs speed @ 115200 |
-| Boost | Discrete ~2 A class on PCB | Hot air/oven; avoid cheap MT3608 |
-| Charger | Discrete LiPo charger on PCB | Prefer IC with charge terminate + UVLO |
+On Thing Plus / Feather-class boards, **`V_USB` is ~5 V mainly when USB-C is plugged in**.  
+On **battery alone** you usually have **`VBAT` (~3.0–4.2 V)** and **3.3 V** — **not** a boosted 5 V rail.
 
-ESP32-C3: analog current is only on **GPIO0–4**. Use GPIO5 for I²C or FAULT, not Hall analog.
+So:
 
-## KiCad project
+| Mode | P1 +5 V |
+|------|---------|
+| USB-C plugged into Thing Plus | Use **`V_USB` → TPS2553** — works |
+| Battery only (field corner) | Add a **small boost on the slim PCB**: `VBAT` → 5 V → TPS2553, **or** keep USB power bank into the DevKit |
 
-- `Slimme_meter_Sim.kicad_pro` — main project  
-- `SCH_1_USB_5volt_sch.kicad_sch` — USB / 5 V related  
-- `SCH_2_power_supplies.kicad_sch` — power supplies  
+For your “park in a building corner” use case, plan either a USB power bank into the Thing Plus, or one boost IC on the slim board from `VBAT`.
+
+## What you no longer design on the slim board
+
+- ESP32 / DevKit MCU  
+- USB-C data (use DevKit’s)  
+- microSD  
+- Main 3.3 V for the MCU  
+- (Optional) LiPo charger — already on Thing Plus  
+
+## GPIO / sense
+
+- INA219/226 on slim board → I²C to Thing Plus pins  
+- TPS2553 FAULT → GPIO  
+- Request / Data optos → UART + GPIO on headers  
 
 Detail: [ARCHITECTURE.md](ARCHITECTURE.md) · [PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)
