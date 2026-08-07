@@ -1,0 +1,23 @@
+G04 #@! TF.GenerationSoftware,KiCad,Pcbnew,9.0.9*
+G04 #@! TF.CreationDate,2026-08-06T00:30:07+02:00*
+G04 #@! TF.ProjectId,Slimme_meter_Sim,536c696d-6d65-45f6-9d65-7465725f5369,rev?*
+G04 #@! TF.SameCoordinates,Original*
+G04 #@! TF.FileFunction,Paste,Bot*
+G04 #@! TF.FilePolarity,Positive*
+%FSLAX46Y46*%
+G04 Gerber Fmt 4.6, Leading zero omitted, Abs format (unit mm)*
+G04 Created by KiCad (PCBNEW 9.0.9) date 2026-08-06 00:30:07*
+%MOMM*%
+%LPD*%
+G01*
+G04 APERTURE LIST*
+%ADD10R,3.800000X1.000000*%
+%ADD11R,3.400000X1.500000*%
+G04 APERTURE END LIST*
+D10*
+X71095000Y-157925000D03*
+X71095000Y-159925000D03*
+D11*
+X76955000Y-162275000D03*
+X76955000Y-155575000D03*
+M02*

@@ -1,0 +1,294 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "d59de98b-abe3-4329-b084-e6d28a71ec22")
+	(paper "A3")
+	(title_block
+		(title "Main PCB")
+		(date "2026-07-30")
+	)
+	(lib_symbols)
+	(wire
+		(pts
+			(xy 99.06 40.64) (xy 101.6 40.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "028b5f42-ac38-4fc4-8b86-e8e40808a4df")
+	)
+	(wire
+		(pts
+			(xy 99.06 45.72) (xy 104.14 45.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1a75f701-92d4-40b9-b993-280f6749b580")
+	)
+	(wire
+		(pts
+			(xy 99.06 76.2) (xy 101.6 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20040319-dd05-4fe1-a984-65b2dcbdb699")
+	)
+	(wire
+		(pts
+			(xy 85.09 53.34) (xy 85.09 67.31)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4b1e13b5-aec3-4ea8-90ed-2f849449f405")
+	)
+	(wire
+		(pts
+			(xy 101.6 40.64) (xy 101.6 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9f496e24-b1a4-4100-8c61-361e0222f199")
+	)
+	(wire
+		(pts
+			(xy 81.28 53.34) (xy 81.28 67.31)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aafb99ac-3a06-4996-a1f2-87fb4719308e")
+	)
+	(wire
+		(pts
+			(xy 87.63 53.34) (xy 87.63 67.31)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b11c6b03-eba0-47dd-be49-dd329d9dbdcd")
+	)
+	(wire
+		(pts
+			(xy 104.14 45.72) (xy 104.14 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b69b1be9-16bf-4a93-ad3a-2d2f2aecc134")
+	)
+	(wire
+		(pts
+			(xy 104.14 81.28) (xy 99.06 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "daf4b45c-992f-450f-aa5e-327404fb554f")
+	)
+	(sheet
+		(at 40.64 29.21)
+		(size 58.42 24.13)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 255 122 161 1.0000)
+		)
+		(uuid "5e636416-256f-40d4-bd94-a88f282663f2")
+		(property "Sheetname" "SCH_1_USB_5volt"
+			(at 40.64 26.5934 0)
+			(show_name yes)
+			(effects
+				(font
+					(size 5.08 5.08)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "SCH_1_USB_5volt_sch.kicad_sch"
+			(at 40.64 53.9246 0)
+			(show_name yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "+5V" bidirectional
+			(at 99.06 40.64 0)
+			(uuid "2832bdb6-ac23-4a5d-86c9-b1e3364f30a8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GND1" bidirectional
+			(at 99.06 45.72 0)
+			(uuid "eb1dbe63-f1d1-43c8-8578-40bff24bb494")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "D+" bidirectional
+			(at 85.09 53.34 270)
+			(uuid "029707c3-b3be-49a9-8bc5-2c465970272a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "D-" bidirectional
+			(at 87.63 53.34 270)
+			(uuid "9a6a5844-167d-4f3c-88e6-e1960d38eca6")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "GPIO4_Battery" bidirectional
+			(at 81.28 53.34 270)
+			(uuid "7dbd9325-8244-4cf0-b7a3-22a3eb676415")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 41.91 67.31)
+		(size 57.15 24.13)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "83fb2266-046b-478e-8047-fe792468e87b")
+		(property "Sheetname" "SCH_2_power_supplies"
+			(at 41.91 66.5984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "SCH_2_power_supplies.kicad_sch"
+			(at 41.91 92.0246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "+5V" bidirectional
+			(at 99.06 76.2 0)
+			(uuid "d6e7d15d-2234-43c5-98ec-fe593185eaab")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GND1" bidirectional
+			(at 99.06 81.28 0)
+			(uuid "ad01e2de-d1ea-418e-ada8-59265161dbfc")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "D+" bidirectional
+			(at 85.09 67.31 90)
+			(uuid "2604f9a7-3a27-4d26-abd0-61e19b4df5bd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "D-" bidirectional
+			(at 87.63 67.31 90)
+			(uuid "7e614e94-80dc-40b5-8b17-f5bc061a339a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GPIO4_Battery" bidirectional
+			(at 81.28 67.31 90)
+			(uuid "60e11731-ce33-479f-af37-765795c8a260")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project "Slimme_meter_Sim"
+				(path "/d59de98b-abe3-4329-b084-e6d28a71ec22"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

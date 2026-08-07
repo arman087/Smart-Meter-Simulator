@@ -505,7 +505,7 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "16V 22uF X7R ±20% 1206"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -7819,7 +7819,7 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "22uf"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -29428,7 +29428,7 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "100mW 1kΩ 75V"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -31489,7 +31489,7 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "10k"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
