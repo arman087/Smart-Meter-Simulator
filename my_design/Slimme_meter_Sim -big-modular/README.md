@@ -1,75 +1,97 @@
-# Slimme meter Sim — DevKit brain + slim P1 board
+# Slimme meter Sim — DevKit with real battery → 5 V
 
-**Active path:** this folder only.
+**Active path:** this folder.  
+**Do not use SparkFun Thing Plus** for this product — it has **no 5 V boost** from the JST battery.
 
-## Idea
+## What you actually need from the DevKit
 
-Use a **premium ESP32-S3 development board** that already has USB-C, microSD, 3.3 V regulation, and (ideally) LiPo charge.  
-Your custom PCB is **only the P1 meter front-end**: take **5 V from the DevKit headers** → eFuse → RJ12 + optos (+ current sense).
+| Must have | Why |
+|-----------|-----|
+| ESP32-S3 (or strong S3) | MCU + Wi‑Fi |
+| USB-C | Flash + charge |
+| microSD | Telegrams |
+| LiPo / battery management | JST (or internal pack) |
+| **Regulated ~5 V out while on battery** | Feed TPS2553 → RJ12 |
+| Headers / Grove / bus pins | Wire to slim P1 PCB |
 
-## Recommended DevKit
+Feather / Thing Plus boards almost never boost LiPo→5 V. Their “5V” pin is usually **USB only**.
 
-**[SparkFun Thing Plus — ESP32-S3](https://www.sparkfun.com/sparkfun-thing-plus-esp32-s3.html)** (Feather / Thing Plus footprint)
+---
 
-| Built-in | You get |
-|----------|---------|
-| ESP32-S3 | Wi‑Fi, strong MCU, PSRAM/flash options |
-| USB-C | Power + programming |
-| microSD | Telegram store (no SD module on your PCB) |
-| 3.3 V regulator | Powers the S3 |
-| LiPo JST + charger + fuel gauge | Portable brain |
-| Headers | **`V_USB` (5 V)**, `3V3`, `VBAT`, GPIOs, Qwiic |
+## Recommended DevKit: **M5Stack CoreS3** (SKU K128)
 
-Docs: https://docs.sparkfun.com/SparkFun_Thing_Plus_ESP32-S3/
+https://docs.m5stack.com/en/core/CoreS3  
+https://shop.m5stack.com/products/m5stack-cores3-esp32-s3-lotdevelopment-kit
 
-**Alt:** Adafruit Feather ESP32-S3 (excellent, LiPo, USB pin) — **no on-board SD** (needs Adalogger / extra).
+| Feature | On CoreS3 |
+|---------|-----------|
+| MCU | ESP32-S3, 16 MB Flash, 8 MB PSRAM |
+| USB-C | Program + power |
+| microSD | Yes |
+| Battery | Internal ~500 mAh (+ DinBase can take more / DC) |
+| PMU | **AXP2101** (real power management) |
+| **5 V out on battery** | **Yes** — Grove / M-Bus **5V** when BUS out enabled |
+| UI | Touch screen (handy in the field) |
 
-## Split
+### Power ICs (CoreS3)
 
-| SparkFun Thing Plus (buy) | Your slim PCB (design) |
-|---------------------------|-------------------------|
-| ESP32-S3, USB-C, SD, LiPo charge, 3.3 V | Header footprint matching Thing Plus / Feather |
-| | **`V_USB` → TPS2553 → INA → RJ12 pin1** |
-| | Optos **6N137** Request + Data |
-| | RJ12, ESD, LED/button optional |
-| | Optional: small **VBAT→5 V boost** if you need P1 5 V on battery-only |
+| IC | Role |
+|----|------|
+| **AXP2101** | Charge, paths, rails, can drive **5 V bus out** from battery |
+| AW9523B | Enables `BUS_OUT` / USB OTG direction |
+
+Firmware must enable bus 5 V (M5Unified), e.g. power mode **USB in / BUS out** or `setExtPower` / BUS_OUT_EN as in M5 docs — then Grove **red = 5 V** even on battery.
+
+Grove PORT.A / B / C: **GND · 5V · GPIO · GPIO** → take **5V + GND** to your slim board.
+
+---
+
+## Your slim PCB (still simple)
 
 ```
-Thing Plus USB-C / LiPo
+CoreS3 Grove 5V + GND (+ UART/GPIO wires)
         │
-        ├─ 3V3, MCU, SD, Wi‑Fi          (on DevKit)
-        │
-        └─ V_USB (5 V when USB present) ──► slim PCB
-                                              TPS2553 ──► INA ──► RJ12 pin1
-                                              optos ◄──► GPIO from DevKit headers
+        ▼
+   TPS2553 ──► RJ12 pin1
+   6N137 ×2 ── Request / Data
+   RJ12 · ESD · optional INA
 ```
 
-## Important: 5 V on battery-only
+No charger, no boost, no 3.3 V, no SD, no USB-C on your PCB.
 
-On Thing Plus / Feather-class boards, **`V_USB` is ~5 V mainly when USB-C is plugged in**.  
-On **battery alone** you usually have **`VBAT` (~3.0–4.2 V)** and **3.3 V** — **not** a boosted 5 V rail.
+---
 
-So:
+## How power behaves (CoreS3)
 
-| Mode | P1 +5 V |
-|------|---------|
-| USB-C plugged into Thing Plus | Use **`V_USB` → TPS2553** — works |
-| Battery only (field corner) | Add a **small boost on the slim PCB**: `VBAT` → 5 V → TPS2553, **or** keep USB power bank into the DevKit |
+| Source | MCU runs | Grove/M-Bus **5 V** for eFuse |
+|--------|----------|-------------------------------|
+| USB-C | Yes | Yes (enable BUS out) |
+| Internal battery only | Yes | **Yes** (AXP2101 boost path — enable BUS out) |
+| DinBase DC 9–24 V | Yes | Yes |
 
-For your “park in a building corner” use case, plan either a USB power bank into the Thing Plus, or one boost IC on the slim board from `VBAT`.
+This matches: **battery in the kit → 5 V out → your eFuse board**. No power bank.
 
-## What you no longer design on the slim board
+Budget: keep P1 ≤ ~250 mA (TPS2553). Don’t expect amps of 5 V for motors — fine for Ghost.
 
-- ESP32 / DevKit MCU  
-- USB-C data (use DevKit’s)  
-- microSD  
-- Main 3.3 V for the MCU  
-- (Optional) LiPo charger — already on Thing Plus  
+---
 
-## GPIO / sense
+## Fallback if you refuse M5Stack form factor
 
-- INA219/226 on slim board → I²C to Thing Plus pins  
-- TPS2553 FAULT → GPIO  
-- Request / Data optos → UART + GPIO on headers  
+Stack two proven modules:
+
+1. Any ESP32-S3 DevKit with SD (or Feather + SD wing)  
+2. **Adafruit #6106** (bq25185 + **TPS61023 5 V boost**) → `SYS_5V` to TPS2553  
+
+That guarantees LiPo→5 V, but it’s two boards.
+
+---
+
+## Rejected for your requirement
+
+| Board | Why not |
+|-------|---------|
+| SparkFun Thing Plus ESP32-S3 | No boost; `V_USB` dead on battery-only |
+| Adafruit Feather ESP32-S3 alone | Same — USB/BAT, no 5 V boost |
+| Most LilyGO “5V” pins | Often mislabeled SYS/battery voltage |
 
 Detail: [ARCHITECTURE.md](ARCHITECTURE.md) · [PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)
