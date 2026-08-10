@@ -1,97 +1,98 @@
-# Slimme meter Sim — DevKit with real battery → 5 V
+# Slimme meter Sim — big modular (hand-build)
 
-**Active path:** this folder.  
-**Do not use SparkFun Thing Plus** for this product — it has **no 5 V boost** from the JST battery.
+**Active path:** this folder only.  
+Parent `DESIGN_GUIDE.md` / root README are **not** source of truth for this build.
 
-## What you actually need from the DevKit
-
-| Must have | Why |
-|-----------|-----|
-| ESP32-S3 (or strong S3) | MCU + Wi‑Fi |
-| USB-C | Flash + charge |
-| microSD | Telegrams |
-| LiPo / battery management | JST (or internal pack) |
-| **Regulated ~5 V out while on battery** | Feed TPS2553 → RJ12 |
-| Headers / Grove / bus pins | Wire to slim P1 PCB |
-
-Feather / Thing Plus boards almost never boost LiPo→5 V. Their “5V” pin is usually **USB only**.
+Portable **DSMR P1 meter-side** simulator: battery in a corner, Ghost on RJ12, Wi‑Fi range tests without a real meter.
 
 ---
 
-## Recommended DevKit: **M5Stack CoreS3** (SKU K128)
+## Locked modular plan (return-to-work)
 
-https://docs.m5stack.com/en/core/CoreS3  
-https://shop.m5stack.com/products/m5stack-cores3-esp32-s3-lotdevelopment-kit
+| Piece | How it is built |
+|-------|-----------------|
+| **ESP32-S3** | **Module:** Espressif **ESP32-S3-DevKitC-1-N32R16V** (**WROOM-2**, 32 MB flash + 16 MB PSRAM) — same 2×22 headers, onboard 5 V→3.3 V LDO. Alt: **N16R8V** |
+| **USB-C (charge)** | **Breakout module** → soldered/wired to main PCB (not a tiny USB-C footprint on your board) |
+| **microSD** | **Breakout module** → SPI wires to DevKit (not onboard SD slot) |
+| **Charger IC** | On **main PCB** — hand-solder (bigger package preferred) |
+| **5 V boost** | On **main PCB** — hand-solder (**bigger package** preferred) |
+| **eFuse / current limit** | On **main PCB** — **both** TPS2662 + TPS2553, select with jumper / 0 Ω |
+| **Optos + RJ12** | On **main PCB** — **6N137 DIP-8** ×2, RJ12, ESD |
 
-| Feature | On CoreS3 |
-|---------|-----------|
-| MCU | ESP32-S3, 16 MB Flash, 8 MB PSRAM |
-| USB-C | Program + power |
-| microSD | Yes |
-| Battery | Internal ~500 mAh (+ DinBase can take more / DC) |
-| PMU | **AXP2101** (real power management) |
-| **5 V out on battery** | **Yes** — Grove / M-Bus **5V** when BUS out enabled |
-| UI | Touch screen (handy in the field) |
-
-### Power ICs (CoreS3)
-
-| IC | Role |
-|----|------|
-| **AXP2101** | Charge, paths, rails, can drive **5 V bus out** from battery |
-| AW9523B | Enables `BUS_OUT` / USB OTG direction |
-
-Firmware must enable bus 5 V (M5Unified), e.g. power mode **USB in / BUS out** or `setExtPower` / BUS_OUT_EN as in M5 docs — then Grove **red = 5 V** even on battery.
-
-Grove PORT.A / B / C: **GND · 5V · GPIO · GPIO** → take **5V + GND** to your slim board.
+**Not on main PCB:** DevKit MCU, USB-C receptacle soldering challenge, SD cage soldering challenge.
 
 ---
 
-## Your slim PCB (still simple)
+## Power rules (do not loop-charge)
 
 ```
-CoreS3 Grove 5V + GND (+ UART/GPIO wires)
-        │
-        ▼
-   TPS2553 ──► RJ12 pin1
-   6N137 ×2 ── Request / Data
-   RJ12 · ESD · optional INA
+Main USB-C breakout ──► charger ──► LiPo / VSYS ──► boost ──► 5V_SYS
+                                                              ├── eFuse → RJ12 pin 1
+                                                              └── [SW] ──|>|──► DevKit "5V"
+
+DevKit USB ──► program / first flash ONLY
+               NEVER wired into the charger
 ```
 
-No charger, no boost, no 3.3 V, no SD, no USB-C on your PCB.
+| Rule | Why |
+|------|-----|
+| **Only main USB-C charges** | Avoids boost → DevKit 5V → charger fake-charge loop |
+| **`[SW]` between 5V_SYS and DevKit `5V`** | Open while programming on DevKit USB; closed for normal run |
+| **Diode on 5V_SYS → DevKit** | Extra reverse protection when switch is closed and habits slip |
+| **After first flash** | Prefer Wi‑Fi / OTA; leave DevKit USB unused |
+
+### Switch habit
+
+| Mode | Switch `5V_SYS → DevKit` | USB |
+|------|--------------------------|-----|
+| First flash / recovery | **OPEN** | DevKit USB only |
+| Field / normal | **CLOSED** | Main USB-C charge (or battery); talk over Wi‑Fi |
 
 ---
 
-## How power behaves (CoreS3)
+## Hand-solder focus (your three ICs)
 
-| Source | MCU runs | Grove/M-Bus **5 V** for eFuse |
-|--------|----------|-------------------------------|
-| USB-C | Yes | Yes (enable BUS out) |
-| Internal battery only | Yes | **Yes** (AXP2101 boost path — enable BUS out) |
-| DinBase DC 9–24 V | Yes | Yes |
+1. **Charger** (e.g. path like bq25185-class / Adafruit #6106 as reference)  
+2. **Boost** — bigger package / module-friendly footprint  
+3. **eFuse** — see decision below  
 
-This matches: **battery in the kit → 5 V out → your eFuse board**. No power bank.
-
-Budget: keep P1 ≤ ~250 mA (TPS2553). Don’t expect amps of 5 V for motors — fine for Ghost.
+Everything else painful (USB-C, SD) = **bought breakouts**.
 
 ---
 
-## Fallback if you refuse M5Stack form factor
+## eFuse: populate **both**, select one
 
-Stack two proven modules:
+Put **TPS2662** (foldback / rich) **and** **TPS2553** (bigger / easy) on the same PCB. Only one path to RJ12 pin 1 is live.
 
-1. Any ESP32-S3 DevKit with SD (or Feather + SD wing)  
-2. **Adafruit #6106** (bq25185 + **TPS61023 5 V boost**) → `SYS_5V` to TPS2553  
+```
+5V_SYS ──┬──► TPS2662 ──┐
+         │              ├── [jumper / 0 Ω / SW] ──► RJ12 pin1
+         └──► TPS2553 ──┘
+```
 
-That guarantees LiPo→5 V, but it’s two boards.
+| Select | When |
+|--------|------|
+| **TPS2662 path** | Reflow succeeded — use the “amazing” part |
+| **TPS2553 path** | Tiny IC bridged / dead / skipped — still ship the board |
+
+**Select hardware (pick one style in KiCad):**
+- Two **0 Ω** positions (fit only one), or  
+- **2.54 mm jumper** ( clearest for bring-up), or  
+- SPDT switch (handy, slightly more drop/noise — fine for P1)
+
+**Do not** leave both outputs paralleled with no select — fight / odd current paths.
+
+Try the tiny IC with paste + hot plate; if it fails, open that path and close TPS2553. No board respin required.
 
 ---
 
-## Rejected for your requirement
+## Tomorrow checklist
 
-| Board | Why not |
-|-------|---------|
-| SparkFun Thing Plus ESP32-S3 | No boost; `V_USB` dead on battery-only |
-| Adafruit Feather ESP32-S3 alone | Same — USB/BAT, no 5 V boost |
-| Most LilyGO “5V” pins | Often mislabeled SYS/battery voltage |
+1. KiCad: power sheet — charger → VSYS → boost → `5V_SYS`  
+2. KiCad: DevKit header footprint + **SW + diode** to DevKit `5V`  
+3. KiCad: USB-C **breakout** connector footprint / pin header (VBUS, GND, maybe CC if needed)  
+4. KiCad: SD **breakout** header (SPI + 3V3 + GND)  
+5. KiCad: **both** eFuse footprints + **select jumper/0 Ω** → RJ12  
+6. KiCad: 6N137 ×2 + ESD  
 
 Detail: [ARCHITECTURE.md](ARCHITECTURE.md) · [PARTS_CHECKLIST.md](PARTS_CHECKLIST.md)
