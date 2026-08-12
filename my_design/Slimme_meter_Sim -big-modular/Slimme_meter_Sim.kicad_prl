@@ -8,7 +8,6 @@
       "Power_BAT"
     ],
     "hidden_nets": [
-      "GND1",
       "VBATT",
       "/SCH_1_USB_5volt/V_batt_port"
     ],
@@ -96,16 +95,16 @@
       9
     ],
     "col_widths": [
-      26,
-      24,
-      14,
-      11,
-      14,
-      14,
-      14,
-      11,
-      14,
-      343
+      10,
+      10,
+      6,
+      4,
+      6,
+      6,
+      6,
+      4,
+      6,
+      303
     ],
     "custom_group_rules": [],
     "expanded_rows": [],

@@ -1,0 +1,987 @@
+FILE FP6276B_alt.pdf pages=12 size=758676
+
+==================== PAGE 1 ====================
+FP6276B 
+500kHz 6A High Efficiency Synchronous PWM Boost Converter 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+1/12 
+ 
+ 
+General Description 
+The FP6276B is a current mode boost DC-DC converter with PWM/PSM control. Its PWM 
+circuitry with built-in 40mΩ high side switch and 40mΩ low side switch make this regulator highly power 
+efficient. The internal compensation network also minimizes external component counts to only 6. An 
+internal 0.6V voltage is connected to error amplifier the non-inverting input as precision reference 
+voltage. Built-in soft-start function can reduce the inrush current. 
+ 
+Features 
+ Current mode with PWM/PSM control 
+ Input voltage range: 2.4V~4.5V 
+ Adjustable Output up to 5.3V 
+ Shutdown current: <1uA 
+ Oscillator frequency: 500KHz 
+ Reference voltage: 0.6V +/-2% 
+ Disconnect load during shutdown 
+ Cycle-by-cycle current limit   
+ Low RDS(on): 40mΩ for both high and low side 
+ Protection: OTP, OCP, SCP 
+ Internal compensation 
+ Internal soft-start: 7ms 
+ Package: SOP-8L(EP) 
+ 
+Applications                                         
+ Chargers 
+ Handheld Devices 
+ Portable Products 
+ Power Bank 
+ 
+Typical Application Circuit 
+FP6276B
+OC
+GND
+EN
+FB
+VIN
+VO
+LX
+1
+2
+3
+4
+6
+5
+7
+8
+VOUT
+VIN
+LX
+ON/OFF
+PGND
+
+==================== PAGE 2 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+2/12 
+Function Block Diagram 
+ 
+Error Amp.
+Control 
+and 
+Driver 
+Logic 
+FB
+0.6V
+Soft 
+Start
+GND
+VDD
+VDD
+PWM
+Comp.
+LX
+Current Sense 
+Amp.
+PGND
+Bulk Well
+Switch
+Oscillator
+500KHz
+Slope 
+Compensation
+VO
+EN
+Shutdown
+Circuitry
+OTP
+VIN
+UVLO
+Adjustable
+Current Limit
+OC
+OCP
+MUX
+VDD
+VO
+VIN
+ 
+ 
+ 
+ 
+Pin Descriptions 
+ 
+SOP-8L (EP) 
+ 
+1
+2
+3
+4
+8
+7
+6
+5
+LX
+LX
+EN
+VO
+OC
+FB
+GND
+FP6276B
+Top View
+EP
+(PGND)
+Bottom View
+VIN
+XXx-XXL
+Name 
+No. 
+I / O 
+Description 
+LX 
+1 
+I 
+Power Switch Output 
+LX 
+2 
+I 
+Power Switch Output 
+VIN 
+3 
+P 
+IC Power Supply 
+EN 
+4 
+I 
+Enable Control (Active High) 
+GND 
+5 
+P 
+IC Ground 
+FB 
+6 
+I 
+Error Amplifier Inverting Input 
+OC 
+7 
+I 
+Adjustable Current Limit 
+(The resistor must be connected to ground.) 
+VO 
+8 
+O 
+Output Voltage Pin 
+PGND 
+EP 
+P 
+IC Power Ground(Must connect to GND)  
+
+==================== PAGE 3 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+3/12 
+Marking Information 
+ 
+SOP-8L(EP) 
+ 
+Halogen Free
+Lot Number
+Internal ID
+Per - Half Month
+Year
+FP6276B
+ 
+XXx-XXL
+ 
+ 
+ 
+Halogen Free: Halogen free product indicator
+Lot Number: Wafer lot number's code
+Internal ID: Internal Identification Code
+Per-Half Month: Production period indicator in half month time unit
+For Example : A  → First Half Month of January
+B  → Second Half Month of January
+C  → First Half Month of February
+D  → Second Half Month of February
+Year: Production year’s last digit
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+==================== PAGE 4 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+4/12 
+Ordering Information 
+Part Number 
+Operating Temperature 
+Package 
+MOQ 
+Description 
+FP6276BXR-G1 
+-40°C ~ 85°C 
+SOP-8L(EP) 
+2500EA 
+Tape & Reel 
+ 
+Absolute Maximum Ratings 
+Parameter 
+Symbol 
+Conditions 
+Min. 
+Typ. 
+Max. 
+Unit 
+Supply Voltage 
+VIN 
+ 
+0 
+ 
+6 
+V 
+LX Voltage 
+VLX 
+ 
+0 
+ 
+6 
+V 
+EN,FB,OC,VO Voltage 
+ 
+ 
+0 
+ 
+6 
+V 
+Thermal Resistance (Note1) 
+θJA 
+SOP-8L(EP) 
+ 
+ 
++60 
+°C / W 
+Junction Temperature 
+TJ 
+ 
+ 
+ 
++150 
+°C 
+Operating Temperature 
+TOP 
+ 
+-40 
+ 
++85 
+°C 
+Storage Temperature 
+TST 
+ 
+-65 
+ 
++150 
+°C 
+Lead Temperature 
+ 
+(soldering, 10 sec) 
+ 
+ 
++260 
+°C 
+ 
+Note1:  
+θJA is measured in the natural convection at TA=25°C on a low effective thermal conductivity test 
+board of JEDEC 51-3 thermal measurement standard. 
+ 
+IR Re-flow Soldering Curve 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+==================== PAGE 5 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+5/12 
+Recommended Operating Conditions 
+Parameter 
+Symbol 
+Conditions 
+Min. 
+Typ. 
+Max. 
+Unit 
+Supply Voltage   
+VIN 
+ 
+2.4 
+ 
+4.5 
+V 
+Operating Temperature Range 
+TA 
+Ambient Temperature 
+-40 
+ 
++85 
+°C 
+ 
+DC Electrical Characteristics (VIN=3.3V, TA=25°C, unless otherwise specified) 
+Parameter 
+Symbol 
+Conditions 
+Min. 
+Typ. 
+Max. 
+Unit 
+Input Voltage 
+VIN 
+ 
+2.4 
+ 
+4.5 
+V 
+Under Voltage Lockout 
+VUVLO 
+ 
+ 
+2.1 
+ 
+V 
+UVLO Hysteresis 
+ 
+ 
+ 
+0.1 
+ 
+V 
+Quiescent Current 
+ICC 
+VFB =0.65V, No switching 
+ 
+280 
+ 
+µA 
+Average Supply Current 
+ICC 
+VFB=0.55V, Switching 
+ 
+3.6 
+ 
+mA 
+Shutdown Current 
+ICC 
+VEN=GND 
+ 
+0.1 
+ 
+µA 
+Linear Charge Current  
+ICHARGE  VOUT<VIN  
+3 
+ 
+ 
+A 
+Operation Frequency 
+fOSC 
+VFB=0.55V 
+ 
+500 
+ 
+kHZ 
+Maximum Duty Ratio 
+% 
+ 
+ 
+90 
+ 
+% 
+Feedback Voltage 
+VREF 
+VIN=4.5V 
+0.588 
+0.6 
+0.612 
+V 
+Enable Voltage 
+VEN 
+ 
+0.96 
+ 
+ 
+V 
+Shutdown Voltage 
+VEN 
+ 
+ 
+ 
+0.6 
+V 
+Soft-Start Time 
+tSS 
+VIN=4.5V 
+ 
+7 
+ 
+ms 
+High Side Switch RDS(ON) 
+RON-PMOS  
+ 
+40 
+ 
+mΩ 
+Low Side Switch RDS(ON) 
+RON-NMOS  
+ 
+40 
+ 
+mΩ 
+Internal Switch Current Limit 
+IOCP 
+ 
+ 
+6 
+ 
+A 
+Thermal Shutdown Threshold 
+TOTP 
+ 
+ 
+150 
+ 
+℃ 
+Thermal Shutdown Hysteresis 
+ 
+ 
+ 
+30 
+ 
+℃ 
+ 
+ 
+
+==================== PAGE 6 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+6/12 
+Typical Operating Characteristics 
+(VCC=3V,Vout=5V ,Iout=2.1A,TA=25℃, unless otherwise specified) 
+4.9
+4.92
+4.94
+4.96
+4.98
+5
+2.5
+3
+3.5
+4
+4.5
+Output Voltage(V)
+Input Voltage(V)
+Output Voltage VS Input Voltage
+4.95
+4.97
+4.99
+5.01
+5.03
+5.05
+0
+0.5
+1
+1.5
+2
+2.5
+Output Voltage(V)
+Output Current(A)
+Output Voltage VS Output Current
+ 
+80 
+82 
+84 
+86 
+88 
+90 
+92 
+94 
+96 
+98 
+100 
+0
+0.5
+1
+1.5
+2
+2.5
+Efficiency(%)
+Output Current(A)
+Efficiency VS Output Current
+Vin=4.2V
+Vin=3.7V
+Vin=3.3V
+Vin=3V
+20
+30
+40
+50
+60
+70
+0
+0.5
+1
+1.5
+2
+2.5
+Temperature(℃)
+Output Current(A)
+Temperature VS Output Current
+Vin=4.2V
+Vin=3.7V
+Vin=3.3V
+Vin=3V
+ 
+450
+470
+490
+510
+530
+550
+2.5
+3
+3.5
+4
+4.5
+Frequency(kHz)
+Input Voltage(V)
+Frequency VS Input Voltage
+0
+1
+2
+3
+4
+5
+0
+50
+100
+150
+200
+250
+300
+350
+Current Limit (A)
+Ocset Resistor(kΩ)
+Ocset Resistance VS Current Limit
+ 
+
+==================== PAGE 7 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+7/12 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Transient Response 
+(VIN=3.3V，VOUT=5V，IOUT=0.5~2.1A) 
+Output Ripple 
+(VIN=3.3V，VOUT=5V，
+IOUT=2.1A) 
+EN ON Test 
+(VIN=3.3V，VOUT=5V，IOUT=2.1A) 
+EN OFF Test 
+(VIN=3.3V，VOUT=5V，
+IOUT=2.1A) 
+Power ON Test 
+(VIN=3.3V，VOUT=5V，IOUT=2.1A) 
+Short Test 
+(VIN=3.3V， IOUT=2.1A) 
+
+==================== PAGE 8 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+8/12 
+Function Description 
+ 
+Operation  
+The FP6276B is a current mode synchronous boost converter. The constant switching frequency 
+is 500 kHz and operates with pulse width modulation (PWM). Build-in 40mΩ high side switch and 
+40mΩ low side switch provides a high efficient conversion.   
+ 
+Soft Start Function 
+Soft start circuitry is integrated into FP6276B to avoid inrush current during power on. After the IC 
+is enabled, the output of error amplifier is clamped by the internal soft-start function, which causes 
+PWM pulse width increasing slowly and thus reducing input surge current. 
+ 
+Current Limit Program (OCP) 
+ 
+A resistor between OC and GND pin programs peak switch current. The resistor value should be 
+between 37.5k and 300k. The current limit can be set from 5 A to 0.8A. The OC pin can’t float must 
+connect a resistor to ground. Keep traces at this pin as short as possible. Do not put capacitance at this 
+pin. Set the over current trip point according to the following equation: 
+ 
+IOCP= 180000
+R9
++0.2 
+ 
+ 
+Over Temperature Protection (OTP) 
+FP6276B will turn off the power MOSFET automatically when the internal junction temperature is 
+higher than 150°C. The power MOSFET wake up when the junction temperature drops 30°C under the 
+OTP threshold temperature. 
+ 
+
+==================== PAGE 9 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+9/12 
+Application Information 
+ 
+Inductor Selection 
+Inductance value is decided based on different condition. 1.5uH to 4.7µH inductor value is 
+recommended for general application circuit. There are three important inductor specifications, DC 
+resistance, saturation current and core loss. Low DC resistance has better power efficiency.  Also,  
+avoid inductor saturation which will cause circuit system unstable and lower core loss at 500KHz. 
+ 
+Capacitor Selection 
+The output capacitor is required to maintain the VO DC voltage. Low ESR capacitors are 
+preferred to reduce the output voltage ripple. Ceramic capacitor of X5R and X7R are recommended, 
+which have low equivalent series resistance (ESR) and wider operation temperature range. 
+ 
+Output Voltage Programming 
+The output voltage is set by a resistive voltage divider from the output voltage to FB. The output 
+voltage is: 
+
+
+
+
+
+
+
+2
+R
+1
+R
+1
+V
+6
+.
+0
+VOUT
+ 
+ 
+Layout Considerations 
+1. The power traces, consisting of the GND trace, the LX trace and the VIN trace should be kept 
+short, direct and wide. 
+2. Layout LX switching node wide and short trace to reduce EMI. 
+3. Place C1 near VIN pin as closely as possible to maintain input voltage steady and filter out 
+the pulsing input current. 
+4. The resistive divider R1 and R2 must be connected to FB pin directly and as closely as 
+possible. 
+5. FB is a sensitive node. Please keep it away from switching node LX. 
+6. The GND of the IC, C1, C3 and C4 should be connected close together directly to a power 
+ground plane. Besides, C3 and C4 need close to VO pin and PGND(EP Pad).  
+7. R4 and C5 need close to LX pin and PGND(EP Pad). 
+ 
+ 
+ 
+
+==================== PAGE 10 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+10/12 
+ 
+ 
+1
+8
+7
+2
+3
+6
+4
+5
+Vin
+Vout
+C3
+C1
+R1
+L1  
+VIA to GND
+R2
+R9
+R3
+C8
+FP6276B
+R5
+C9
+R4
+C5
+C4
+PGND
+GND
+ 
+Suggested Layout 
+ 
+ 
+ 
+ 
+ 
+ 
+
+==================== PAGE 11 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+11/12 
+Typical Application 
+ 
+ 
+FP6276B
+OC
+GND
+FB
+VIN
+EN
+VO
+LX
+1
+2
+3
+4
+6
+5
+7
+8
+VOUT
+VIN
+R1
+75k
+R2
+10k
+R9
+43k
+L1  3.3µH
+C1 
+22µF
+C3
+22µF
+C4
+100µF
+LX
+Close to PGND
+ON/OFF
+R3
+10k
+C8 
+1nF
+R5
+1k
+C9
+150pF
+PGND
+R4
+1.5Ω
+C5
+2.2nF
+Close to LX and PGND
+ 
+ 
+ 
+Note: 
+ 
+1. 
+Use ceramic capacitor of X5R or X7R for C1 and C3. 
+2. 
+R4 and C5 must be added for reducing spike voltage and EMI.  
+3. 
+EN voltage must be less than or equal to VIN voltage. 
+4. 
+The OC pin must connect a resistor R9 to ground setting current limit. 
+ 
+ 
+ 
+
+==================== PAGE 12 ====================
+FP6276B 
+This datasheet contains new product information. Advanced Analog Technology reserves the rights to modify the product specification without 
+notice.No liability is assumed as a result of the use of this product. No rights under any patent accompany the sales of the product. 
+ 
+Website: http://www.aat-ic.com/ 
+Rev. 0.72
+ 
+ 
+12/12 
+Package Outline 
+ 
+SOP-8L (EP) 
+ 
+ 
+ 
+Unit: mm 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Exposed PAD Dimensions: 
+ 
+ 
+ 
+ 
+Note: 
+1. Package dimensions are in compliance with JEDEC outline: MS-012 AA. 
+2. Dimension ”D” does not include molding flash, protrusions or gate burrs. 
+3. Dimension “E” does not include inter-lead flash or protrusions. 
+ 
+Symbols 
+Min. (mm) 
+Max. (mm) 
+A 
+1.346 
+1.752 
+A1 
+0.050 
+0.152 
+A2 
+ 
+1.498 
+D 
+4.800 
+4.978 
+E 
+3.810 
+3.987 
+H 
+5.791 
+6.197 
+L 
+0.406 
+1.270 
+θ° 
+0° 
+8° 
+Symbols 
+Min. (mm) 
+Max. (mm) 
+D1 
+3.302 REF 
+E1 
+2.413 REF 
